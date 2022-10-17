@@ -12,34 +12,15 @@ import {
 } from 'react-native';
 import { Camera, CameraDevice, useCameraDevices } from 'react-native-vision-camera';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
-import RNFS from 'react-native-fs';
+//import RNFS from 'react-native-fs';
 
 const App = () => {
   const devices = useCameraDevices();
   const { width, height } = Dimensions.get('screen');
-  const [cameraType, setCameraType] = useState<CameraDevice | undefined>();
+  const [deviceSelected, setDeviceSelected] = useState<CameraDevice | undefined>();
   const [permited, setPermited] = useState(false);
   const cameraRef = useRef<Camera>(null);
-  const [photoPath, setPhotoPath] = useState('');
-
-  useEffect(() => {
-    checkCameraPermission();
-  });
-
-  useEffect(() => {
-    setCameraType(devices.front);
-  }, [devices]);
-
-  async function checkCameraPermission() {
-    const permission = await Camera.requestCameraPermission();
-    if (permission === 'denied') {
-      await Linking.openSettings();
-    }
-
-    if (permission === 'authorized') {
-      setPermited(true);
-    }
-  }
+  const [photoPath, setPhotoPath] = useState<String | undefined>(undefined);
 
   const styles = StyleSheet.create({
     container: {
@@ -60,7 +41,7 @@ const App = () => {
       zIndex: 100,
       alignItems: 'center',
     },
-    buttonTake: {
+    button: {
       backgroundColor: '#26C0DB',
       padding: 20,
       justifyContent: 'center',
@@ -70,7 +51,7 @@ const App = () => {
       position: 'absolute',
       bottom: 40,
     },
-    buttonTakeLabel: {
+    buttonLabel: {
       fontSize: 18,
       color: 'white',
     },
@@ -89,39 +70,49 @@ const App = () => {
       width: 500,
       height: 500,
     },
+    activityIndicatorContainer: {
+      flex: 1,
+      backgroundColor:
+        'white',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
   });
 
-  if (cameraType == null) {
+  useEffect(() => {
+    checkCameraPermission();
+  });
+
+  useEffect(() => {
+    setDeviceSelected(devices.front);
+  }, [devices]);
+
+  async function checkCameraPermission() {
+    const permission = await Camera.requestCameraPermission();
+    if (permission === 'denied') {
+      await Linking.openSettings();
+    }
+
+    if (permission === 'authorized') {
+      setPermited(true);
+    }
+  }
+
+  if (deviceSelected == null) {
     return (
-      <View style={{ flex: 1, backgroundColor: 'white', justifyContent: 'center', alignItems: 'center' }}>
+      <View style={styles.activityIndicatorContainer}>
         <ActivityIndicator size={50} color={'#26C0DB'} />
       </View>
     );
   }
 
-  if (photoPath !== '') {
-    console.log({ photoPath });
-    return (
-      <View style={styles.imageContainer}>
-        <Image source={{ uri: `file://${photoPath}` }} style={styles.image} resizeMode={'contain'} />
-        <Pressable
-          style={{ backgroundColor: 'red', padding: 20, marginVertical: 20 }}
-          onPress={() => setPhotoPath('')}>
-          <Text>Back</Text>
-        </Pressable>
-      </View>
-    );
-  }
-
   function cameraFlip() {
-    if (cameraType === devices.back) {
-      console.log('cambio front');
-      setCameraType(devices.front);
+    if (deviceSelected === devices.back) {
+      setDeviceSelected(devices.front);
     }
 
-    if (cameraType === devices.front) {
-      console.log('cambio back');
-      setCameraType(devices.back);
+    if (deviceSelected === devices.front) {
+      setDeviceSelected(devices.back);
     }
   }
 
@@ -131,15 +122,21 @@ const App = () => {
       enableAutoStabilization: true,
     });
     if (photo) {
-      console.log({ photo });
-      cropImage(photo.path);
+      await cropImage(photo.path).then(
+        result => {
+          setPhotoPath(result);
+        }
+      ).catch(
+        error => console.log('error ==>', error)
+      );
     }
   }
 
   async function cropImage(imageUri: string) {
+    let croppedImage = '';
     const anchoRecomendado = 600;
     const altoRecomendado = 720;
-    const result = await ImageResizer.createResizedImage(
+    await ImageResizer.createResizedImage(
       imageUri,
       anchoRecomendado,
       altoRecomendado,
@@ -152,22 +149,47 @@ const App = () => {
         mode: 'cover',
         onlyScaleDown: false,
       }
+    ).then(result => {
+      //const img64 = await RNFS.readFile(result.uri, 'base64');
+      // console.log({ img64 });
+      croppedImage = result.uri;
+    }
+    ).catch(
+      error => console.log({ error })
     );
-    //console.log({ result });
-    const img64 = await RNFS.readFile(result.uri, 'base64');
-    console.log({ img64 });
-    setPhotoPath(result.uri);
+
+    return croppedImage;
+  }
+
+  // if (photoPath !== undefined) {
+  //   return (
+  //     <View style={styles.imageContainer}>
+  //       <Image
+  //         source={{ uri: `file://${photoPath}` }}
+  //         style={styles.image}
+  //         resizeMode={'contain'} />
+  //       <Pressable
+  //         style={styles.button}
+  //         onPress={handleButtonBack}>
+  //         <Text style={styles.buttonLabel}>Back</Text>
+  //       </Pressable>
+  //     </View>
+  //   );
+  // }
+
+  function handleButtonBack() {
+    setPhotoPath(undefined);
   }
 
   return (
     <SafeAreaView style={styles.container}>
-      {permited
-        &&
+      {(permited
+        && photoPath === undefined) ?
         <View style={styles.cameraContainer}>
           <Camera
             ref={cameraRef}
             style={styles.camera}
-            device={cameraType!}
+            device={deviceSelected!}
             isActive={true}
             photo={true}
             enableZoomGesture
@@ -181,12 +203,24 @@ const App = () => {
             </Pressable>
             <Pressable
               onPress={cameraTakePhoto}
-              style={styles.buttonTake}>
-              <Text style={styles.buttonTakeLabel}>
+              style={styles.button}>
+              <Text style={styles.buttonLabel}>
                 TAKE
               </Text>
             </Pressable>
           </View>
+        </View>
+        :
+        <View style={styles.imageContainer}>
+          <Image
+            source={{ uri: `file://${photoPath}` }}
+            style={styles.image}
+            resizeMode={'contain'} />
+          <Pressable
+            style={styles.button}
+            onPress={handleButtonBack}>
+            <Text style={styles.buttonLabel}>Back</Text>
+          </Pressable>
         </View>
       }
     </SafeAreaView>

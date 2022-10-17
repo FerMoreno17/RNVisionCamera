@@ -161,22 +161,6 @@ const App = () => {
     return croppedImage;
   }
 
-  // if (photoPath !== undefined) {
-  //   return (
-  //     <View style={styles.imageContainer}>
-  //       <Image
-  //         source={{ uri: `file://${photoPath}` }}
-  //         style={styles.image}
-  //         resizeMode={'contain'} />
-  //       <Pressable
-  //         style={styles.button}
-  //         onPress={handleButtonBack}>
-  //         <Text style={styles.buttonLabel}>Back</Text>
-  //       </Pressable>
-  //     </View>
-  //   );
-  // }
-
   function handleButtonBack() {
     setPhotoPath(undefined);
   }

@@ -7,6 +7,7 @@ import {DrawerContent} from './components/DrawerContet';
 import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import rootReducer from './redux/reducer/rootReducer';
+import ConfiguracionScreen from './ConfiguracionScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -14,8 +15,17 @@ const App = () => {
   return (
     <Provider store={createStore(rootReducer)}>
       <NavigationContainer>
-        <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-          <Drawer.Screen name="HomeScreen" component={HomeScreen} />
+        <Drawer.Navigator drawerContent={() => <DrawerContent />}>
+          <Drawer.Screen
+            options={{headerTitle: 'Camara'}}
+            name="HomeScreen"
+            component={HomeScreen}
+          />
+          <Drawer.Screen
+            options={{headerTitle: 'Configuración'}}
+            name="ConfiguracionScreen"
+            component={ConfiguracionScreen}
+          />
         </Drawer.Navigator>
       </NavigationContainer>
     </Provider>

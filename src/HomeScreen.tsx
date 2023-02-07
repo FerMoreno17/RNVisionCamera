@@ -11,7 +11,7 @@ import {
   Text,
   View,
   BackHandler,
-  TextInput,
+  Switch,
 } from 'react-native';
 import {
   Camera,
@@ -24,6 +24,7 @@ import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {useNavigation} from '@react-navigation/native';
 import {Face, scanFaces} from 'vision-camera-face-detector';
 import {runOnJS} from 'react-native-reanimated';
+import {DesafioMirarArriba} from './redux/action/DesafiosAction';
 //import RNFS from 'react-native-fs';
 
 const HomeScreen = () => {
@@ -35,10 +36,17 @@ const HomeScreen = () => {
   const [permited, setPermited] = useState(false);
   const cameraRef = useRef<Camera>(null);
   const [photoPath, setPhotoPath] = useState<String | undefined>(undefined);
-  const [desafioAceptado, setDesafioAceptado] = useState<number>();
-  const [condicion, setCondicion] = useState<number>();
+  const [desafioAceptadoX, setDesafioAceptadoX] = useState<number>();
+  const [desafioAceptadoY, setDesafioAceptadoY] = useState<number>();
+  const [condicionX, setCondicionX] = useState<number>();
+  const [condicionY, setCondicionY] = useState<number>();
   const [valorDesafio, setValorDesafio] = useState<string>();
-  const desafios = useSelector((state: IRootState) => state.desafios.value);
+  const desafios = useSelector((state: IRootState) => state.desafios);
+  const [cameraFront, setCameraFront] = useState(false);
+  const [stopCam, setStopCam] = useState(true);
+  const [cont, setCont] = useState(4);
+
+  const dispatch = useDispatch();
 
   async function checkCameraPermission() {
     const permission = await Camera.requestCameraPermission();
@@ -59,56 +67,35 @@ const HomeScreen = () => {
     setDeviceSelected(devices.front);
   }, [devices]);
 
+  /* useEffect(() => {
+    cont > 0 &&
+      setInterval(() => {
+        setCont(cont - 1);
+      }, 1000);
+  }, [cont]);*/
+
   const frameProcessor = useFrameProcessor(
     frame => {
       'worklet';
       try {
         const scannedFaces = scanFaces(frame);
-        let X = scannedFaces[0].pitchAngle;
-        let Y = scannedFaces[0].yawAngle;
+        let Y = scannedFaces[0].pitchAngle;
+        let X = scannedFaces[0].yawAngle;
         let S = scannedFaces[0].smilingProbability;
         let GOL = scannedFaces[0].leftEyeOpenProbability;
         let GOD = scannedFaces[0].rightEyeOpenProbability;
-        if (desafios[0] === desafiosList.MI) {
-          runOnJS(setCondicion)(Y);
-          if (Y >= parseFloat(valorDesafio!)) {
-            runOnJS(setDesafioAceptado)(Y);
-            runOnJS(handleTakePhoto);
-          }
-        } else if (desafios[0] === desafiosList.MD) {
-          runOnJS(setCondicion)(Y);
-          if (Y <= parseFloat(valorDesafio!)) {
-            runOnJS(setDesafioAceptado)(Y);
-            runOnJS(handleTakePhoto);
-          }
-        } else if (desafios[0] === desafiosList.MAB) {
-          runOnJS(setCondicion)(X);
-          if (X <= parseFloat(valorDesafio!)) {
-            runOnJS(setDesafioAceptado)(X);
-            runOnJS(handleTakePhoto);
-          }
-        } else if (desafios[0] === desafiosList.MAR) {
-          runOnJS(setCondicion)(X);
-          if (X >= parseFloat(valorDesafio!)) {
-            runOnJS(setDesafioAceptado)(X);
-            runOnJS(handleTakePhoto);
-          }
-        } else if (desafios[0] === desafiosList.S) {
-          runOnJS(setCondicion)(S);
-          if (S >= parseFloat(valorDesafio!)) {
-            runOnJS(setDesafioAceptado)(S);
-            runOnJS(handleTakePhoto);
-          }
-        } else if (desafios[0] === desafiosList.GD) {
-          runOnJS(setCondicion)(GOD);
-          if (GOD <= parseFloat(valorDesafio!)) {
-            runOnJS(setDesafioAceptado)(GOD);
-            runOnJS(handleTakePhoto);
-          }
-        } else if (desafios[0] === desafiosList.GI) {
-          runOnJS(setCondicion)(GOL);
-          if (GOL <= parseFloat(valorDesafio!)) {
-            runOnJS(setDesafioAceptado)(GOL);
+        if (desafios.value[0] === desafiosList.MI) {
+          runOnJS(setCondicionX)(X);
+          runOnJS(setCondicionY)(Y);
+          if (
+            true
+            /* X <= desafios.mirarIzquierda.xp &&
+            X >= desafios.mirarIzquierda.xn &&
+            Y >= desafios.mirarIzquierda.yn &&
+            Y <= desafios.mirarIzquierda.yp*/
+          ) {
+            runOnJS(setDesafioAceptadoX)(X);
+            runOnJS(setDesafioAceptadoY)(Y);
             runOnJS(handleTakePhoto);
           }
         }
@@ -135,40 +122,30 @@ const HomeScreen = () => {
   function cameraFlip() {
     if (deviceSelected === devices.back) {
       setDeviceSelected(devices.front);
+      setCameraFront(false);
     }
 
     if (deviceSelected === devices.front) {
+      setCameraFront(true);
       setDeviceSelected(devices.back);
     }
   }
 
-  async function handleTakePhoto() {
-    // console.log('Captura: ', tomarFoto);
-    let photo;
-    try {
-      photo = await cameraRef.current?.takePhoto({
-        qualityPrioritization: 'speed',
-        enableAutoStabilization: true,
-      });
+  const handleTakePhoto = async () => {
+    /* const photo = await cameraRef.current?.takePhoto({
+      qualityPrioritization: 'speed',
+      enableAutoStabilization: true,
+    });
+    if (photo) {
+      //  cropImage(photo.path);
+    }*/
+  };
 
-      if (photo) {
-        await cropImage(photo.path)
-          .then(result => {
-            setPhotoPath(result);
-            navigation.navigate('PreviewScreen', {imagePath: result});
-          })
-          .catch(error => console.log('error ==>', error));
-      }
-    } catch (e) {
-      console.log({e});
-    }
-  }
-
-  async function cropImage(imageUri: string) {
+  const cropImage = (imageUri: string) => {
     let croppedImage = '';
     const anchoRecomendado = 600;
     const altoRecomendado = 720;
-    await ImageResizer.createResizedImage(
+    ImageResizer.createResizedImage(
       imageUri,
       anchoRecomendado,
       altoRecomendado,
@@ -186,11 +163,12 @@ const HomeScreen = () => {
         //const img64 = await RNFS.readFile(result.uri, 'base64');
         // console.log({ img64 });
         croppedImage = result.uri;
+        navigation.navigate('PreviewScreen', {imagePath: result});
       })
       .catch(error => console.log({error}));
 
     return croppedImage;
-  }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -200,48 +178,43 @@ const HomeScreen = () => {
             ref={cameraRef}
             style={styles.camera}
             device={deviceSelected!}
-            isActive={true}
+            isActive={stopCam}
             photo={true}
             enableZoomGesture
             frameProcessor={frameProcessor}
-            frameProcessorFps={5}
+            frameProcessorFps={60}
             orientation={'portrait'}
           />
 
           <View style={styles.bottomContainer}>
-            <Text
-              style={{
-                color: 'red',
-                fontSize: 30,
-                textAlign: 'center',
-                marginTop: 20,
-              }}>
-              {condicion}
-            </Text>
-            <Text style={{color: 'black', fontSize: 30, textAlign: 'center'}}>
-              {desafios[0]}
-            </Text>
-            <TextInput
-              keyboardType="numeric"
-              style={styles.desa}
-              onChangeText={setValorDesafio}
-              value={valorDesafio}
-            />
-            <Text
-              style={{
-                color: 'green',
-                fontWeight: '700',
-                fontSize: 20,
-                textAlign: 'center',
-                marginTop: 20,
-              }}>
-              {desafioAceptado}
-            </Text>
-            <Pressable style={styles.button} onPress={cameraFlip}>
-              <Text style={{textAlign: 'center', fontSize: 20}}>
-                Cambiar camara
+            <View style={styles.switch}>
+              <Switch
+                value={cameraFront}
+                onValueChange={cameraFlip}
+                thumbColor={cameraFront ? '#00aeef' : '#F4F4F4'}
+                trackColor={{
+                  false: '#E0E0E0',
+                  true: '#E0E0E0',
+                }}
+              />
+              <Text style={{color: 'black', fontSize: 18}}>Cambiar cámara</Text>
+            </View>
+            <Text style={styles.reto}>{desafios.value[0]}</Text>
+            <View style={styles.desaBox}>
+              <Text style={styles.desaGeneral}>X:{condicionX?.toFixed(4)}</Text>
+              <Text style={styles.desaGeneral}>
+                Y: {condicionY?.toFixed(4)}
               </Text>
-            </Pressable>
+            </View>
+            <View style={styles.desaBox}>
+              <Text style={styles.desaAcept}>
+                X: {desafioAceptadoX?.toFixed(4)}
+              </Text>
+
+              <Text style={styles.desaAcept}>
+                Y: {desafioAceptadoY?.toFixed(4)}
+              </Text>
+            </View>
           </View>
         </View>
       )}
@@ -329,5 +302,37 @@ const styles = StyleSheet.create({
     fontSize: 20,
     textAlign: 'center',
     color: 'black',
+  },
+  switch: {
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginVertical: 20,
+  },
+  desaAcept: {
+    color: 'green',
+    fontWeight: '700',
+    fontSize: 30,
+    textAlign: 'center',
+    marginTop: 20,
+  },
+  desaBox: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  desaGeneral: {
+    color: 'red',
+    fontSize: 30,
+    textAlign: 'center',
+    marginTop: 20,
+    fontWeight: '700',
+  },
+  reto: {
+    color: '#00aeef',
+    fontSize: 30,
+    textAlign: 'center',
+    fontWeight: '700',
   },
 });

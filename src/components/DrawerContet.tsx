@@ -1,63 +1,54 @@
-import {DrawerContentScrollView} from '@react-navigation/drawer';
+import {DrawerContentScrollView, DrawerItem} from '@react-navigation/drawer';
+import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 import {useDispatch} from 'react-redux';
-import DesafiosAction from '../redux/action/DesafiosAction';
-export const DrawerContent = (props: any) => {
-  const [dropDown, setDropDown] = useState(false);
+import {DesafiosAction} from '../redux/action/DesafiosAction';
+export const DrawerContent = () => {
   const dispatch = useDispatch();
+  const navigation = useNavigation();
 
   let desafiosList = [
-    'Sonreir',
-    'Guiño Izquierdo',
-    'Guiño Derecho',
     'Mirar Izquierda',
     'Mirar Derecha',
     'Mirar Arriba',
     'Mirar Abajo',
     'Mirar Frente',
+    'Guiño Izquierdo',
+    'Guiño Derecho',
+    'Sonreir',
   ];
   return (
     <View style={{flex: 1, padding: 20}}>
       <DrawerContentScrollView>
-        <View
-          onTouchEnd={() => {
-            setDropDown(!dropDown);
+        <DrawerItem
+          label={'CONFIGURACIÓN'}
+          labelStyle={styles.texto}
+          style={{backgroundColor: '#002855'}}
+          onPress={() => {
+            navigation.navigate('ConfiguracionScreen');
           }}
-          style={{
-            borderColor: 'grey',
-            borderWidth: 2,
-            padding: 5,
-          }}>
-          <Text style={styles.texto}>Desafios</Text>
-        </View>
-        {dropDown && (
-          <View
-            style={{
-              borderColor: 'grey',
-              borderWidth: 2,
-              borderBottomWidth: 1,
-              borderTopWidth: 0,
-            }}>
-            {desafiosList.map(resp => (
-              <View
-                onTouchEnd={() => {
-                  dispatch(DesafiosAction([resp]));
-                }}
-                style={{flex: 1, borderBottomWidth: 1}}>
-                <Text style={styles.texto}>{resp}</Text>
-              </View>
-            ))}
-          </View>
-        )}
+        />
+        {desafiosList.map((resp, index) => (
+          <DrawerItem
+            label={resp}
+            key={index}
+            labelStyle={styles.texto}
+            style={{backgroundColor: '#00aeef'}}
+            onPress={() => {
+              dispatch(DesafiosAction([resp])),
+                navigation.navigate('HomeScreen');
+            }}
+          />
+        ))}
       </DrawerContentScrollView>
     </View>
   );
 };
 const styles = StyleSheet.create({
   texto: {
-    color: 'black',
-    padding: 5,
+    color: '#fff',
+    fontWeight: '700',
     fontSize: 20,
   },
 });

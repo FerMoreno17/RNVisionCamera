@@ -8,6 +8,7 @@ import {Provider} from 'react-redux';
 import {createStore} from 'redux';
 import rootReducer from './redux/reducer/rootReducer';
 import ConfiguracionScreen from './ConfiguracionScreen';
+import PreviewScreen from './PreviewScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -25,6 +26,11 @@ const App = () => {
             options={{headerTitle: 'Configuración'}}
             name="ConfiguracionScreen"
             component={ConfiguracionScreen}
+          />
+          <Drawer.Screen
+            options={{headerTitle: 'Vista previa'}}
+            name="PreviewScreen"
+            component={PreviewScreen}
           />
         </Drawer.Navigator>
       </NavigationContainer>

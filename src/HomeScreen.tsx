@@ -45,7 +45,11 @@ const HomeScreen = () => {
   const [cameraFront, setCameraFront] = useState(false);
   const [stopCam, setStopCam] = useState(true);
   const [cont, setCont] = useState(4);
-
+  let Y;
+  let X;
+  let S;
+  let GOL;
+  let GOD;
   const dispatch = useDispatch();
 
   async function checkCameraPermission() {
@@ -74,69 +78,21 @@ const HomeScreen = () => {
       }, 1000);
   }, [cont]);*/
 
-  const frameProcessor = useFrameProcessor(
-    frame => {
-      'worklet';
-      try {
-        const scannedFaces = scanFaces(frame);
-        let Y = scannedFaces[0].pitchAngle;
-        let X = scannedFaces[0].yawAngle;
-        let S = scannedFaces[0].smilingProbability;
-        let GOL = scannedFaces[0].leftEyeOpenProbability;
-        let GOD = scannedFaces[0].rightEyeOpenProbability;
-        if (desafios.value[0] === desafiosList.MI) {
-          runOnJS(setCondicionX)(X);
-          runOnJS(setCondicionY)(Y);
-          if (
-            true
-            /* X <= desafios.mirarIzquierda.xp &&
-            X >= desafios.mirarIzquierda.xn &&
-            Y >= desafios.mirarIzquierda.yn &&
-            Y <= desafios.mirarIzquierda.yp*/
-          ) {
-            runOnJS(setDesafioAceptadoX)(X);
-            runOnJS(setDesafioAceptadoY)(Y);
-            runOnJS(handleTakePhoto);
-          }
-        }
-      } catch (e) {}
-    },
-    [desafios, valorDesafio],
-  );
-
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      navigation.toggleDrawer();
-      return true;
-    });
-  }, []);
-
-  if (deviceSelected == null) {
-    return (
-      <View style={styles.activityIndicatorContainer}>
-        <ActivityIndicator size={50} color={'#26C0DB'} />
-      </View>
-    );
-  }
-
-  function cameraFlip() {
-    if (deviceSelected === devices.back) {
-      setDeviceSelected(devices.front);
-      setCameraFront(false);
-    }
-
-    if (deviceSelected === devices.front) {
-      setCameraFront(true);
-      setDeviceSelected(devices.back);
-    }
-  }
-
   const handleTakePhoto = async () => {
-    /* const photo = await cameraRef.current?.takePhoto({
-      qualityPrioritization: 'speed',
-      enableAutoStabilization: true,
-    });
-    if (photo) {
+    try {
+      await cameraRef.current
+        ?.takePhoto({
+          qualityPrioritization: 'speed',
+          enableAutoStabilization: true,
+        })
+        .then(photo => {
+          console.log(photo);
+        });
+    } catch (e: any) {
+      console.log(e.message);
+    }
+
+    /*   if (photo) {
       //  cropImage(photo.path);
     }*/
   };
@@ -170,6 +126,68 @@ const HomeScreen = () => {
     return croppedImage;
   };
 
+  const setCondicionesFrame = (x: any, y: any) => {
+    setCondicionX(x);
+    setCondicionY(y);
+  };
+
+  const frameProcessor = useFrameProcessor(
+    frame => {
+      'worklet';
+      try {
+        const scannedFaces = scanFaces(frame);
+        Y = scannedFaces[0].pitchAngle;
+        X = scannedFaces[0].yawAngle;
+        S = scannedFaces[0].smilingProbability;
+        GOL = scannedFaces[0].leftEyeOpenProbability;
+        GOD = scannedFaces[0].rightEyeOpenProbability;
+        if (desafios.value[0] === desafiosList.MI) {
+          runOnJS(setCondicionesFrame)(X, Y);
+          runOnJS(handleTakePhoto)();
+          /*if (
+            true
+             X <= desafios.mirarIzquierda.xp &&
+              X >= desafios.mirarIzquierda.xn &&
+              Y >= desafios.mirarIzquierda.yn &&
+              Y <= desafios.mirarIzquierda.yp
+          ) {
+
+            // runOnJS(setDesafioAceptadoX)(X);
+            // runOnJS(setDesafioAceptadoY)(Y);
+          }*/
+        }
+      } catch (e) {}
+    },
+    [desafios, valorDesafio],
+  );
+
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.toggleDrawer();
+      return true;
+    });
+  }, []);
+
+  if (deviceSelected == null) {
+    return (
+      <View style={styles.activityIndicatorContainer}>
+        <ActivityIndicator size={50} color={'#26C0DB'} />
+      </View>
+    );
+  }
+
+  function cameraFlip() {
+    if (deviceSelected === devices.back) {
+      setDeviceSelected(devices.front);
+      setCameraFront(false);
+    }
+
+    if (deviceSelected === devices.front) {
+      setCameraFront(true);
+      setDeviceSelected(devices.back);
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       {permited && (
@@ -178,9 +196,8 @@ const HomeScreen = () => {
             ref={cameraRef}
             style={styles.camera}
             device={deviceSelected!}
-            isActive={stopCam}
+            isActive={true}
             photo={true}
-            enableZoomGesture
             frameProcessor={frameProcessor}
             frameProcessorFps={60}
             orientation={'portrait'}

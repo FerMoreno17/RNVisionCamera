@@ -6,7 +6,6 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 const PreviewScreen = () => {
   const navigation = useNavigation();
   const props = useRoute();
-  console.log(props);
 
   const styles = StyleSheet.create({
     button: {
@@ -36,7 +35,7 @@ const PreviewScreen = () => {
   });
 
   function handleButtonBack() {
-    navigation.goBack();
+    navigation.reset({routes: [{name: 'HomeScreen'}]});
   }
 
   return (

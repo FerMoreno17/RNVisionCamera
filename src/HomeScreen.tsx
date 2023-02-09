@@ -38,6 +38,7 @@ const HomeScreen = () => {
   const [image, setImage] = useState<string | undefined>();
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [indicator, setIndicator] = useState(false);
+  const [cameraActive, setCameraActive] = useState(true);
   const cameraRef = useRef<Camera>(null);
 
   useEffect(() => {
@@ -50,13 +51,7 @@ const HomeScreen = () => {
     checkCameraPermission();
   });
 
-  useEffect(() => {
-    indicator &&
-      setTimeout(() => {
-        handleTakePicture();
-      }, 2000);
-  }, [indicator]);
-
+  console.log(cameraRef.current);
   const handleFacesDetected = ({faces}: any) => {
     if (faces) {
       try {
@@ -65,11 +60,10 @@ const HomeScreen = () => {
         GOL = faces[0].leftEyeOpenProbability;
         GOD = faces[0].rightEyeOpenProbability;
         //console.log(X);
-        if (X > 330 && X < 340) {
+        setCondicionX(X);
+        if (X > 330 && X < 340 && !indicator) {
           setIndicator(true);
-          setCondicionX(X);
-        } else {
-          setIndicator(false);
+          handleTakePicture();
         }
       } catch (e) {}
     }
@@ -78,11 +72,13 @@ const HomeScreen = () => {
 
   const handleTakePicture = async () => {
     if (cameraRef) {
+      setCameraActive(false);
       try {
-        const data = await cameraRef.current?.takePictureAsync();
-        console.log(data?.uri);
-        setImage(data?.uri);
-        cropImage(data?.uri!);
+        await cameraRef.current?.takePictureAsync().then(data => {
+          console.log(data?.uri);
+          setImage(data?.uri);
+          cropImage(data?.uri!);
+        });
       } catch (error) {
         console.log({error});
       }
@@ -112,6 +108,7 @@ const HomeScreen = () => {
         //const img64 = await RNFS.readFile(result.uri, 'base64');
         // console.log({ img64 });
         croppedImage = result.uri;
+        setIndicator(false);
         navigation.navigate('PreviewScreen', {imagePath: result});
       })
       .catch(error => console.log({error}));
@@ -170,7 +167,7 @@ const HomeScreen = () => {
             style={styles.camera}
             type={type}
             ref={cameraRef}
-            onFacesDetected={handleFacesDetected}
+            onFacesDetected={cameraActive ? handleFacesDetected : undefined}
             faceDetectorSettings={{
               mode: FaceDetector.FaceDetectorMode.fast,
               detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,

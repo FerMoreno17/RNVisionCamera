@@ -6,6 +6,7 @@ import {SafeAreaView} from 'react-native-safe-area-context';
 const PreviewScreen = () => {
   const navigation = useNavigation();
   const props = useRoute();
+  console.log(props);
 
   const styles = StyleSheet.create({
     button: {
@@ -38,7 +39,18 @@ const PreviewScreen = () => {
     navigation.goBack();
   }
 
-  return <SafeAreaView style={styles.imageContainer}></SafeAreaView>;
+  return (
+    <SafeAreaView style={styles.imageContainer}>
+      <Image
+        source={{uri: props.params?.imagePath.uri}}
+        style={styles.image}
+        resizeMode={'contain'}
+      />
+      <Pressable style={styles.button} onPress={handleButtonBack}>
+        <Text style={styles.buttonLabel}>Back</Text>
+      </Pressable>
+    </SafeAreaView>
+  );
 };
 
 export default PreviewScreen;

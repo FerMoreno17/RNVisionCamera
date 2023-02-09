@@ -4,8 +4,6 @@ import {useDispatch, useSelector} from 'react-redux';
 import {
   ActivityIndicator,
   Dimensions,
-  Linking,
-  Pressable,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -13,88 +11,83 @@ import {
   BackHandler,
   Switch,
 } from 'react-native';
-import {
-  Camera,
-  CameraDevice,
-  useCameraDevices,
-  useFrameProcessor,
-} from 'react-native-vision-camera';
+import {Camera} from 'expo-camera';
+import * as FaceDetector from 'expo-face-detector';
 import {IRootState} from './redux/reducer/rootReducer';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {useNavigation} from '@react-navigation/native';
-import {Face, scanFaces} from 'vision-camera-face-detector';
-import {runOnJS} from 'react-native-reanimated';
-import {DesafioMirarArriba} from './redux/action/DesafiosAction';
+import {checkCameraPermission} from './cameraPermission';
 //import RNFS from 'react-native-fs';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-  const devices = useCameraDevices();
-  const [deviceSelected, setDeviceSelected] = useState<
-    CameraDevice | undefined
-  >();
+
   const [permited, setPermited] = useState(false);
-  const cameraRef = useRef<Camera>(null);
-  const [photoPath, setPhotoPath] = useState<String | undefined>(undefined);
   const [desafioAceptadoX, setDesafioAceptadoX] = useState<number>();
   const [desafioAceptadoY, setDesafioAceptadoY] = useState<number>();
   const [condicionX, setCondicionX] = useState<number>();
   const [condicionY, setCondicionY] = useState<number>();
-  const [valorDesafio, setValorDesafio] = useState<string>();
   const desafios = useSelector((state: IRootState) => state.desafios);
   const [cameraFront, setCameraFront] = useState(false);
-  const [stopCam, setStopCam] = useState(true);
-  const [cont, setCont] = useState(4);
-  let Y;
   let X;
   let S;
   let GOL;
   let GOD;
   const dispatch = useDispatch();
 
-  async function checkCameraPermission() {
-    const permission = await Camera.requestCameraPermission();
-    if (permission === 'denied') {
-      await Linking.openSettings();
-    }
+  const [image, setImage] = useState<string | undefined>();
+  const [type, setType] = useState(Camera.Constants.Type.front);
+  const [indicator, setIndicator] = useState(false);
+  const cameraRef = useRef<Camera>(null);
 
-    if (permission === 'authorized') {
-      setPermited(true);
-    }
-  }
+  useEffect(() => {
+    checkCameraPermission().then(resp => {
+      setPermited(resp);
+    });
+  }, []);
 
   useEffect(() => {
     checkCameraPermission();
   });
 
   useEffect(() => {
-    setDeviceSelected(devices.front);
-  }, [devices]);
+    indicator &&
+      setTimeout(() => {
+        handleTakePicture();
+      }, 2000);
+  }, [indicator]);
 
-  /* useEffect(() => {
-    cont > 0 &&
-      setInterval(() => {
-        setCont(cont - 1);
-      }, 1000);
-  }, [cont]);*/
-
-  const handleTakePhoto = async () => {
-    try {
-      await cameraRef.current
-        ?.takePhoto({
-          qualityPrioritization: 'speed',
-          enableAutoStabilization: true,
-        })
-        .then(photo => {
-          console.log(photo);
-        });
-    } catch (e: any) {
-      console.log(e.message);
+  const handleFacesDetected = ({faces}: any) => {
+    if (faces) {
+      try {
+        X = faces[0].yawAngle;
+        S = faces[0].smilingProbability;
+        GOL = faces[0].leftEyeOpenProbability;
+        GOD = faces[0].rightEyeOpenProbability;
+        //console.log(X);
+        if (X > 330 && X < 340) {
+          setIndicator(true);
+          setCondicionX(X);
+        } else {
+          setIndicator(false);
+        }
+      } catch (e) {}
     }
+    return;
+  };
 
-    /*   if (photo) {
-      //  cropImage(photo.path);
-    }*/
+  const handleTakePicture = async () => {
+    if (cameraRef) {
+      try {
+        const data = await cameraRef.current?.takePictureAsync();
+        console.log(data?.uri);
+        setImage(data?.uri);
+        cropImage(data?.uri!);
+      } catch (error) {
+        console.log({error});
+      }
+    }
+    return;
   };
 
   const cropImage = (imageUri: string) => {
@@ -126,41 +119,6 @@ const HomeScreen = () => {
     return croppedImage;
   };
 
-  const setCondicionesFrame = (x: any, y: any) => {
-    setCondicionX(x);
-    setCondicionY(y);
-  };
-
-  const frameProcessor = useFrameProcessor(
-    frame => {
-      'worklet';
-      try {
-        const scannedFaces = scanFaces(frame);
-        Y = scannedFaces[0].pitchAngle;
-        X = scannedFaces[0].yawAngle;
-        S = scannedFaces[0].smilingProbability;
-        GOL = scannedFaces[0].leftEyeOpenProbability;
-        GOD = scannedFaces[0].rightEyeOpenProbability;
-        if (desafios.value[0] === desafiosList.MI) {
-          runOnJS(setCondicionesFrame)(X, Y);
-          runOnJS(handleTakePhoto)();
-          /*if (
-            true
-             X <= desafios.mirarIzquierda.xp &&
-              X >= desafios.mirarIzquierda.xn &&
-              Y >= desafios.mirarIzquierda.yn &&
-              Y <= desafios.mirarIzquierda.yp
-          ) {
-
-            // runOnJS(setDesafioAceptadoX)(X);
-            // runOnJS(setDesafioAceptadoY)(Y);
-          }*/
-        }
-      } catch (e) {}
-    },
-    [desafios, valorDesafio],
-  );
-
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => {
       navigation.toggleDrawer();
@@ -168,7 +126,7 @@ const HomeScreen = () => {
     });
   }, []);
 
-  if (deviceSelected == null) {
+  if (cameraRef == null) {
     return (
       <View style={styles.activityIndicatorContainer}>
         <ActivityIndicator size={50} color={'#26C0DB'} />
@@ -177,14 +135,13 @@ const HomeScreen = () => {
   }
 
   function cameraFlip() {
-    if (deviceSelected === devices.back) {
-      setDeviceSelected(devices.front);
+    if (type === Camera.Constants.Type.back) {
+      setType(Camera.Constants.Type.front);
       setCameraFront(false);
     }
-
-    if (deviceSelected === devices.front) {
+    if (type === Camera.Constants.Type.front) {
       setCameraFront(true);
-      setDeviceSelected(devices.back);
+      setType(Camera.Constants.Type.back);
     }
   }
 
@@ -192,15 +149,35 @@ const HomeScreen = () => {
     <SafeAreaView style={styles.container}>
       {permited && (
         <View style={styles.cameraContainer}>
+          <View
+            style={{
+              backgroundColor: indicator ? 'green' : 'red',
+              width: 120,
+              height: 50,
+              borderRadius: 100,
+              position: 'absolute',
+              top: 100,
+              right: 20,
+              zIndex: 100,
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}>
+            <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+              {indicator ? 'No te muevas :)' : 'continua...'}
+            </Text>
+          </View>
           <Camera
-            ref={cameraRef}
             style={styles.camera}
-            device={deviceSelected!}
-            isActive={true}
-            photo={true}
-            frameProcessor={frameProcessor}
-            frameProcessorFps={60}
-            orientation={'portrait'}
+            type={type}
+            ref={cameraRef}
+            onFacesDetected={handleFacesDetected}
+            faceDetectorSettings={{
+              mode: FaceDetector.FaceDetectorMode.fast,
+              detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
+              runClassifications: FaceDetector.FaceDetectorClassifications.all,
+              minDetectionInterval: 100,
+              tracking: true,
+            }}
           />
 
           <View style={styles.bottomContainer}>

@@ -1,7 +1,6 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import HomeScreen from './HomeScreen';
 import 'react-native-gesture-handler';
 import {DrawerContent} from './components/DrawerContet';
 import {Provider} from 'react-redux';
@@ -9,6 +8,7 @@ import {createStore} from 'redux';
 import rootReducer from './redux/reducer/rootReducer';
 import ConfiguracionScreen from './ConfiguracionScreen';
 import PreviewScreen from './PreviewScreen';
+import HomeScreen from './HomeScreen';
 
 const Drawer = createDrawerNavigator();
 

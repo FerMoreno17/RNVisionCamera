@@ -26,7 +26,7 @@ export const DrawerContent = () => {
           labelStyle={styles.texto}
           style={{backgroundColor: '#002855'}}
           onPress={() => {
-            navigation.navigate('ConfiguracionScreen');
+            navigation.reset({routes: [{name: 'ConfiguracionScreen'}]});
           }}
         />
         {desafiosList.map((resp, index) => (
@@ -37,7 +37,7 @@ export const DrawerContent = () => {
             style={{backgroundColor: '#00aeef'}}
             onPress={() => {
               dispatch(DesafiosAction([resp])),
-                navigation.navigate('HomeScreen');
+                navigation.reset({routes: [{name: 'HomeScreen'}]});
             }}
           />
         ))}

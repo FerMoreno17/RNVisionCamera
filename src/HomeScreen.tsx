@@ -10,6 +10,8 @@ import {
   View,
   BackHandler,
   Switch,
+  Platform,
+  Image,
 } from 'react-native';
 import {Camera} from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
@@ -17,7 +19,10 @@ import {IRootState} from './redux/reducer/rootReducer';
 import ImageResizer from '@bam.tech/react-native-image-resizer';
 import {useNavigation} from '@react-navigation/native';
 import {checkCameraPermission} from './cameraPermission';
+import MascaraSelfie from './components/MascaraSelfie';
 //import RNFS from 'react-native-fs';
+import {useHeaderHeight} from '@react-navigation/elements';
+import {manipulateAsync, FlipType} from 'expo-image-manipulator';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -39,7 +44,9 @@ const HomeScreen = () => {
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [indicator, setIndicator] = useState(false);
   const [cameraActive, setCameraActive] = useState(true);
+  const [ratioo, setRatio] = useState<string | undefined>();
   const cameraRef = useRef<Camera>(null);
+  const headerHeight = useHeaderHeight();
 
   useEffect(() => {
     checkCameraPermission().then(resp => {
@@ -51,7 +58,6 @@ const HomeScreen = () => {
     checkCameraPermission();
   });
 
-  console.log(cameraRef.current);
   const handleFacesDetected = ({faces}: any) => {
     if (faces) {
       try {
@@ -63,21 +69,23 @@ const HomeScreen = () => {
         setCondicionX(X);
         if (X > 330 && X < 340 && !indicator) {
           setIndicator(true);
-          handleTakePicture();
+          handleTakePicture(X);
+        } else {
+          setIndicator(false);
         }
       } catch (e) {}
     }
     return;
   };
 
-  const handleTakePicture = async () => {
+  const handleTakePicture = async (X: number) => {
     if (cameraRef) {
       setCameraActive(false);
       try {
         await cameraRef.current?.takePictureAsync().then(data => {
-          console.log(data?.uri);
+          //  console.log(data?.uri);
           setImage(data?.uri);
-          cropImage(data?.uri!);
+          cropImage(data?.uri!, X);
         });
       } catch (error) {
         console.log({error});
@@ -86,34 +94,39 @@ const HomeScreen = () => {
     return;
   };
 
-  const cropImage = (imageUri: string) => {
-    let croppedImage = '';
-    const anchoRecomendado = 600;
-    const altoRecomendado = 720;
-    ImageResizer.createResizedImage(
-      imageUri,
-      anchoRecomendado,
-      altoRecomendado,
-      'JPEG',
-      50,
-      0,
-      undefined,
-      false,
-      {
-        mode: 'cover',
-        onlyScaleDown: false,
-      },
-    )
-      .then(result => {
-        //const img64 = await RNFS.readFile(result.uri, 'base64');
-        // console.log({ img64 });
-        croppedImage = result.uri;
-        setIndicator(false);
-        navigation.navigate('PreviewScreen', {imagePath: result});
-      })
-      .catch(error => console.log({error}));
-
-    return croppedImage;
+  const cropImage = async (imageUri: string, X: number) => {
+    await manipulateAsync(
+      Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
+      [{resize: {width: 600}}],
+    ).then(async (resize: any) => {
+      Image.getSize(resize.uri, async (widthX, height) => {
+        await manipulateAsync(
+          Platform.OS === 'android' ? resize.uri : `file://${resize.uri}`,
+          [
+            {
+              crop: {
+                height: 720,
+                originX: 0,
+                originY: 0,
+                width: 600,
+              },
+            },
+          ],
+          {
+            base64: true,
+            compress: 0.6,
+          },
+        )
+          .then((crop: any) => {
+            setIndicator(false);
+            navigation.navigate('PreviewScreen', {
+              imagePath: crop.uri,
+              desaAceptado: X,
+            });
+          })
+          .catch(error => console.log('error ==>', error));
+      });
+    });
   };
 
   useEffect(() => {
@@ -142,29 +155,42 @@ const HomeScreen = () => {
     }
   }
 
+  const prepareRatio = async () => {
+    await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
+      const ratio =
+        ratios.find(ratio => ratio === '16:9') || ratios[ratios.length - 1];
+      setRatio(ratio);
+    });
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       {permited && (
         <View style={styles.cameraContainer}>
+          <View style={styles.mask}>
+            <MascaraSelfie color={indicator ? '#B2E64A99' : '#FF5C5C99'} />
+          </View>
           <View
             style={{
-              backgroundColor: indicator ? 'green' : 'red',
-              width: 120,
-              height: 50,
-              borderRadius: 100,
               position: 'absolute',
-              top: 100,
-              right: 20,
               zIndex: 100,
-              justifyContent: 'center',
-              alignItems: 'center',
+              bottom: height * 0.5 - headerHeight,
+              width: '100%',
             }}>
-            <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-              {indicator ? 'No te muevas :)' : 'continua...'}
+            <Text
+              style={{
+                fontSize: 16,
+                fontWeight: 'bold',
+                color: 'white',
+                textAlign: 'center',
+              }}>
+              {!indicator ? 'Siga el desafio y no se mueva' : 'Continua...'}
             </Text>
           </View>
           <Camera
             style={styles.camera}
+            onCameraReady={prepareRatio}
+            ratio={ratioo}
             type={type}
             ref={cameraRef}
             onFacesDetected={cameraActive ? handleFacesDetected : undefined}
@@ -176,8 +202,11 @@ const HomeScreen = () => {
               tracking: true,
             }}
           />
-
-          <View style={styles.bottomContainer}>
+          <View
+            style={[
+              styles.bottomContainer,
+              {height: height * 0.5 - headerHeight},
+            ]}>
             <View style={styles.switch}>
               <Switch
                 value={cameraFront}
@@ -192,19 +221,7 @@ const HomeScreen = () => {
             </View>
             <Text style={styles.reto}>{desafios.value[0]}</Text>
             <View style={styles.desaBox}>
-              <Text style={styles.desaGeneral}>X:{condicionX?.toFixed(4)}</Text>
-              <Text style={styles.desaGeneral}>
-                Y: {condicionY?.toFixed(4)}
-              </Text>
-            </View>
-            <View style={styles.desaBox}>
-              <Text style={styles.desaAcept}>
-                X: {desafioAceptadoX?.toFixed(4)}
-              </Text>
-
-              <Text style={styles.desaAcept}>
-                Y: {desafioAceptadoY?.toFixed(4)}
-              </Text>
+              <Text style={styles.desaGeneral}>{condicionX?.toFixed(4)} °</Text>
             </View>
           </View>
         </View>
@@ -227,6 +244,7 @@ export enum desafiosList {
 }
 
 const {width, height} = Dimensions.get('screen');
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -237,14 +255,19 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
+  mask: {
+    zIndex: 100,
+    position: 'absolute',
+    width: Dimensions.get('screen').width,
+    height: Dimensions.get('screen').height / 2,
+  },
   bottomContainer: {
     backgroundColor: 'white',
     position: 'absolute',
-    height: height * 0.4,
+    height: height * 0.5 - 50,
     width: width,
     bottom: 0,
     zIndex: 100,
-    paddingTop: 10,
   },
   button: {
     backgroundColor: '#26C0DB',

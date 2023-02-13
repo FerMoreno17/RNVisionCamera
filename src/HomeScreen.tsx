@@ -40,7 +40,6 @@ const HomeScreen = () => {
   let GOD;
   const dispatch = useDispatch();
 
-  const [image, setImage] = useState<string | undefined>();
   const [type, setType] = useState(Camera.Constants.Type.front);
   const [indicator, setIndicator] = useState(false);
   const [cameraActive, setCameraActive] = useState(true);
@@ -65,11 +64,10 @@ const HomeScreen = () => {
         S = faces[0].smilingProbability;
         GOL = faces[0].leftEyeOpenProbability;
         GOD = faces[0].rightEyeOpenProbability;
-        //console.log(X);
         setCondicionX(X);
-        if (X > 330 && X < 340 && !indicator) {
+        if (X > 330 && X < 340) {
           setIndicator(true);
-          handleTakePicture(X);
+          handleTakePicture(X, S, GOL, GOD);
         } else {
           setIndicator(false);
         }
@@ -78,14 +76,16 @@ const HomeScreen = () => {
     return;
   };
 
-  const handleTakePicture = async (X: number) => {
+  const handleTakePicture = async (
+    X: number,
+    S: number,
+    GOL: number,
+    GOD: number,
+  ) => {
     if (cameraRef) {
-      setCameraActive(false);
       try {
         await cameraRef.current?.takePictureAsync().then(data => {
-          //  console.log(data?.uri);
-          setImage(data?.uri);
-          cropImage(data?.uri!, X);
+          indicator && cropImage(data?.uri!, X, S, GOL, GOD);
         });
       } catch (error) {
         console.log({error});
@@ -94,7 +94,13 @@ const HomeScreen = () => {
     return;
   };
 
-  const cropImage = async (imageUri: string, X: number) => {
+  const cropImage = async (
+    imageUri: string,
+    X: number,
+    S: number,
+    GOL: number,
+    GOD: number,
+  ) => {
     await manipulateAsync(
       Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
       [{resize: {width: 600}}],
@@ -107,7 +113,7 @@ const HomeScreen = () => {
               crop: {
                 height: 720,
                 originX: 0,
-                originY: 0,
+                originY: height * 0.17,
                 width: 600,
               },
             },
@@ -118,10 +124,13 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
-            setIndicator(false);
+            console.log(crop);
             navigation.navigate('PreviewScreen', {
               imagePath: crop.uri,
-              desaAceptado: X,
+              X: X,
+              S: S,
+              GOL: GOL,
+              GOD: GOD,
             });
           })
           .catch(error => console.log('error ==>', error));
@@ -168,23 +177,30 @@ const HomeScreen = () => {
       {permited && (
         <View style={styles.cameraContainer}>
           <View style={styles.mask}>
-            <MascaraSelfie color={indicator ? '#B2E64A99' : '#FF5C5C99'} />
+            <MascaraSelfie color={indicator ? '#00aeef99' : '#ffffffc5'} />
+          </View>
+          <View style={styles.contenedorDatos}>
+            <Text style={styles.reto}>{desafios.value[0]}</Text>
+            <View style={styles.desaBox}>
+              <Text style={styles.desaGeneral}>{condicionX?.toFixed(4)}°</Text>
+            </View>
           </View>
           <View
             style={{
               position: 'absolute',
-              zIndex: 100,
-              bottom: height * 0.5 - headerHeight,
-              width: '100%',
+              top: height / 2.5,
+              zIndex: 300,
+              alignSelf: 'center',
             }}>
             <Text
               style={{
-                fontSize: 16,
+                fontSize: 20,
                 fontWeight: 'bold',
                 color: 'white',
+
                 textAlign: 'center',
               }}>
-              {!indicator ? 'Siga el desafio y no se mueva' : 'Continua...'}
+              {!indicator ? 'Realice el desafio' : 'Banca un toque'}
             </Text>
           </View>
           <Camera
@@ -193,36 +209,28 @@ const HomeScreen = () => {
             ratio={ratioo}
             type={type}
             ref={cameraRef}
-            onFacesDetected={cameraActive ? handleFacesDetected : undefined}
+            onFacesDetected={handleFacesDetected}
             faceDetectorSettings={{
               mode: FaceDetector.FaceDetectorMode.fast,
-              detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
+              //detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
               runClassifications: FaceDetector.FaceDetectorClassifications.all,
-              minDetectionInterval: 100,
+              minDetectionInterval: 20,
               tracking: true,
             }}
           />
-          <View
-            style={[
-              styles.bottomContainer,
-              {height: height * 0.5 - headerHeight},
-            ]}>
-            <View style={styles.switch}>
-              <Switch
-                value={cameraFront}
-                onValueChange={cameraFlip}
-                thumbColor={cameraFront ? '#00aeef' : '#F4F4F4'}
-                trackColor={{
-                  false: '#E0E0E0',
-                  true: '#E0E0E0',
-                }}
-              />
-              <Text style={{color: 'black', fontSize: 18}}>Cambiar cámara</Text>
-            </View>
-            <Text style={styles.reto}>{desafios.value[0]}</Text>
-            <View style={styles.desaBox}>
-              <Text style={styles.desaGeneral}>{condicionX?.toFixed(4)} °</Text>
-            </View>
+          <View style={styles.switch}>
+            <Switch
+              value={cameraFront}
+              onValueChange={cameraFlip}
+              thumbColor={cameraFront ? '#ffffff' : '#00aeef'}
+              trackColor={{
+                false: '#ffffff99',
+                true: '#00000099',
+              }}
+            />
+            <Text style={{color: 'black', fontSize: 20, fontWeight: '700'}}>
+              Cambiar cámara
+            </Text>
           </View>
         </View>
       )}
@@ -258,13 +266,11 @@ const styles = StyleSheet.create({
   mask: {
     zIndex: 100,
     position: 'absolute',
-    width: Dimensions.get('screen').width,
-    height: Dimensions.get('screen').height / 2,
+    width: '100%',
   },
   bottomContainer: {
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff99',
     position: 'absolute',
-    height: height * 0.5 - 50,
     width: width,
     bottom: 0,
     zIndex: 100,
@@ -318,9 +324,13 @@ const styles = StyleSheet.create({
     color: 'black',
   },
   switch: {
+    position: 'absolute',
+    zIndex: 300,
+    bottom: 0,
+    paddingVertical: 15,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'center',
+    alignSelf: 'center',
     justifyContent: 'center',
     marginVertical: 20,
   },
@@ -340,13 +350,18 @@ const styles = StyleSheet.create({
     color: 'red',
     fontSize: 30,
     textAlign: 'center',
-    marginTop: 20,
     fontWeight: '700',
   },
   reto: {
     color: '#00aeef',
-    fontSize: 30,
+    fontSize: 40,
     textAlign: 'center',
     fontWeight: '700',
+    paddingVertical: 15,
+  },
+  contenedorDatos: {
+    position: 'absolute',
+    zIndex: 100,
+    width: '100%',
   },
 });

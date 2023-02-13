@@ -1,6 +1,6 @@
 import React from 'react';
 import {Dimensions} from 'react-native';
-import Svg, {Circle, Rect, Mask} from 'react-native-svg';
+import Svg, {Circle, Rect, Mask, Ellipse} from 'react-native-svg';
 import {useHeaderHeight} from '@react-navigation/elements';
 
 interface IProps {
@@ -16,11 +16,11 @@ function MascaraSelfie({color}: IProps) {
   return (
     <Svg height={height} viewBox={viewBox}>
       <Mask id="mask">
-        <Rect height={heightSinHeader / 2} width={'100%'} fill="white" />
-        <Circle r={'25%'} cx={'50%'} cy={heightSinHeader / 4} fill="black" />
+        <Rect height={heightSinHeader} width={'100%'} fill="white" />
+        <Ellipse cx="50%" cy="47%" rx={'47%'} ry={'30%'} fill="black" />
       </Mask>
       <Rect
-        height={heightSinHeader / 2}
+        height={heightSinHeader}
         width={'100%'}
         fill={color}
         mask="url(#mask)"

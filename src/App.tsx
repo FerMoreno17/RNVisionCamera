@@ -16,7 +16,14 @@ const App = () => {
   return (
     <Provider store={createStore(rootReducer)}>
       <NavigationContainer>
-        <Drawer.Navigator drawerContent={() => <DrawerContent />}>
+        <Drawer.Navigator
+          screenOptions={{
+            headerStyle: {
+              backgroundColor: '#002855',
+            },
+            headerTintColor: '#fff',
+          }}
+          drawerContent={() => <DrawerContent />}>
           <Drawer.Screen
             options={{headerTitle: 'Camara'}}
             name="HomeScreen"

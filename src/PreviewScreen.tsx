@@ -7,6 +7,8 @@ import {
   Pressable,
   BackHandler,
   View,
+  ImageBackground,
+  Dimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
@@ -31,16 +33,43 @@ const PreviewScreen = () => {
 
   return (
     <SafeAreaView style={styles.imageContainer}>
-      <Image
+      <ImageBackground
+        blurRadius={60}
+        style={{
+          flex: 1,
+          width: '100%',
+        }}
         source={{uri: props.params?.imagePath}}
-        style={styles.image}
-        resizeMode={'contain'}
-      />
-      <View style={styles.desaBox}>
-        <Text style={styles.desaAcept}>
-          {props.params?.desaAceptado?.toFixed(4)}°
-        </Text>
+        imageStyle={styles.resize}>
+        <Image
+          source={{uri: props.params?.imagePath}}
+          style={styles.image}
+          resizeMode={'contain'}
+        />
+      </ImageBackground>
+      <View
+        style={{
+          height: Dimensions.get('screen').height * 0.3,
+          width: '80%',
+        }}>
+        <View style={styles.desaBox}>
+          <Text style={styles.desaAcepttitle}>Angulo del eje X:</Text>
+          <Text style={styles.desaAcept}>{props.params?.X?.toFixed(4)}°</Text>
+        </View>
+        <View style={styles.desaBox}>
+          <Text style={styles.desaAcepttitle}>Prob. de Sonreir:</Text>
+          <Text style={styles.desaAcept}>{props.params?.S?.toFixed(4)}°</Text>
+        </View>
+        <View style={styles.desaBox}>
+          <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Izq:</Text>
+          <Text style={styles.desaAcept}>{props.params?.GOL?.toFixed(4)}°</Text>
+        </View>
+        <View style={styles.desaBox}>
+          <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Der:</Text>
+          <Text style={styles.desaAcept}>{props.params?.GOD?.toFixed(4)}°</Text>
+        </View>
       </View>
+
       <Pressable style={styles.button} onPress={handleButtonBack}>
         <Text style={styles.buttonLabel}>VOLVER</Text>
       </Pressable>
@@ -52,13 +81,12 @@ export default PreviewScreen;
 
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: '#26C0DB',
+    backgroundColor: '#00aeef',
     padding: 20,
     justifyContent: 'center',
     alignItems: 'center',
     width: 320,
     borderRadius: 25,
-    position: 'absolute',
     bottom: 40,
   },
   buttonLabel: {
@@ -67,25 +95,36 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   imageContainer: {
-    flex: 1,
+    flex: 2,
     backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },
   image: {
-    width: 500,
-    height: 500,
+    width: '100%',
+    flex: 1,
+  },
+  desaAcepttitle: {
+    color: '#00aeef',
+    fontWeight: '700',
+    fontSize: 20,
+    marginTop: 20,
   },
   desaAcept: {
-    color: 'green',
+    color: '#000',
     fontWeight: '700',
-    fontSize: 30,
-    textAlign: 'center',
+    fontSize: 20,
     marginTop: 20,
   },
   desaBox: {
-    display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    justifyContent: 'space-between',
+  },
+  imagenPrevia: {
+    flex: 1,
+    alignSelf: 'center',
+  },
+  resize: {
+    resizeMode: 'cover',
   },
 });

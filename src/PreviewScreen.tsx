@@ -58,15 +58,15 @@ const PreviewScreen = () => {
         </View>
         <View style={styles.desaBox}>
           <Text style={styles.desaAcepttitle}>Prob. de Sonreir:</Text>
-          <Text style={styles.desaAcept}>{props.params?.S?.toFixed(4)}°</Text>
+          <Text style={styles.desaAcept}>{props.params?.S?.toFixed(4)}%</Text>
         </View>
         <View style={styles.desaBox}>
           <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Izq:</Text>
-          <Text style={styles.desaAcept}>{props.params?.GOL?.toFixed(4)}°</Text>
+          <Text style={styles.desaAcept}>{props.params?.GOL?.toFixed(4)}%</Text>
         </View>
         <View style={styles.desaBox}>
           <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Der:</Text>
-          <Text style={styles.desaAcept}>{props.params?.GOD?.toFixed(4)}°</Text>
+          <Text style={styles.desaAcept}>{props.params?.GOD?.toFixed(4)}%</Text>
         </View>
       </View>
 

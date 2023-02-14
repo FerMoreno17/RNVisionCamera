@@ -13,49 +13,38 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import {Camera} from 'expo-camera';
+import {Camera, CameraType} from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
 import {IRootState} from './redux/reducer/rootReducer';
-import ImageResizer from '@bam.tech/react-native-image-resizer';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {checkCameraPermission} from './cameraPermission';
 import MascaraSelfie from './components/MascaraSelfie';
 //import RNFS from 'react-native-fs';
-import {useHeaderHeight} from '@react-navigation/elements';
-import {manipulateAsync, FlipType} from 'expo-image-manipulator';
+//import {useHeaderHeight} from '@react-navigation/elements';
+import {manipulateAsync} from 'expo-image-manipulator';
+import '../global.js';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
-
   const [permited, setPermited] = useState(false);
-  const [desafioAceptadoX, setDesafioAceptadoX] = useState<number>();
-  const [desafioAceptadoY, setDesafioAceptadoY] = useState<number>();
   const [condicionX, setCondicionX] = useState<number>();
-  const [condicionY, setCondicionY] = useState<number>();
   const desafios = useSelector((state: IRootState) => state.desafios);
   const [cameraFront, setCameraFront] = useState(false);
   let X;
   let S;
   let GOL;
   let GOD;
-  const dispatch = useDispatch();
 
-  const [type, setType] = useState(Camera.Constants.Type.front);
+  const [type, setType] = useState(CameraType.front);
   const [indicator, setIndicator] = useState(false);
-  const [cameraActive, setCameraActive] = useState(true);
   const [ratioo, setRatio] = useState<string | undefined>();
   const cameraRef = useRef<Camera>(null);
-  const headerHeight = useHeaderHeight();
 
   useEffect(() => {
     checkCameraPermission().then(resp => {
       setPermited(resp);
     });
   }, []);
-
-  useEffect(() => {
-    checkCameraPermission();
-  });
 
   const handleFacesDetected = ({faces}: any) => {
     if (faces) {
@@ -67,9 +56,10 @@ const HomeScreen = () => {
         setCondicionX(X);
         if (X > 330 && X < 340) {
           setIndicator(true);
-          handleTakePicture(X, S, GOL, GOD);
+          !global.flag && handleTakePicture(X, S, GOL, GOD);
         } else {
           setIndicator(false);
+          global.flag = false;
         }
       } catch (e) {}
     }
@@ -77,15 +67,16 @@ const HomeScreen = () => {
   };
 
   const handleTakePicture = async (
-    X: number,
-    S: number,
-    GOL: number,
-    GOD: number,
+    Xs: number,
+    Ss: number,
+    GOLs: number,
+    GODs: number,
   ) => {
+    global.flag = true;
     if (cameraRef) {
       try {
         await cameraRef.current?.takePictureAsync().then(data => {
-          indicator && cropImage(data?.uri!, X, S, GOL, GOD);
+          global.flag && cropImage(data?.uri!, Xs, Ss, GOLs, GODs);
         });
       } catch (error) {
         console.log({error});
@@ -96,10 +87,10 @@ const HomeScreen = () => {
 
   const cropImage = async (
     imageUri: string,
-    X: number,
-    S: number,
-    GOL: number,
-    GOD: number,
+    Xs: number,
+    Ss: number,
+    GOLs: number,
+    GODs: number,
   ) => {
     await manipulateAsync(
       Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
@@ -124,13 +115,13 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
-            console.log(crop);
+            //console.log(crop);
             navigation.navigate('PreviewScreen', {
               imagePath: crop.uri,
-              X: X,
-              S: S,
-              GOL: GOL,
-              GOD: GOD,
+              X: Xs,
+              S: Ss,
+              GOL: GOLs,
+              GOD: GODs,
             });
           })
           .catch(error => console.log('error ==>', error));
@@ -140,7 +131,7 @@ const HomeScreen = () => {
 
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => {
-      navigation.toggleDrawer();
+      navigation.dispatch(DrawerActions.toggleDrawer());
       return true;
     });
   }, []);
@@ -154,20 +145,20 @@ const HomeScreen = () => {
   }
 
   function cameraFlip() {
-    if (type === Camera.Constants.Type.back) {
-      setType(Camera.Constants.Type.front);
+    if (type === CameraType.back) {
+      setType(CameraType.front);
       setCameraFront(false);
     }
-    if (type === Camera.Constants.Type.front) {
+    if (type === CameraType.front) {
       setCameraFront(true);
-      setType(Camera.Constants.Type.back);
+      setType(CameraType.back);
     }
   }
 
   const prepareRatio = async () => {
     await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
       const ratio =
-        ratios.find(ratio => ratio === '16:9') || ratios[ratios.length - 1];
+        ratios.find(ratiox => ratiox === '16:9') || ratios[ratios.length - 1];
       setRatio(ratio);
     });
   };
@@ -200,7 +191,7 @@ const HomeScreen = () => {
 
                 textAlign: 'center',
               }}>
-              {!indicator ? 'Realice el desafio' : 'Banca un toque'}
+              {!global.flag ? 'Realice el desafio' : 'Banca un toque'}
             </Text>
           </View>
           <Camera

@@ -11,9 +11,11 @@
   },
   "dependencies": {
     "@bam.tech/react-native-image-resizer": "^3.0.3",
+    "@react-native-async-storage/async-storage": "^1.17.11",
     "@react-navigation/drawer": "^6.5.7",
     "@react-navigation/native": "^6.0.13",
     "@react-navigation/native-stack": "^6.9.1",
+    "@reduxjs/toolkit": "^1.9.2",
     "expo": "^47.0.0",
     "expo-camera": "~13.1.0",
     "expo-face-detector": "~12.0.0",
@@ -27,7 +29,9 @@
     "react-native-screens": "^3.18.2",
     "react-native-svg": "^13.8.0",
     "react-redux": "^8.0.5",
-    "redux": "^4.2.0"
+    "redux": "^4.2.0",
+    "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.4.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

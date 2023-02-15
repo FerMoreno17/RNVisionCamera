@@ -34,7 +34,6 @@ const HomeScreen = () => {
   let S;
   let GOL;
   let GOD;
-
   const [type, setType] = useState(CameraType.front);
   const [indicator, setIndicator] = useState(false);
   const [ratioo, setRatio] = useState<string | undefined>();
@@ -46,20 +45,85 @@ const HomeScreen = () => {
     });
   }, []);
 
+  const wait = (timeout: any) => {
+    return new Promise(resolve => setTimeout(resolve, timeout));
+  };
+
   const handleFacesDetected = ({faces}: any) => {
     if (faces) {
       try {
         X = faces[0].yawAngle;
         S = faces[0].smilingProbability;
-        GOL = faces[0].leftEyeOpenProbability;
-        GOD = faces[0].rightEyeOpenProbability;
-        setCondicionX(X);
-        if (X > 330 && X < 340) {
-          setIndicator(true);
-          !global.flag && handleTakePicture(X, S, GOL, GOD);
-        } else {
-          setIndicator(false);
-          global.flag = false;
+        GOL = faces[0].rightEyeOpenProbability;
+        GOD = faces[0].leftEyeOpenProbability;
+        if (desafios.value[0] === desafiosList.MI) {
+          setCondicionX(X);
+          if (
+            X > desafios.mirarIzquierda.min &&
+            X < desafios.mirarIzquierda.max
+          ) {
+            setIndicator(true);
+            !global.flag && handleTakePicture(X, S, GOL, GOD);
+          } else {
+            setIndicator(false);
+            global.flag = false;
+          }
+        }
+        if (desafios.value[0] === desafiosList.MD) {
+          setCondicionX(X);
+          if (X > desafios.mirarDerecha.min && X < desafios.mirarDerecha.max) {
+            setIndicator(true);
+            !global.flag && handleTakePicture(X, S, GOL, GOD);
+          } else {
+            setIndicator(false);
+            global.flag = false;
+          }
+        }
+        if (desafios.value[0] === desafiosList.MF) {
+          setCondicionX(X);
+          if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
+            setIndicator(true);
+            !global.flag && handleTakePicture(X, S, GOL, GOD);
+          } else {
+            setIndicator(false);
+            global.flag = false;
+          }
+        }
+        if (desafios.value[0] === desafiosList.GI) {
+          setCondicionX(GOL);
+          if (
+            GOL > desafios.guiñoIzquierdo.min &&
+            GOL < desafios.guiñoIzquierdo.max
+          ) {
+            setIndicator(true);
+            !global.flag && handleTakePicture(X, S, GOL, GOD);
+          } else {
+            setIndicator(false);
+            global.flag = false;
+          }
+        }
+        if (desafios.value[0] === desafiosList.GD) {
+          setCondicionX(GOD);
+          if (
+            GOD > desafios.guiñoDerecho.min &&
+            GOD < desafios.guiñoDerecho.max
+          ) {
+            setIndicator(true);
+            !global.flag && handleTakePicture(X, S, GOL, GOD);
+          } else {
+            setIndicator(false);
+            global.flag = false;
+          }
+        }
+        if (desafios.value[0] === desafiosList.S) {
+          setCondicionX(S);
+          if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
+            setIndicator(true);
+            !global.flag && handleTakePicture(X, S, GOL, GOD);
+          } else {
+            setIndicator(false);
+            global.flag = false;
+          }
         }
       } catch (e) {}
     }
@@ -173,7 +237,14 @@ const HomeScreen = () => {
           <View style={styles.contenedorDatos}>
             <Text style={styles.reto}>{desafios.value[0]}</Text>
             <View style={styles.desaBox}>
-              <Text style={styles.desaGeneral}>{condicionX?.toFixed(4)}°</Text>
+              <Text style={styles.desaGeneral}>
+                {condicionX?.toFixed(4)}
+                {desafios.value[0] === 'Sonreir' ||
+                desafios.value[0] === 'Guiño Izquierdo' ||
+                desafios.value[0] === 'Guiño Derecho'
+                  ? ' %'
+                  : ' °'}
+              </Text>
             </View>
           </View>
           <View
@@ -237,9 +308,7 @@ export enum desafiosList {
   GD = 'Guiño Derecho',
   MI = 'Mirar Izquierda',
   MD = 'Mirar Derecha',
-  MAR = 'Mirar Arriba',
-  MAB = 'Mirar Abajo',
-  MF = 'Mirar frente',
+  MF = 'Mirar Frente',
 }
 
 const {width, height} = Dimensions.get('screen');

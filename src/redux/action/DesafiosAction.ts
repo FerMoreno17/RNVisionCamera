@@ -1,64 +1,34 @@
 import {
   GUIÑO_DERECHA,
   GUIÑO_IZQUIERDA,
-  MIRAR_ABAJO,
-  MIRAR_ARRIBA,
   MIRAR_DERECHA,
   MIRAR_IZQUIERDA,
   SONREIR,
   IAction,
   DESAFIOS,
+  MIRAR_FRENTE,
 } from '../action/types';
-const DesafioMirarIquierda = (value: {
-  xp: number;
-  xn: number;
-  yp: number;
-  yn: number;
-}): IAction => ({
+const DesafioMirarIquierda = (value: {max: number; min: number}): IAction => ({
   type: MIRAR_IZQUIERDA,
   payload: value,
 });
-const DesafioMirarDerecha = (value: {
-  xp: number;
-  xn: number;
-  yp: number;
-  yn: number;
-}): IAction => ({
+const DesafioMirarDerecha = (value: {max: number; min: number}): IAction => ({
   type: MIRAR_DERECHA,
   payload: value,
 });
-const DesafioMirarArriba = (value: {
-  xp: number;
-  xn: number;
-  yp: number;
-  yn: number;
-}): IAction => ({
-  type: MIRAR_ARRIBA,
+const DesafioMirarFrente = (value: {max: number; min: number}): IAction => ({
+  type: MIRAR_FRENTE,
   payload: value,
 });
-const DesafioMirarAbajo = (value: {
-  xp: number;
-  xn: number;
-  yp: number;
-  yn: number;
-}): IAction => ({
-  type: MIRAR_ABAJO,
-  payload: value,
-});
-const DesafioSonreir = (value: {
-  xp: number;
-  xn: number;
-  yp: number;
-  yn: number;
-}): IAction => ({
+const DesafioSonreir = (value: {max: number; min: number}): IAction => ({
   type: SONREIR,
   payload: value,
 });
-const DesafioGuiñoIzquierda = (value: string[]): IAction => ({
+const DesafioGuiñoIzquierda = (value: {max: number; min: number}): IAction => ({
   type: GUIÑO_IZQUIERDA,
   payload: value,
 });
-const DesafioGuiñoDerecha = (value: string[]): IAction => ({
+const DesafioGuiñoDerecha = (value: {max: number; min: number}): IAction => ({
   type: GUIÑO_DERECHA,
   payload: value,
 });
@@ -72,8 +42,7 @@ export {
   DesafioGuiñoDerecha,
   DesafioGuiñoIzquierda,
   DesafioSonreir,
-  DesafioMirarAbajo,
-  DesafioMirarArriba,
+  DesafioMirarFrente,
   DesafioMirarDerecha,
   DesafiosAction,
 };

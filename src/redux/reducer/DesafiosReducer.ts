@@ -1,19 +1,17 @@
 import {
   GUIÑO_DERECHA,
   GUIÑO_IZQUIERDA,
-  MIRAR_ABAJO,
-  MIRAR_ARRIBA,
   MIRAR_DERECHA,
   MIRAR_IZQUIERDA,
   SONREIR,
   DESAFIOS,
   IAction,
+  MIRAR_FRENTE,
 } from '../action/types';
 export interface IDesafiosReducer {
-  mirarArriba: {xp: number; xn: number; yp: number; yn: number};
-  mirarAbajo: {xp: number; xn: number; yp: number; yn: number};
-  mirarDerecha: {xp: number; xn: number; yp: number; yn: number};
-  mirarIzquierda: {xp: number; xn: number; yp: number; yn: number};
+  mirarFrente: {max: number; min: number};
+  mirarDerecha: {max: number; min: number};
+  mirarIzquierda: {max: number; min: number};
   sonreir: {max: number; min: number};
   guiñoIzquierdo: {max: number; min: number};
   guiñoDerecho: {max: number; min: number};
@@ -21,10 +19,9 @@ export interface IDesafiosReducer {
 }
 
 const initialState = {
-  mirarArriba: {xp: 0, xn: 0, yp: 0, yn: 0},
-  mirarAbajo: {xp: 0, xn: 0, yp: 0, yn: 0},
-  mirarDerecha: {xp: 0, xn: 0, yp: 0, yn: 0},
-  mirarIzquierda: {xp: 0, xn: 0, yp: 0, yn: 0},
+  mirarFrente: {max: 0, min: 0},
+  mirarDerecha: {max: 0, min: 0},
+  mirarIzquierda: {max: 0, min: 0},
   sonreir: {max: 0, min: 0},
   guiñoIzquierdo: {max: 0, min: 0},
   guiñoDerecho: {max: 0, min: 0},
@@ -41,15 +38,10 @@ export function DesafiosReducer(
         ...state,
         value: action.payload,
       };
-    case MIRAR_ARRIBA:
+    case MIRAR_FRENTE:
       return {
         ...state,
-        mirarArriba: action.payload,
-      };
-    case MIRAR_ABAJO:
-      return {
-        ...state,
-        mirarAbajo: action.payload,
+        mirarFrente: action.payload,
       };
     case MIRAR_DERECHA:
       return {

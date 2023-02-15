@@ -69,10 +69,22 @@ const PreviewScreen = () => {
           <Text style={styles.desaAcept}>{props.params?.GOD?.toFixed(4)}%</Text>
         </View>
       </View>
+      <View
+        style={{
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+        }}>
+        <Pressable
+          style={[styles.button, {backgroundColor: 'grey'}]}
+          onPress={handleButtonBack}>
+          <Text style={styles.buttonLabel}>{'VOLVER'}</Text>
+        </Pressable>
 
-      <Pressable style={styles.button} onPress={handleButtonBack}>
-        <Text style={styles.buttonLabel}>VOLVER</Text>
-      </Pressable>
+        <Pressable style={styles.button} onPress={() => {}}>
+          <Text style={styles.buttonLabel}>ENVIAR</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
@@ -83,9 +95,9 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: '#00aeef',
     padding: 20,
-    justifyContent: 'center',
+    margin: 10,
     alignItems: 'center',
-    width: 320,
+    flex: 1,
     borderRadius: 25,
     bottom: 40,
   },

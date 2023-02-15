@@ -11,8 +11,6 @@ export const DrawerContent = () => {
   let desafiosList = [
     'Mirar Izquierda',
     'Mirar Derecha',
-    'Mirar Arriba',
-    'Mirar Abajo',
     'Mirar Frente',
     'Guiño Izquierdo',
     'Guiño Derecho',

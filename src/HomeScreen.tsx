@@ -45,10 +45,6 @@ const HomeScreen = () => {
     });
   }, []);
 
-  const wait = (timeout: any) => {
-    return new Promise(resolve => setTimeout(resolve, timeout));
-  };
-
   const handleFacesDetected = ({faces}: any) => {
     if (faces) {
       try {
@@ -56,6 +52,8 @@ const HomeScreen = () => {
         S = faces[0].smilingProbability;
         GOL = faces[0].rightEyeOpenProbability;
         GOD = faces[0].leftEyeOpenProbability;
+        //console.log(faces[0].bounds.origin.x);
+        // console.log(faces[0]);
         if (desafios.value[0] === desafiosList.MI) {
           setCondicionX(X);
           if (

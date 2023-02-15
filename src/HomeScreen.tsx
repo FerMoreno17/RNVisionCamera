@@ -230,10 +230,12 @@ const HomeScreen = () => {
       {permited && (
         <View style={styles.cameraContainer}>
           <View style={styles.mask}>
-            <MascaraSelfie color={indicator ? '#00aeef99' : '#ffffffc5'} />
+            <MascaraSelfie color={indicator ? '#55F79599' : '#ffffffc5'} />
           </View>
           <View style={styles.contenedorDatos}>
-            <Text style={styles.reto}>{desafios.value[0]}</Text>
+            <Text style={[styles.reto, indicator && {color: '#fff'}]}>
+              {desafios.value[0]}
+            </Text>
             <View style={styles.desaBox}>
               <Text style={styles.desaGeneral}>
                 {condicionX?.toFixed(4)}

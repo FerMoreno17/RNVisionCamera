@@ -11,11 +11,10 @@ import {
   DesafioMirarIquierda,
   DesafioSonreir,
 } from './redux/action/DesafiosAction';
-import {IRootState} from './redux/reducer/rootReducer';
 import {useNavigation} from '@react-navigation/native';
 
 const ConfiguracionScreen = () => {
-  const desafios = useSelector((state: IRootState) => state.desafios);
+  const desafios = useSelector((state: any) => state.desafios);
   const dispatch = useDispatch();
   const [mirarIzMAX, setMirarIzMAX] = useState(
     desafios.mirarIzquierda.max.toString(),

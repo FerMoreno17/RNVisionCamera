@@ -11,14 +11,61 @@ import {
   Dimensions,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useSelector} from 'react-redux';
+import {desafiosList} from './components/DrawerContet';
 
 const PreviewScreen = () => {
   const navigation = useNavigation();
   const props = useRoute();
+  const desafios = useSelector((state: any) => state.desafios);
 
   function handleButtonBack() {
     navigation.reset({routes: [{name: 'HomeScreen'}] as any});
   }
+
+  const desafioBack = (value: string) => {
+    switch (value) {
+      case desafiosList[0]:
+        return 'MirarHaciaIzquierda';
+      case desafiosList[1]:
+        return 'MirarHaciaDerecha';
+      case desafiosList[2]:
+        return 'MirarAlFrente';
+      case desafiosList[3]:
+        return 'OjoIzquierdoCerrado';
+      case desafiosList[4]:
+        return 'OjoDerechoCerrado';
+      case desafiosList[5]:
+        return 'Sonreir';
+    }
+  };
+
+  const enviarDesa = async () => {
+    await fetch(
+      'http://mejorasuxsuperapp.gyfcloud.com.ar/api/v0.11/enrolamiento/enviardesafio',
+      {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          foto: props.params?.base64,
+          desafio: desafioBack(desafios.value[0]),
+          probabilidadGuinioIzq: props.params?.GOL,
+          probabilidadGuinioDer: props.params?.GOD,
+          probabilidadSonreir: props.params?.S,
+          gradoEjeX: props.params?.X,
+        }),
+      },
+    )
+      .then(resp => {
+        return resp.json();
+      })
+      .then(respJson => {
+        console.log(respJson);
+      });
+  };
 
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
@@ -81,7 +128,7 @@ const PreviewScreen = () => {
           <Text style={styles.buttonLabel}>{'VOLVER'}</Text>
         </Pressable>
 
-        <Pressable style={styles.button} onPress={() => {}}>
+        <Pressable style={styles.button} onPress={enviarDesa}>
           <Text style={styles.buttonLabel}>ENVIAR</Text>
         </Pressable>
       </View>

@@ -290,7 +290,9 @@ const HomeScreen = () => {
 
                 textAlign: 'center',
               }}>
-              {!global.flag ? 'Realice el desafio' : 'Banca un toque'}
+              {!global.flag
+                ? 'Realice el desafio'
+                : 'No te muevas hasta que se capture el desafío'}
             </Text>
           </View>
           <Camera

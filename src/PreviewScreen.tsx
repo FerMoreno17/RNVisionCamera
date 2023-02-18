@@ -1,5 +1,5 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   Text,
   StyleSheet,
@@ -9,15 +9,20 @@ import {
   View,
   ImageBackground,
   Dimensions,
+  Modal,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
+import AppSpinner from './components/AppSpinner';
 import {desafiosList} from './components/DrawerContet';
 
 const PreviewScreen = () => {
   const navigation = useNavigation();
   const props = useRoute();
   const desafios = useSelector((state: any) => state.desafios);
+  const [modaleOpen, setModalOpen] = useState(false);
+  const [spinner, setSpinner] = useState(false);
+  const [response, setResponse] = useState();
 
   function handleButtonBack() {
     navigation.reset({routes: [{name: 'HomeScreen'}] as any});
@@ -41,6 +46,7 @@ const PreviewScreen = () => {
   };
 
   const enviarDesa = async () => {
+    setSpinner(true);
     await fetch(
       'http://mejorasuxsuperapp.gyfcloud.com.ar/api/v0.11/enrolamiento/enviardesafio',
       {
@@ -56,6 +62,19 @@ const PreviewScreen = () => {
           probabilidadGuinioDer: props.params?.GOD,
           probabilidadSonreir: props.params?.S,
           gradoEjeX: props.params?.X,
+          configMirarIzquierdaMin: desafios.mirarIzquierda.min.toString(),
+          configMirarIzquierdaMax: desafios.mirarIzquierda.max.toString(),
+          configMirarDerechaMin: desafios.mirarDerecha.min.toString(),
+          configMirarDerechaMax: desafios.mirarDerecha.max.toString(),
+          configMirarFrenteMin: desafios.mirarFrente.min.toString(),
+          configMirarFrenteMax: desafios.mirarFrente.max.toString(),
+          configGuinioIzquierdoMin: desafios.guiñoIzquierdo.min.toString(),
+          configGuinioIzquierdoMax: desafios.guiñoIzquierdo.max.toString(),
+          configGuinioDerechoMin: desafios.guiñoDerecho.min.toString(),
+          configGuinioDerechoMax: desafios.guiñoDerecho.max.toString(),
+          configSonreirMin: desafios.sonreir.min.toString(),
+          configSonreirMax: desafios.sonreir.max.toString(),
+          camara: desafios.frontSelected ? 'Camara Frontal' : 'Camara Trasera',
         }),
       },
     )
@@ -63,10 +82,11 @@ const PreviewScreen = () => {
         return resp.json();
       })
       .then(respJson => {
-        console.log(respJson);
+        setResponse(respJson);
+        setModalOpen(true);
+        setSpinner(false);
       });
   };
-
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -132,6 +152,63 @@ const PreviewScreen = () => {
           <Text style={styles.buttonLabel}>ENVIAR</Text>
         </Pressable>
       </View>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modaleOpen}
+        onRequestClose={() => {
+          setModalOpen(false);
+        }}>
+        <Pressable
+          onTouchEnd={() => {
+            setModalOpen(false);
+          }}
+          style={{
+            flex: 1,
+            backgroundColor: '#00000099',
+          }}></Pressable>
+        <View
+          style={{
+            minHeight: Dimensions.get('screen').height * 0.5,
+            width: '95%',
+            backgroundColor: '#fff',
+            marginTop: Dimensions.get('window').height * 0.1,
+            alignSelf: 'center',
+            borderWidth: 2,
+            borderColor: '#6e6e6e',
+            borderRadius: 20,
+            position: 'absolute',
+            top: 0,
+            zIndex: 200,
+          }}>
+          <Text
+            style={{
+              fontSize: 30,
+              fontWeight: '700',
+              textAlign: 'right',
+              marginRight: 15,
+              marginTop: 10,
+              color: '#6e6e6e',
+            }}
+            onPress={() => {
+              setModalOpen(false);
+            }}>
+            X
+          </Text>
+          <View
+            style={{
+              padding: 10,
+              flex: 1,
+              justifyContent: 'center',
+              marginTop: -40,
+            }}>
+            <Text style={{color: '#000', fontSize: 18, lineHeight: 30}}>
+              {JSON.stringify(response, null, 1)}
+            </Text>
+          </View>
+        </View>
+      </Modal>
+      <AppSpinner open={spinner} />
     </SafeAreaView>
   );
 };

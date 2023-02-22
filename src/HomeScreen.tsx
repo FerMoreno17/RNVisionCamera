@@ -36,7 +36,7 @@ const FrameColor = ({originBounds}: IProp) => {
           width: originBounds.size.width,
           zIndex: 999,
           borderWidth: 3,
-          borderColor: 'green',
+          borderColor: 'yellow',
         }}
       />
     );
@@ -71,6 +71,44 @@ const HomeScreen = () => {
     });
   }, []);
 
+  const LimitFaceDetect = (originBounds: any) => {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: originBounds.originBounds.c,
+          left: `${originBounds.originBounds.b}%`,
+          height: originBounds.originBounds.d - originBounds.originBounds.c,
+          width: originBounds.originBounds.a,
+          zIndex: 1000,
+          borderWidth: 3,
+          borderLeftColor: 'yellow',
+          borderRightColor: 'yellow',
+          borderTopColor: 'red',
+          borderBottomColor: 'red',
+        }}
+      />
+    );
+  };
+
+  const MinFaceDetect = () => {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: height * 0.33,
+          alignSelf: 'center',
+          height: height * 0.2,
+          width: width * 0.6,
+          zIndex: 1000,
+          borderWidth: 3,
+          borderColor: 'yellow',
+          borderTopWidth: 0,
+          borderBottomWidth: 0,
+        }}
+      />
+    );
+  };
   const handleFacesDetected = ({faces}: FaceDetectionResult) => {
     if (faces.length > 0) {
       try {
@@ -86,13 +124,14 @@ const HomeScreen = () => {
             X = 360 - X;
           }
         }
-
         if (desafios.frontSelected && Platform.OS === 'ios' && X < 0) {
           X = 360 + X;
         }
         if (
-          faces[0].bounds.size.width <= width &&
+          faces[0].bounds.size.width <= width * 0.95 &&
           faces[0].bounds.size.width >= width * 0.6 &&
+          faces[0].bounds.size.width + faces[0].bounds.origin.x <
+            width * 0.975 &&
           faces[0].bounds.origin.y + faces[0].bounds.size.height <=
             height * 0.73 &&
           faces[0].bounds.origin.y >= height * 0.15
@@ -105,7 +144,7 @@ const HomeScreen = () => {
             ) {
               setIndicator(true);
               setContaFrame(contaFrame + 1);
-              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -120,7 +159,7 @@ const HomeScreen = () => {
             ) {
               setIndicator(true);
               setContaFrame(contaFrame + 1);
-              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -132,7 +171,7 @@ const HomeScreen = () => {
             if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
               setIndicator(true);
               setContaFrame(contaFrame + 1);
-              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -146,7 +185,7 @@ const HomeScreen = () => {
             ) {
               setIndicator(true);
               setContaFrame(contaFrame + 1);
-              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -160,7 +199,7 @@ const HomeScreen = () => {
             ) {
               setIndicator(true);
               setContaFrame(contaFrame + 1);
-              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -171,7 +210,7 @@ const HomeScreen = () => {
             if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
               setIndicator(true);
               setContaFrame(contaFrame + 1);
-              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -274,7 +313,6 @@ const HomeScreen = () => {
 
   const prepareRatio = async () => {
     await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
-      console.log(ratios);
       const ratio =
         ratios.find(ratiox => ratiox === '16:9') || ratios[ratios.length - 1];
       setRatio(ratio);
@@ -327,6 +365,15 @@ const HomeScreen = () => {
             </Text>
           </View>
           <FrameColor originBounds={originBounds} />
+          <LimitFaceDetect
+            originBounds={{
+              a: width * 0.95,
+              b: 2.5,
+              c: height * 0.15,
+              d: height * 0.73,
+            }}
+          />
+          <MinFaceDetect />
           <Camera
             style={styles.camera}
             onCameraReady={prepareRatio}
@@ -338,7 +385,7 @@ const HomeScreen = () => {
               mode: FaceDetector.FaceDetectorMode.fast,
               //detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
               runClassifications: FaceDetector.FaceDetectorClassifications.all,
-              minDetectionInterval: 250,
+              minDetectionInterval: 25,
               tracking: true,
             }}
           />

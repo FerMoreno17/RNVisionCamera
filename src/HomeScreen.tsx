@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -18,10 +17,7 @@ import * as FaceDetector from 'expo-face-detector';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {checkCameraPermission} from './cameraPermission';
 import MascaraSelfie from './components/MascaraSelfie';
-//import RNFS from 'react-native-fs';
-//import {useHeaderHeight} from '@react-navigation/elements';
 import {manipulateAsync} from 'expo-image-manipulator';
-import '../global.js';
 import {SwitchCamaraAction} from './redux/action/DesafiosAction';
 
 const HomeScreen = () => {
@@ -275,22 +271,9 @@ const HomeScreen = () => {
               )}
             </View>
           </View>
-          <View
-            style={{
-              position: 'absolute',
-              top: height / 2.5,
-              zIndex: 300,
-              alignSelf: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: 'white',
-
-                textAlign: 'center',
-              }}>
-              {!global.flag
+          <View style={styles.conte}>
+            <Text style={styles.textDe}>
+              {!indicator
                 ? 'Realice el desafio'
                 : 'No te muevas hasta que se capture el desafío'}
             </Text>
@@ -359,6 +342,18 @@ const styles = StyleSheet.create({
     zIndex: 100,
     position: 'absolute',
     width: '100%',
+  },
+  conte: {
+    position: 'absolute',
+    top: height / 2.5,
+    zIndex: 300,
+    alignSelf: 'center',
+  },
+  textDe: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
   },
   bottomContainer: {
     backgroundColor: '#ffffff99',

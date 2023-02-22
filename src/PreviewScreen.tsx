@@ -136,12 +136,7 @@ const PreviewScreen = () => {
           <Text style={styles.desaAcept}>{props.params?.GOD?.toFixed(4)}%</Text>
         </View>
       </View>
-      <View
-        style={{
-          display: 'flex',
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-        }}>
+      <View style={styles.botonera}>
         <Pressable
           style={[styles.button, {backgroundColor: 'grey'}]}
           onPress={handleButtonBack}>
@@ -167,41 +162,15 @@ const PreviewScreen = () => {
             flex: 1,
             backgroundColor: '#00000099',
           }}></Pressable>
-        <View
-          style={{
-            minHeight: Dimensions.get('screen').height * 0.5,
-            width: '95%',
-            backgroundColor: '#fff',
-            marginTop: Dimensions.get('window').height * 0.1,
-            alignSelf: 'center',
-            borderWidth: 2,
-            borderColor: '#6e6e6e',
-            borderRadius: 20,
-            position: 'absolute',
-            top: 0,
-            zIndex: 200,
-          }}>
+        <View style={styles.cont}>
           <Text
-            style={{
-              fontSize: 30,
-              fontWeight: '700',
-              textAlign: 'right',
-              marginRight: 15,
-              marginTop: 10,
-              color: '#6e6e6e',
-            }}
+            style={styles.closeModal}
             onPress={() => {
               setModalOpen(false);
             }}>
             X
           </Text>
-          <View
-            style={{
-              padding: 10,
-              flex: 1,
-              justifyContent: 'center',
-              marginTop: -40,
-            }}>
+          <View style={styles.json}>
             <Text style={{color: '#000', fontSize: 18, lineHeight: 30}}>
               {JSON.stringify(response, null, 1)}
             </Text>
@@ -262,5 +231,37 @@ const styles = StyleSheet.create({
   },
   resize: {
     resizeMode: 'cover',
+  },
+  cont: {
+    minHeight: Dimensions.get('screen').height * 0.5,
+    width: '95%',
+    backgroundColor: '#fff',
+    marginTop: Dimensions.get('window').height * 0.1,
+    alignSelf: 'center',
+    borderWidth: 2,
+    borderColor: '#6e6e6e',
+    borderRadius: 20,
+    position: 'absolute',
+    top: 0,
+    zIndex: 200,
+  },
+  closeModal: {
+    fontSize: 30,
+    fontWeight: '700',
+    textAlign: 'right',
+    marginRight: 15,
+    marginTop: 10,
+    color: '#6e6e6e',
+  },
+  json: {
+    padding: 10,
+    flex: 1,
+    justifyContent: 'center',
+    marginTop: -40,
+  },
+  botonera: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });

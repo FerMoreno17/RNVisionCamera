@@ -274,6 +274,7 @@ const HomeScreen = () => {
 
   const prepareRatio = async () => {
     await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
+      console.log(ratios);
       const ratio =
         ratios.find(ratiox => ratiox === '16:9') || ratios[ratios.length - 1];
       setRatio(ratio);

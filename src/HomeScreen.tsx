@@ -23,6 +23,7 @@ import MascaraSelfie from './components/MascaraSelfie';
 //import {useHeaderHeight} from '@react-navigation/elements';
 import {manipulateAsync} from 'expo-image-manipulator';
 import '../global.js';
+import {ImageType} from 'expo-camera/build/Camera.types';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -134,12 +135,19 @@ const HomeScreen = () => {
     GOLs: number,
     GODs: number,
   ) => {
+    console.log('entro take picture');
     global.flag = true;
     if (cameraRef) {
       try {
-        await cameraRef.current?.takePictureAsync().then(data => {
-          global.flag && cropImage(data?.uri!, Xs, Ss, GOLs, GODs);
-        });
+        await cameraRef.current
+          ?.takePictureAsync({
+            quality: 0.5,
+            skipProcessing: true,
+          })
+          .then(data => {
+            console.log('entrego data', data);
+            global.flag && cropImage(data?.uri!, Xs, Ss, GOLs, GODs);
+          });
       } catch (error) {
         console.log({error});
       }
@@ -154,10 +162,12 @@ const HomeScreen = () => {
     GOLs: number,
     GODs: number,
   ) => {
+    console.log('ingreso crop');
     await manipulateAsync(
       Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
       [{resize: {width: 600}}],
     ).then(async (resize: any) => {
+      console.log('ingreso 1er then');
       Image.getSize(resize.uri, async (widthX, height) => {
         await manipulateAsync(
           Platform.OS === 'android' ? resize.uri : `file://${resize.uri}`,
@@ -177,7 +187,7 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
-            //console.log(crop);
+            console.log('ingreso 2do then');
             navigation.navigate('PreviewScreen', {
               imagePath: crop.uri,
               X: Xs,

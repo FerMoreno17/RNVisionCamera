@@ -20,7 +20,13 @@ PODS:
     - ExpoModulesCore
   - EXFont (11.0.1):
     - ExpoModulesCore
+  - EXImageLoader (4.0.0):
+    - ExpoModulesCore
+    - React-Core
   - Expo (47.0.13):
+    - ExpoModulesCore
+  - ExpoImageManipulator (11.0.0):
+    - EXImageLoader
     - ExpoModulesCore
   - ExpoKeepAwake (11.0.1):
     - ExpoModulesCore
@@ -105,9 +111,6 @@ PODS:
   - GoogleMLKit/FaceDetection (2.6.0):
     - GoogleMLKit/MLKitCore
     - MLKitFaceDetection (~> 1.5.0)
-  - GoogleMLKit/ImageLabeling (2.6.0):
-    - GoogleMLKit/MLKitCore
-    - MLKitImageLabeling (~> 1.5.0)
   - GoogleMLKit/MLKitCore (2.6.0):
     - MLKitCommon (~> 5.0.0)
   - GoogleToolboxForMac/DebugUtils (2.3.2):
@@ -146,17 +149,6 @@ PODS:
   - MLKitFaceDetection (1.5.0):
     - MLKitCommon (~> 5.0)
     - MLKitVision (~> 3.0)
-  - MLKitImageLabeling (1.5.0):
-    - MLKitCommon (~> 5.0)
-    - MLKitImageLabelingCommon (~> 3.0)
-    - MLKitVision (~> 3.0)
-    - MLKitVisionKit (~> 4.0)
-  - MLKitImageLabelingCommon (3.0.0):
-    - MLKitCommon (~> 5.0)
-    - MLKitVision (~> 3.0)
-  - MLKitObjectDetectionCommon (3.0.0):
-    - MLKitCommon (~> 5.0)
-    - MLKitVision (~> 3.0)
   - MLKitVision (3.0.0):
     - GoogleToolboxForMac/Logger (~> 2.1)
     - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
@@ -164,11 +156,6 @@ PODS:
     - MLImage (= 1.0.0-beta2)
     - MLKitCommon (~> 5.0)
     - Protobuf (~> 3.12)
-  - MLKitVisionKit (4.0.0):
-    - MLKitCommon (~> 5.0)
-    - MLKitImageLabelingCommon (~> 3.0)
-    - MLKitObjectDetectionCommon (~> 3.0)
-    - MLKitVision (~> 3.0)
   - nanopb (2.30909.0):
     - nanopb/decode (= 2.30909.0)
     - nanopb/encode (= 2.30909.0)
@@ -403,9 +390,9 @@ PODS:
   - React-jsinspector (0.70.3)
   - React-logger (0.70.3):
     - glog
-  - react-native-image-resizer (3.0.3):
+  - react-native-image-resizer (3.0.4):
     - React-Core
-  - react-native-safe-area-context (4.4.1):
+  - react-native-safe-area-context (4.5.0):
     - RCT-Folly
     - RCTRequired
     - RCTTypeSafety
@@ -477,6 +464,8 @@ PODS:
     - React-jsi (= 0.70.3)
     - React-logger (= 0.70.3)
     - React-perflogger (= 0.70.3)
+  - RNCAsyncStorage (1.17.11):
+    - React-Core
   - RNFS (2.20.0):
     - React-Core
   - RNGestureHandler (2.9.0):
@@ -508,20 +497,12 @@ PODS:
     - React-RCTText
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (3.18.2):
+  - RNScreens (3.19.0):
     - React-Core
     - React-RCTImage
+  - RNSVG (13.8.0):
+    - React-Core
   - SocketRocket (0.6.0)
-  - vision-camera-face-detector (0.1.8):
-    - GoogleMLKit/FaceDetection
-    - React-Core
-  - vision-camera-image-labeler (0.1.6):
-    - GoogleMLKit/ImageLabeling
-    - React-Core
-  - VisionCamera (2.15.2):
-    - React
-    - React-callinvoker
-    - React-Core
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -536,7 +517,9 @@ DEPENDENCIES:
   - EXFaceDetector (from `../node_modules/expo-face-detector/ios`)
   - EXFileSystem (from `../node_modules/expo-file-system/ios`)
   - EXFont (from `../node_modules/expo-font/ios`)
+  - EXImageLoader (from `../node_modules/expo-image-loader/ios`)
   - Expo (from `../node_modules/expo`)
+  - ExpoImageManipulator (from `../node_modules/expo-image-manipulator/ios`)
   - ExpoKeepAwake (from `../node_modules/expo-keep-awake/ios`)
   - ExpoModulesCore (from `../node_modules/expo-modules-core`)
   - FBLazyVector (from `../node_modules/react-native/Libraries/FBLazyVector`)
@@ -597,13 +580,12 @@ DEPENDENCIES:
   - React-RCTVibration (from `../node_modules/react-native/Libraries/Vibration`)
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
+  - "RNCAsyncStorage (from `../node_modules/@react-native-async-storage/async-storage`)"
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
-  - vision-camera-face-detector (from `../node_modules/vision-camera-face-detector`)
-  - vision-camera-image-labeler (from `../node_modules/vision-camera-image-labeler`)
-  - VisionCamera (from `../node_modules/react-native-vision-camera`)
+  - RNSVG (from `../node_modules/react-native-svg`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
 SPEC REPOS:
@@ -629,11 +611,7 @@ SPEC REPOS:
     - MLImage
     - MLKitCommon
     - MLKitFaceDetection
-    - MLKitImageLabeling
-    - MLKitImageLabelingCommon
-    - MLKitObjectDetectionCommon
     - MLKitVision
-    - MLKitVisionKit
     - nanopb
     - OpenSSL-Universal
     - PromisesObjC
@@ -660,8 +638,12 @@ EXTERNAL SOURCES:
     :path: "../node_modules/expo-file-system/ios"
   EXFont:
     :path: "../node_modules/expo-font/ios"
+  EXImageLoader:
+    :path: "../node_modules/expo-image-loader/ios"
   Expo:
     :path: "../node_modules/expo"
+  ExpoImageManipulator:
+    :path: "../node_modules/expo-image-manipulator/ios"
   ExpoKeepAwake:
     :path: "../node_modules/expo-keep-awake/ios"
   ExpoModulesCore:
@@ -732,6 +714,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/runtimeexecutor"
   ReactCommon:
     :path: "../node_modules/react-native/ReactCommon"
+  RNCAsyncStorage:
+    :path: "../node_modules/@react-native-async-storage/async-storage"
   RNFS:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
@@ -740,12 +724,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
-  vision-camera-face-detector:
-    :path: "../node_modules/vision-camera-face-detector"
-  vision-camera-image-labeler:
-    :path: "../node_modules/vision-camera-image-labeler"
-  VisionCamera:
-    :path: "../node_modules/react-native-vision-camera"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
   Yoga:
     :path: "../node_modules/react-native/ReactCommon/yoga"
 
@@ -760,7 +740,9 @@ SPEC CHECKSUMS:
   EXFaceDetector: 0bb666598a78ae4a787689a45a58ddb68e3bd86e
   EXFileSystem: 60602b6eefa6873f97172c684b7537c9760b50d6
   EXFont: 319606bfe48c33b5b5063fb0994afdc496befe80
+  EXImageLoader: 84b65e6bd9d3345d6fbb3ab936a546c54496a64d
   Expo: b9fa98bf260992312ee3c424400819fb9beadafe
+  ExpoImageManipulator: 5f3c1ab8dd81de11491b5051bb925abc91fe57e4
   ExpoKeepAwake: 69b59d0a8d2b24de9f82759c39b3821fec030318
   ExpoModulesCore: 485dff3a59b036a33b6050c0a5aea3cf1037fdd1
   FBLazyVector: 3b313c3fb52b597f7a9b430798e6367d2b9f07e5
@@ -787,11 +769,7 @@ SPEC CHECKSUMS:
   MLImage: a454f9f8ecfd537783a12f9488f5be1a68820829
   MLKitCommon: 3bc17c6f7d25ce3660f030350b46ae7ec9ebca6e
   MLKitFaceDetection: 617cb847441868a8bfd4b48d751c9b33c1104948
-  MLKitImageLabeling: 8e19e6cea9b220c5ae6beb85e2c0b14c370fdb3a
-  MLKitImageLabelingCommon: 9916b03956a3a647ebc7471a12b1eb0798ae84f8
-  MLKitObjectDetectionCommon: 81d8ef93327005779a05fb6f2d74b0b0ef8840b1
   MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
-  MLKitVisionKit: 68c122ceb9b2fe1a05ffe09341c750d566c77170
   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   OpenSSL-Universal: ebc357f1e6bc71fa463ccb2fe676756aff50e88c
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
@@ -811,8 +789,8 @@ SPEC CHECKSUMS:
   React-jsiexecutor: 7e2e1772ef7b97168c880eeaf3749d8c145ffd6e
   React-jsinspector: 0553c9fe7218e1f127be070bd5a4d2fc19fb8190
   React-logger: cffcc09e8aba8a3014be8d18da7f922802e9f19e
-  react-native-image-resizer: fd06eb3e557fd66ce25deaae2477545cb5ce8b61
-  react-native-safe-area-context: 99b24a0c5acd0d5dcac2b1a7f18c49ea317be99a
+  react-native-image-resizer: 794abf75ec13ed1f0dbb1f134e27504ea65e9e66
+  react-native-safe-area-context: 39c2d8be3328df5d437ac1700f4f3a4f75716acc
   React-perflogger: 082b4293f0b3914ff41da35a6c06ac4490fcbcc8
   React-RCTActionSheet: 83da3030deb5dea54b398129f56540a44e64d3ae
   React-RCTAnimation: bac3a4f4c0436554d9f7fbb1352a0cdcb1fb0f1c
@@ -825,14 +803,13 @@ SPEC CHECKSUMS:
   React-RCTVibration: b9a58ffdd18446f43d493a4b0ecd603ee86be847
   React-runtimeexecutor: e9b1f9310158a1e265bcdfdfd8c62d6174b947a2
   ReactCommon: 01064177e66d652192c661de899b1076da962fd9
+  RNCAsyncStorage: 8616bd5a58af409453ea4e1b246521bb76578d60
   RNFS: 4ac0f0ea233904cb798630b3c077808c06931688
   RNGestureHandler: 071d7a9ad81e8b83fe7663b303d132406a7d8f39
   RNReanimated: 6668b0587bebd4b15dd849b99e5a9c70fc12ed95
-  RNScreens: 34cc502acf1b916c582c60003dc3089fa01dc66d
+  RNScreens: ea4cd3a853063cda19a4e3c28d2e52180c80f4eb
+  RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
   SocketRocket: fccef3f9c5cedea1353a9ef6ada904fde10d6608
-  vision-camera-face-detector: c1d0ace533f6bcf710a21428efef01e019be42f4
-  vision-camera-image-labeler: 44dc35bea2ce7a6967d1033e48a210500a50be7d
-  VisionCamera: 4cfd685b1e671fea4aa0400905ab397f0e972210
   Yoga: 2ed968a4f060a92834227c036279f2736de0fce3
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

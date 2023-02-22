@@ -184,14 +184,14 @@ const ConfiguracionScreen = () => {
         <View style={styles.containerInputsProb}>
           <Text style={styles.placeHolder}>MIN</Text>
           <TextInput
-            keyboardType="numeric"
+            keyboardType="numbers-and-punctuation"
             value={sonrisaMIN}
             style={styles.textInput}
             onChangeText={setSonrisaMIN}
           />
           <Text style={styles.placeHolder}>MAX</Text>
           <TextInput
-            keyboardType="numeric"
+            keyboardType="numbers-and-punctuation"
             value={sonrisaMAX}
             style={styles.textInput}
             onChangeText={setSonrisaMAX}

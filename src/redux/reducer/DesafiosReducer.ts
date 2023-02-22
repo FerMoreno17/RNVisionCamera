@@ -22,7 +22,7 @@ const initialState = {
   mirarFrente: {max: 0, min: 0},
   mirarDerecha: {max: 0, min: 0},
   mirarIzquierda: {max: 0, min: 0},
-  sonreir: {max: 0, min: 0},
+  sonreir: {max: 1, min: 0.7},
   guiñoIzquierdo: {max: 0, min: 0},
   guiñoDerecho: {max: 0, min: 0},
   value: ['Mirar Izquierda'],

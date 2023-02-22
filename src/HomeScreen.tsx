@@ -79,7 +79,6 @@ const HomeScreen = () => {
         GOL = faces[0].rightEyeOpenProbability;
         GOD = faces[0].leftEyeOpenProbability;
         setBounds(faces[0].bounds);
-
         if (!desafios.frontSelected) {
           if (X < 0) {
             X = X * -1;
@@ -91,86 +90,100 @@ const HomeScreen = () => {
         if (desafios.frontSelected && Platform.OS === 'ios' && X < 0) {
           X = 360 + X;
         }
+        if (
+          faces[0].bounds.size.width <= width &&
+          faces[0].bounds.size.width >= width * 0.6 &&
+          faces[0].bounds.origin.y + faces[0].bounds.size.height <=
+            height * 0.73 &&
+          faces[0].bounds.origin.y >= height * 0.15
+        ) {
+          if (desafios.value[0] === desafiosList.MI) {
+            setCondicionX(X);
+            if (
+              X > desafios.mirarIzquierda.min &&
+              X < desafios.mirarIzquierda.max
+            ) {
+              setIndicator(true);
+              setContaFrame(contaFrame + 1);
+              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+            } else {
+              setContaFrame(0);
+              setIndicator(false);
+            }
+          }
 
-        if (desafios.value[0] === desafiosList.MI) {
-          setCondicionX(X);
-          if (
-            X > desafios.mirarIzquierda.min &&
-            X < desafios.mirarIzquierda.max
-          ) {
-            setIndicator(true);
-            setContaFrame(contaFrame + 1);
-            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
-          } else {
-            setContaFrame(0);
-            setIndicator(false);
+          if (desafios.value[0] === desafiosList.MD) {
+            setCondicionX(X);
+            if (
+              X > desafios.mirarDerecha.min &&
+              X < desafios.mirarDerecha.max
+            ) {
+              setIndicator(true);
+              setContaFrame(contaFrame + 1);
+              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+            } else {
+              setContaFrame(0);
+              setIndicator(false);
+            }
           }
-        }
 
-        if (desafios.value[0] === desafiosList.MD) {
-          setCondicionX(X);
-          if (X > desafios.mirarDerecha.min && X < desafios.mirarDerecha.max) {
-            setIndicator(true);
-            setContaFrame(contaFrame + 1);
-            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
-          } else {
-            setContaFrame(0);
-            setIndicator(false);
+          if (desafios.value[0] === desafiosList.MF) {
+            setCondicionX(X);
+            if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
+              setIndicator(true);
+              setContaFrame(contaFrame + 1);
+              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+            } else {
+              setContaFrame(0);
+              setIndicator(false);
+            }
           }
-        }
-
-        if (desafios.value[0] === desafiosList.MF) {
-          setCondicionX(X);
-          if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
-            setIndicator(true);
-            setContaFrame(contaFrame + 1);
-            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
-          } else {
-            setContaFrame(0);
-            setIndicator(false);
+          if (desafios.value[0] === desafiosList.GI) {
+            setCondicionX(GOL);
+            if (
+              GOL > desafios.guiñoIzquierdo.min &&
+              GOL < desafios.guiñoIzquierdo.max
+            ) {
+              setIndicator(true);
+              setContaFrame(contaFrame + 1);
+              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+            } else {
+              setContaFrame(0);
+              setIndicator(false);
+            }
           }
-        }
-        if (desafios.value[0] === desafiosList.GI) {
-          setCondicionX(GOL);
-          if (
-            GOL > desafios.guiñoIzquierdo.min &&
-            GOL < desafios.guiñoIzquierdo.max
-          ) {
-            setIndicator(true);
-            setContaFrame(contaFrame + 1);
-            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
-          } else {
-            setContaFrame(0);
-            setIndicator(false);
+          if (desafios.value[0] === desafiosList.GD) {
+            setCondicionX(GOD);
+            if (
+              GOD > desafios.guiñoDerecho.min &&
+              GOD < desafios.guiñoDerecho.max
+            ) {
+              setIndicator(true);
+              setContaFrame(contaFrame + 1);
+              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+            } else {
+              setContaFrame(0);
+              setIndicator(false);
+            }
           }
-        }
-        if (desafios.value[0] === desafiosList.GD) {
-          setCondicionX(GOD);
-          if (
-            GOD > desafios.guiñoDerecho.min &&
-            GOD < desafios.guiñoDerecho.max
-          ) {
-            setIndicator(true);
-            setContaFrame(contaFrame + 1);
-            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
-          } else {
-            setContaFrame(0);
-            setIndicator(false);
+          if (desafios.value[0] === desafiosList.S) {
+            setCondicionX(S);
+            if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
+              setIndicator(true);
+              setContaFrame(contaFrame + 1);
+              contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
+            } else {
+              setContaFrame(0);
+              setIndicator(false);
+            }
           }
-        }
-        if (desafios.value[0] === desafiosList.S) {
-          setCondicionX(S);
-          if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
-            setIndicator(true);
-            setContaFrame(contaFrame + 1);
-            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
-          } else {
-            setContaFrame(0);
-            setIndicator(false);
-          }
+        } else {
+          setContaFrame(0);
+          setIndicator(false);
         }
       } catch (e) {}
     } else {
+      setContaFrame(0);
       setIndicator(false);
     }
     return;
@@ -201,12 +214,10 @@ const HomeScreen = () => {
     GOLs: number,
     GODs: number,
   ) => {
-    console.log('ingreso crop');
     await manipulateAsync(
       Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
       [{resize: {width: 600}}],
     ).then(async (resize: any) => {
-      console.log('ingreso 1er then');
       Image.getSize(resize.uri, async (widthX, height) => {
         await manipulateAsync(
           Platform.OS === 'android' ? resize.uri : `file://${resize.uri}`,
@@ -226,7 +237,6 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
-            console.log('ingreso 2do then');
             navigation.navigate('PreviewScreen', {
               base64: crop.base64,
               imagePath: crop.uri,

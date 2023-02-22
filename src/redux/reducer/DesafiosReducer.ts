@@ -7,6 +7,7 @@ import {
   DESAFIOS,
   IAction,
   MIRAR_FRENTE,
+  SWITCH_CAMARA,
 } from '../action/types';
 export interface IDesafiosReducer {
   mirarFrente: {max: number; min: number};
@@ -16,16 +17,18 @@ export interface IDesafiosReducer {
   guiñoIzquierdo: {max: number; min: number};
   guiñoDerecho: {max: number; min: number};
   value: string[];
+  frontSelected: boolean;
 }
 
 const initialState = {
-  mirarFrente: {max: 0, min: 0},
-  mirarDerecha: {max: 0, min: 0},
-  mirarIzquierda: {max: 0, min: 0},
+  mirarIzquierda: {max: 350, min: 330},
+  mirarDerecha: {max: 40, min: 20},
+  mirarFrente: {max: 10, min: 350},
+  guiñoIzquierdo: {max: 0, min: 0.5},
+  guiñoDerecho: {max: 0, min: 0.5},
   sonreir: {max: 1, min: 0.7},
-  guiñoIzquierdo: {max: 0, min: 0},
-  guiñoDerecho: {max: 0, min: 0},
   value: ['Mirar Izquierda'],
+  frontSelected: true,
 };
 
 export function DesafiosReducer(
@@ -37,6 +40,11 @@ export function DesafiosReducer(
       return {
         ...state,
         value: action.payload,
+      };
+    case SWITCH_CAMARA:
+      return {
+        ...state,
+        frontSelected: action.payload,
       };
     case MIRAR_FRENTE:
       return {

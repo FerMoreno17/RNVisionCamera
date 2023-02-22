@@ -7,6 +7,7 @@ import {
   IAction,
   DESAFIOS,
   MIRAR_FRENTE,
+  SWITCH_CAMARA,
 } from '../action/types';
 const DesafioMirarIquierda = (value: {max: number; min: number}): IAction => ({
   type: MIRAR_IZQUIERDA,
@@ -37,6 +38,10 @@ const DesafiosAction = (value: string[]): IAction => ({
   payload: value,
 });
 
+const SwitchCamaraAction = (value: boolean): IAction => ({
+  type: SWITCH_CAMARA,
+  payload: value,
+});
 export {
   DesafioMirarIquierda,
   DesafioGuiñoDerecha,
@@ -45,4 +50,5 @@ export {
   DesafioMirarFrente,
   DesafioMirarDerecha,
   DesafiosAction,
+  SwitchCamaraAction,
 };

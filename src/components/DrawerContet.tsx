@@ -4,18 +4,18 @@ import React, {useState} from 'react';
 import {View, StyleSheet} from 'react-native';
 import {useDispatch} from 'react-redux';
 import {DesafiosAction} from '../redux/action/DesafiosAction';
+export const desafiosList = [
+  'Mirar Izquierda',
+  'Mirar Derecha',
+  'Mirar Frente',
+  'Guiño Izquierdo',
+  'Guiño Derecho',
+  'Sonreir',
+];
 export const DrawerContent = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
 
-  let desafiosList = [
-    'Mirar Izquierda',
-    'Mirar Derecha',
-    'Mirar Frente',
-    'Guiño Izquierdo',
-    'Guiño Derecho',
-    'Sonreir',
-  ];
   return (
     <View style={{flex: 1, padding: 20}}>
       <DrawerContentScrollView>
@@ -29,7 +29,7 @@ export const DrawerContent = () => {
         />
         {desafiosList.map((resp, index) => (
           <DrawerItem
-            label={resp}
+            label={resp.toLocaleUpperCase()}
             key={index}
             labelStyle={styles.texto}
             style={{backgroundColor: '#00aeef'}}

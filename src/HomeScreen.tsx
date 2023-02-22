@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -15,30 +14,31 @@ import {
 } from 'react-native';
 import {Camera, CameraType} from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
-import {IRootState} from './redux/reducer/rootReducer';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {checkCameraPermission} from './cameraPermission';
 import MascaraSelfie from './components/MascaraSelfie';
-//import RNFS from 'react-native-fs';
-//import {useHeaderHeight} from '@react-navigation/elements';
 import {manipulateAsync} from 'expo-image-manipulator';
-import '../global.js';
-import {ImageType} from 'expo-camera/build/Camera.types';
+import {SwitchCamaraAction} from './redux/action/DesafiosAction';
 
 const HomeScreen = () => {
   const navigation = useNavigation();
   const [permited, setPermited] = useState(false);
   const [condicionX, setCondicionX] = useState<number>();
-  const desafios = useSelector((state: IRootState) => state.desafios);
-  const [cameraFront, setCameraFront] = useState(false);
+  const desafios = useSelector((state: any) => state.desafios);
   let X;
   let S;
   let GOL;
   let GOD;
-  const [type, setType] = useState(CameraType.front);
+  const [type, setType] = useState(
+    !desafios.frontSelected ? CameraType.front : CameraType.back,
+  );
   const [indicator, setIndicator] = useState(false);
   const [ratioo, setRatio] = useState<string | undefined>();
   const cameraRef = useRef<Camera>(null);
+  const [contaFrame, setContaFrame] = useState(0);
+  const [detectFace, setDetectFace] = useState(false);
+  const [contaDetectFace, setContaDetectFace] = useState(3);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     checkCameraPermission().then(resp => {
@@ -47,7 +47,7 @@ const HomeScreen = () => {
   }, []);
 
   const handleFacesDetected = ({faces}: any) => {
-    if (faces) {
+    if (faces.length > 0) {
       try {
         X = faces[0].yawAngle;
         S = faces[0].smilingProbability;
@@ -56,36 +56,43 @@ const HomeScreen = () => {
         //console.log(faces[0].bounds.origin.x);
         // console.log(faces[0]);
         if (desafios.value[0] === desafiosList.MI) {
+          type === CameraType.back && (X = 360 - X);
           setCondicionX(X);
           if (
             X > desafios.mirarIzquierda.min &&
             X < desafios.mirarIzquierda.max
           ) {
             setIndicator(true);
-            !global.flag && handleTakePicture(X, S, GOL, GOD);
+            setContaFrame(contaFrame + 1);
+            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
           } else {
+            setContaFrame(0);
             setIndicator(false);
-            global.flag = false;
           }
         }
         if (desafios.value[0] === desafiosList.MD) {
+          type === CameraType.back && (X = X * -1);
           setCondicionX(X);
           if (X > desafios.mirarDerecha.min && X < desafios.mirarDerecha.max) {
             setIndicator(true);
-            !global.flag && handleTakePicture(X, S, GOL, GOD);
+            setContaFrame(contaFrame + 1);
+            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
           } else {
+            setContaFrame(0);
             setIndicator(false);
-            global.flag = false;
           }
         }
         if (desafios.value[0] === desafiosList.MF) {
+          type === CameraType.back && (X = X > 0 ? 360 - X : X * -1);
           setCondicionX(X);
+          console.log(X);
           if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
             setIndicator(true);
-            !global.flag && handleTakePicture(X, S, GOL, GOD);
+            setContaFrame(contaFrame + 1);
+            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
           } else {
+            setContaFrame(0);
             setIndicator(false);
-            global.flag = false;
           }
         }
         if (desafios.value[0] === desafiosList.GI) {
@@ -95,10 +102,11 @@ const HomeScreen = () => {
             GOL < desafios.guiñoIzquierdo.max
           ) {
             setIndicator(true);
-            !global.flag && handleTakePicture(X, S, GOL, GOD);
+            setContaFrame(contaFrame + 1);
+            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
           } else {
+            setContaFrame(0);
             setIndicator(false);
-            global.flag = false;
           }
         }
         if (desafios.value[0] === desafiosList.GD) {
@@ -108,23 +116,27 @@ const HomeScreen = () => {
             GOD < desafios.guiñoDerecho.max
           ) {
             setIndicator(true);
-            !global.flag && handleTakePicture(X, S, GOL, GOD);
+            setContaFrame(contaFrame + 1);
+            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
           } else {
+            setContaFrame(0);
             setIndicator(false);
-            global.flag = false;
           }
         }
         if (desafios.value[0] === desafiosList.S) {
           setCondicionX(S);
           if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
             setIndicator(true);
-            !global.flag && handleTakePicture(X, S, GOL, GOD);
+            setContaFrame(contaFrame + 1);
+            contaFrame === 8 && handleTakePicture(X, S, GOL, GOD);
           } else {
+            setContaFrame(0);
             setIndicator(false);
-            global.flag = false;
           }
         }
       } catch (e) {}
+    } else {
+      setIndicator(false);
     }
     return;
   };
@@ -135,22 +147,14 @@ const HomeScreen = () => {
     GOLs: number,
     GODs: number,
   ) => {
-    console.log('entro take picture');
-    global.flag = true;
     if (cameraRef) {
-      try {
-        await cameraRef.current
-          ?.takePictureAsync({
-            quality: 0.5,
-            skipProcessing: true,
-          })
-          .then(data => {
-            console.log('entrego data', data);
-            global.flag && cropImage(data?.uri!, Xs, Ss, GOLs, GODs);
-          });
-      } catch (error) {
-        console.log({error});
-      }
+      await cameraRef.current?.takePictureAsync({
+        quality: type === CameraType.back ? 0 : 1,
+        skipProcessing: true,
+        onPictureSaved: data => {
+          cropImage(data?.uri!, Xs, Ss, GOLs, GODs);
+        },
+      });
     }
     return;
   };
@@ -189,6 +193,7 @@ const HomeScreen = () => {
           .then((crop: any) => {
             console.log('ingreso 2do then');
             navigation.navigate('PreviewScreen', {
+              base64: crop.base64,
               imagePath: crop.uri,
               X: Xs,
               S: Ss,
@@ -216,16 +221,11 @@ const HomeScreen = () => {
     );
   }
 
-  function cameraFlip() {
-    if (type === CameraType.back) {
-      setType(CameraType.front);
-      setCameraFront(false);
-    }
-    if (type === CameraType.front) {
-      setCameraFront(true);
-      setType(CameraType.back);
-    }
-  }
+  useEffect(() => {
+    desafios.frontSelected
+      ? setType(CameraType.front)
+      : setType(CameraType.back);
+  }, [desafios.frontSelected]);
 
   const prepareRatio = async () => {
     await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
@@ -235,44 +235,49 @@ const HomeScreen = () => {
     });
   };
 
+  useEffect(() => {
+    let aux = 3;
+    let aux2 = setInterval(() => {
+      contaDetectFace >= 0 ? setContaDetectFace(aux) : clearInterval(aux2);
+      aux--;
+    }, 1000);
+    setTimeout(() => {
+      setDetectFace(true);
+    }, 4000);
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       {permited && (
         <View style={styles.cameraContainer}>
           <View style={styles.mask}>
-            <MascaraSelfie color={indicator ? '#55F79599' : '#ffffffc5'} />
+            <MascaraSelfie color={indicator ? '#00aeef99' : '#ffffffc5'} />
           </View>
           <View style={styles.contenedorDatos}>
             <Text style={[styles.reto, indicator && {color: '#fff'}]}>
               {desafios.value[0]}
             </Text>
             <View style={styles.desaBox}>
-              <Text style={styles.desaGeneral}>
-                {condicionX?.toFixed(4)}
-                {desafios.value[0] === 'Sonreir' ||
-                desafios.value[0] === 'Guiño Izquierdo' ||
-                desafios.value[0] === 'Guiño Derecho'
-                  ? ' %'
-                  : ' °'}
-              </Text>
+              {contaDetectFace > 0 ? (
+                <Text style={styles.contador}>{contaDetectFace}</Text>
+              ) : (
+                <Text style={styles.desaGeneral}>
+                  {condicionX?.toFixed(4)}
+                  {condicionX &&
+                    (desafios.value[0] === 'Sonreir' ||
+                    desafios.value[0] === 'Guiño Izquierdo' ||
+                    desafios.value[0] === 'Guiño Derecho'
+                      ? ' %'
+                      : ' °')}
+                </Text>
+              )}
             </View>
           </View>
-          <View
-            style={{
-              position: 'absolute',
-              top: height / 2.5,
-              zIndex: 300,
-              alignSelf: 'center',
-            }}>
-            <Text
-              style={{
-                fontSize: 20,
-                fontWeight: 'bold',
-                color: 'white',
-
-                textAlign: 'center',
-              }}>
-              {!global.flag ? 'Realice el desafio' : 'Banca un toque'}
+          <View style={styles.conte}>
+            <Text style={styles.textDe}>
+              {!indicator
+                ? 'Realice el desafio'
+                : 'No te muevas hasta que se capture el desafío'}
             </Text>
           </View>
           <Camera
@@ -281,23 +286,25 @@ const HomeScreen = () => {
             ratio={ratioo}
             type={type}
             ref={cameraRef}
-            onFacesDetected={handleFacesDetected}
+            onFacesDetected={detectFace ? handleFacesDetected : undefined}
             faceDetectorSettings={{
               mode: FaceDetector.FaceDetectorMode.fast,
               //detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
               runClassifications: FaceDetector.FaceDetectorClassifications.all,
-              minDetectionInterval: 20,
+              minDetectionInterval: 250,
               tracking: true,
             }}
           />
           <View style={styles.switch}>
             <Switch
-              value={cameraFront}
-              onValueChange={cameraFlip}
-              thumbColor={cameraFront ? '#ffffff' : '#00aeef'}
+              value={desafios.frontSelected}
+              onValueChange={() => {
+                dispatch(SwitchCamaraAction(!desafios.frontSelected));
+              }}
+              thumbColor={desafios.frontSelected ? '#00aeef' : '#fff'}
               trackColor={{
-                false: '#ffffff99',
-                true: '#00000099',
+                false: '#00000099',
+                true: '#ffffff99',
               }}
             />
             <Text style={{color: 'black', fontSize: 20, fontWeight: '700'}}>
@@ -337,6 +344,18 @@ const styles = StyleSheet.create({
     zIndex: 100,
     position: 'absolute',
     width: '100%',
+  },
+  conte: {
+    position: 'absolute',
+    top: height / 2.5,
+    zIndex: 300,
+    alignSelf: 'center',
+  },
+  textDe: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    textAlign: 'center',
   },
   bottomContainer: {
     backgroundColor: '#ffffff99',
@@ -421,13 +440,20 @@ const styles = StyleSheet.create({
     fontSize: 30,
     textAlign: 'center',
     fontWeight: '700',
+    marginTop: 10,
+  },
+  contador: {
+    color: 'orange',
+    fontSize: 50,
+    textAlign: 'center',
+    fontWeight: '700',
   },
   reto: {
     color: '#00aeef',
     fontSize: 40,
     textAlign: 'center',
     fontWeight: '700',
-    paddingVertical: 15,
+    paddingTop: 15,
   },
   contenedorDatos: {
     position: 'absolute',

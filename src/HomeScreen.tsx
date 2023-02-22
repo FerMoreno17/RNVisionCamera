@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {
@@ -12,13 +13,35 @@ import {
   Platform,
   Image,
 } from 'react-native';
-import {Camera, CameraType} from 'expo-camera';
+import {Camera, CameraType, FaceDetectionResult} from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
 import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {checkCameraPermission} from './cameraPermission';
 import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {SwitchCamaraAction} from './redux/action/DesafiosAction';
+
+interface IProp {
+  originBounds: any;
+}
+const FrameColor = ({originBounds}: IProp) => {
+  if (originBounds !== undefined) {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: originBounds.origin.y,
+          left: originBounds.origin.x,
+          height: originBounds.size.height,
+          width: originBounds.size.width,
+          zIndex: 999,
+          borderWidth: 3,
+          borderColor: 'green',
+        }}
+      />
+    );
+  }
+};
 
 const HomeScreen = () => {
   const navigation = useNavigation();
@@ -38,6 +61,8 @@ const HomeScreen = () => {
   const [contaFrame, setContaFrame] = useState(0);
   const [detectFace, setDetectFace] = useState(false);
   const [contaDetectFace, setContaDetectFace] = useState(3);
+  const [originBounds, setBounds] = useState<any>();
+
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -46,13 +71,14 @@ const HomeScreen = () => {
     });
   }, []);
 
-  const handleFacesDetected = ({faces}: any) => {
+  const handleFacesDetected = ({faces}: FaceDetectionResult) => {
     if (faces.length > 0) {
       try {
         X = faces[0].yawAngle;
         S = faces[0].smilingProbability;
         GOL = faces[0].rightEyeOpenProbability;
         GOD = faces[0].leftEyeOpenProbability;
+        setBounds(faces[0].bounds);
 
         if (!desafios.frontSelected) {
           if (X < 0) {
@@ -289,6 +315,7 @@ const HomeScreen = () => {
                 : 'No te muevas hasta que se capture el desafío'}
             </Text>
           </View>
+          <FrameColor originBounds={originBounds} />
           <Camera
             style={styles.camera}
             onCameraReady={prepareRatio}
@@ -300,7 +327,7 @@ const HomeScreen = () => {
               mode: FaceDetector.FaceDetectorMode.fast,
               //detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
               runClassifications: FaceDetector.FaceDetectorClassifications.all,
-              minDetectionInterval: 1000,
+              minDetectionInterval: 250,
               tracking: true,
             }}
           />

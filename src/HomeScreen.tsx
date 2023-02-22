@@ -53,10 +53,20 @@ const HomeScreen = () => {
         S = faces[0].smilingProbability;
         GOL = faces[0].rightEyeOpenProbability;
         GOD = faces[0].leftEyeOpenProbability;
-        //console.log(faces[0].bounds.origin.x);
-        // console.log(faces[0]);
+
+        if (!desafios.frontSelected) {
+          if (X < 0) {
+            X = X * -1;
+          } else {
+            X = 360 - X;
+          }
+        }
+
+        if (desafios.frontSelected && Platform.OS === 'ios' && X < 0) {
+          X = 360 + X;
+        }
+
         if (desafios.value[0] === desafiosList.MI) {
-          type === CameraType.back && (X = 360 - X);
           setCondicionX(X);
           if (
             X > desafios.mirarIzquierda.min &&
@@ -70,8 +80,8 @@ const HomeScreen = () => {
             setIndicator(false);
           }
         }
+
         if (desafios.value[0] === desafiosList.MD) {
-          type === CameraType.back && (X = X * -1);
           setCondicionX(X);
           if (X > desafios.mirarDerecha.min && X < desafios.mirarDerecha.max) {
             setIndicator(true);
@@ -82,10 +92,9 @@ const HomeScreen = () => {
             setIndicator(false);
           }
         }
+
         if (desafios.value[0] === desafiosList.MF) {
-          type === CameraType.back && (X = X > 0 ? 360 - X : X * -1);
           setCondicionX(X);
-          console.log(X);
           if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
             setIndicator(true);
             setContaFrame(contaFrame + 1);
@@ -291,7 +300,7 @@ const HomeScreen = () => {
               mode: FaceDetector.FaceDetectorMode.fast,
               //detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
               runClassifications: FaceDetector.FaceDetectorClassifications.all,
-              minDetectionInterval: 250,
+              minDetectionInterval: 1000,
               tracking: true,
             }}
           />

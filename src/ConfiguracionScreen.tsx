@@ -10,11 +10,17 @@ import {
   DesafioMirarFrente,
   DesafioMirarIquierda,
   DesafioSonreir,
+  IntervaloFrame,
+  TiempoArranque,
+  TiempoCaptura,
 } from './redux/action/DesafiosAction';
 import {useNavigation} from '@react-navigation/native';
+import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 
 const ConfiguracionScreen = () => {
-  const desafios = useSelector((state: any) => state.desafios);
+  const desafios: IDesafiosReducer = useSelector(
+    (state: any) => state.desafios,
+  );
   const dispatch = useDispatch();
   const [mirarIzMAX, setMirarIzMAX] = useState(
     desafios.mirarIzquierda.max.toString(),
@@ -48,9 +54,24 @@ const ConfiguracionScreen = () => {
   const [mirarFMIN, setMirarFMIN] = useState(
     desafios.mirarFrente.min.toString(),
   );
+  const [tiempoArranque, setTiempoArranque] = useState(
+    desafios.tiempoArranque.toString(),
+  );
+
+  const [tiempoCaptura, setTiempoCaptura] = useState(
+    desafios.tiempoCaptura.toString(),
+  );
+
+  const [intervaloFrame, setIntervaloFrame] = useState(
+    desafios.intervaloFrame.toString(),
+  );
+
   const navigation = useNavigation();
 
   const guardarConfiguracion = () => {
+    dispatch(IntervaloFrame(parseFloat(intervaloFrame)));
+    dispatch(TiempoArranque(parseFloat(tiempoArranque)));
+    dispatch(TiempoCaptura(parseFloat(tiempoCaptura)));
     dispatch(
       DesafioMirarIquierda({
         min: parseFloat(mirarIzMIN === '' ? '0' : mirarIzMIN),
@@ -196,6 +217,33 @@ const ConfiguracionScreen = () => {
             onChangeText={setSonrisaMAX}
           />
         </View>
+        <Text style={styles.titulo}>Tiempo para iniciar el desafio(1=1s)</Text>
+        <View style={styles.contTiempo}>
+          <TextInput
+            keyboardType="numbers-and-punctuation"
+            value={tiempoArranque}
+            style={styles.textInputTiempos}
+            onChangeText={setTiempoArranque}
+          />
+        </View>
+        <Text style={styles.titulo}>Tiempo para retrasar la captura(1=1s)</Text>
+        <View style={styles.contTiempo}>
+          <TextInput
+            keyboardType="numbers-and-punctuation"
+            value={tiempoCaptura}
+            style={styles.textInputTiempos}
+            onChangeText={setTiempoCaptura}
+          />
+        </View>
+        <Text style={styles.titulo}>Intervalo de cada frame(1000=1s)</Text>
+        <View style={styles.contTiempo}>
+          <TextInput
+            keyboardType="numbers-and-punctuation"
+            value={intervaloFrame}
+            style={styles.textInputTiempos}
+            onChangeText={setIntervaloFrame}
+          />
+        </View>
       </ScrollView>
       <View
         style={{
@@ -240,6 +288,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
   },
+  textInputTiempos: {
+    width: '27%',
+    borderColor: 'black',
+    borderWidth: 1,
+    color: 'black',
+    textAlign: 'center',
+    fontSize: 20,
+  },
   containerInputs: {
     display: 'flex',
     flexDirection: 'row',
@@ -262,5 +318,11 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     paddingVertical: 5,
+  },
+  contTiempo: {
+    display: 'flex',
+    flexDirection: 'row',
+    paddingLeft: '26%',
+    alignItems: 'center',
   },
 });

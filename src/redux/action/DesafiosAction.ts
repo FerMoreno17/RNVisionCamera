@@ -8,7 +8,22 @@ import {
   DESAFIOS,
   MIRAR_FRENTE,
   SWITCH_CAMARA,
+  TIEMPO_CAPTURA,
+  INTERVALO_FRAME,
+  TIEMPO_ARRANQUE,
 } from '../action/types';
+const TiempoCaptura = (value: number): IAction => ({
+  type: TIEMPO_CAPTURA,
+  payload: value,
+});
+const IntervaloFrame = (value: number): IAction => ({
+  type: INTERVALO_FRAME,
+  payload: value,
+});
+const TiempoArranque = (value: number): IAction => ({
+  type: TIEMPO_ARRANQUE,
+  payload: value,
+});
 const DesafioMirarIquierda = (value: {max: number; min: number}): IAction => ({
   type: MIRAR_IZQUIERDA,
   payload: value,
@@ -51,4 +66,7 @@ export {
   DesafioMirarDerecha,
   DesafiosAction,
   SwitchCamaraAction,
+  TiempoCaptura,
+  IntervaloFrame,
+  TiempoArranque,
 };

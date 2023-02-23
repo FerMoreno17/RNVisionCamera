@@ -10,16 +10,20 @@ import {
   ImageBackground,
   Dimensions,
   Modal,
+  ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useSelector} from 'react-redux';
 import AppSpinner from './components/AppSpinner';
 import {desafiosList} from './components/DrawerContet';
+import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 
 const PreviewScreen = () => {
   const navigation = useNavigation();
   const props: any = useRoute();
-  const desafios = useSelector((state: any) => state.desafios);
+  const desafios: IDesafiosReducer = useSelector(
+    (state: any) => state.desafios,
+  );
   const [modaleOpen, setModalOpen] = useState(false);
   const [spinner, setSpinner] = useState(false);
   const [response, setResponse] = useState();
@@ -75,6 +79,9 @@ const PreviewScreen = () => {
           configSonreirMin: desafios.sonreir.min.toString(),
           configSonreirMax: desafios.sonreir.max.toString(),
           camara: desafios.frontSelected ? 'Camara Frontal' : 'Camara Trasera',
+          tiempoInicioDesafio: desafios.tiempoArranque.toString(),
+          tiempoRetrasoCaptura: desafios.tiempoCaptura.toString(),
+          intervaloFrame: desafios.intervaloFrame.toString(),
         }),
       },
     )
@@ -124,22 +131,28 @@ const PreviewScreen = () => {
           height: Dimensions.get('screen').height * 0.3,
           width: '80%',
         }}>
-        <View style={styles.desaBox}>
-          <Text style={styles.desaAcepttitle}>Angulo del eje X:</Text>
-          <Text style={styles.desaAcept}>{props.params?.X?.toFixed(4)}°</Text>
-        </View>
-        <View style={styles.desaBox}>
-          <Text style={styles.desaAcepttitle}>Prob. de Sonreir:</Text>
-          <Text style={styles.desaAcept}>{props.params?.S?.toFixed(4)}%</Text>
-        </View>
-        <View style={styles.desaBox}>
-          <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Izq:</Text>
-          <Text style={styles.desaAcept}>{props.params?.GOL?.toFixed(4)}%</Text>
-        </View>
-        <View style={styles.desaBox}>
-          <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Der:</Text>
-          <Text style={styles.desaAcept}>{props.params?.GOD?.toFixed(4)}%</Text>
-        </View>
+        <ScrollView>
+          <View style={styles.desaBox}>
+            <Text style={styles.desaAcepttitle}>Angulo del eje X:</Text>
+            <Text style={styles.desaAcept}>{props.params?.X?.toFixed(4)}°</Text>
+          </View>
+          <View style={styles.desaBox}>
+            <Text style={styles.desaAcepttitle}>Prob. de Sonreir:</Text>
+            <Text style={styles.desaAcept}>{props.params?.S?.toFixed(4)}%</Text>
+          </View>
+          <View style={styles.desaBox}>
+            <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Izq:</Text>
+            <Text style={styles.desaAcept}>
+              {props.params?.GOL?.toFixed(4)}%
+            </Text>
+          </View>
+          <View style={styles.desaBox}>
+            <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Der:</Text>
+            <Text style={styles.desaAcept}>
+              {props.params?.GOD?.toFixed(4)}%
+            </Text>
+          </View>
+        </ScrollView>
       </View>
       <View style={styles.botonera}>
         <Pressable
@@ -192,12 +205,11 @@ export default PreviewScreen;
 const styles = StyleSheet.create({
   button: {
     backgroundColor: '#00aeef',
-    padding: 20,
+    padding: 10,
     margin: 10,
     alignItems: 'center',
     flex: 1,
-    borderRadius: 25,
-    bottom: 40,
+    bottom: 10,
   },
   buttonLabel: {
     fontSize: 20,

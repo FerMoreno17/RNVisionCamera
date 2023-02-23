@@ -20,6 +20,7 @@ import {checkCameraPermission} from './cameraPermission';
 import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {SwitchCamaraAction} from './redux/action/DesafiosAction';
+import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 
 interface IProp {
   originBounds: any;
@@ -47,7 +48,9 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const [permited, setPermited] = useState(false);
   const [condicionX, setCondicionX] = useState<number>();
-  const desafios = useSelector((state: any) => state.desafios);
+  const desafios: IDesafiosReducer = useSelector(
+    (state: any) => state.desafios,
+  );
   let X;
   let S;
   let GOL;
@@ -59,8 +62,11 @@ const HomeScreen = () => {
   const [ratioo, setRatio] = useState<string | undefined>();
   const cameraRef = useRef<Camera>(null);
   const [contaFrame, setContaFrame] = useState(0);
+  const [frameDate, setFrameDate] = useState<any>();
   const [detectFace, setDetectFace] = useState(false);
-  const [contaDetectFace, setContaDetectFace] = useState(3);
+  const [contaDetectFace, setContaDetectFace] = useState(
+    desafios.tiempoArranque,
+  );
   const [originBounds, setBounds] = useState<any>();
 
   const dispatch = useDispatch();
@@ -143,8 +149,14 @@ const HomeScreen = () => {
               X < desafios.mirarIzquierda.max
             ) {
               setIndicator(true);
-              setContaFrame(contaFrame + 1);
-              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 0 &&
+                (setFrameDate(new Date().valueOf()),
+                setContaFrame(contaFrame + 1));
+              (new Date().valueOf() - frameDate) / 1000 >
+                desafios.tiempoCaptura &&
+                contaFrame === 1 &&
+                (setContaFrame(contaFrame + 1),
+                handleTakePicture(X, S, GOL, GOD));
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -158,8 +170,14 @@ const HomeScreen = () => {
               X < desafios.mirarDerecha.max
             ) {
               setIndicator(true);
-              setContaFrame(contaFrame + 1);
-              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 0 &&
+                (setFrameDate(new Date().valueOf()),
+                setContaFrame(contaFrame + 1));
+              (new Date().valueOf() - frameDate) / 1000 >
+                desafios.tiempoCaptura &&
+                contaFrame === 1 &&
+                (setContaFrame(contaFrame + 1),
+                handleTakePicture(X, S, GOL, GOD));
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -170,8 +188,14 @@ const HomeScreen = () => {
             setCondicionX(X);
             if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
               setIndicator(true);
-              setContaFrame(contaFrame + 1);
-              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 0 &&
+                (setFrameDate(new Date().valueOf()),
+                setContaFrame(contaFrame + 1));
+              (new Date().valueOf() - frameDate) / 1000 >
+                desafios.tiempoCaptura &&
+                contaFrame === 1 &&
+                (setContaFrame(contaFrame + 1),
+                handleTakePicture(X, S, GOL, GOD));
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -184,8 +208,14 @@ const HomeScreen = () => {
               GOL < desafios.guiñoIzquierdo.max
             ) {
               setIndicator(true);
-              setContaFrame(contaFrame + 1);
-              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 0 &&
+                (setFrameDate(new Date().valueOf()),
+                setContaFrame(contaFrame + 1));
+              (new Date().valueOf() - frameDate) / 1000 >
+                desafios.tiempoCaptura &&
+                contaFrame === 1 &&
+                (setContaFrame(contaFrame + 1),
+                handleTakePicture(X, S, GOL, GOD));
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -198,8 +228,14 @@ const HomeScreen = () => {
               GOD < desafios.guiñoDerecho.max
             ) {
               setIndicator(true);
-              setContaFrame(contaFrame + 1);
-              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 0 &&
+                (setFrameDate(new Date().valueOf()),
+                setContaFrame(contaFrame + 1));
+              (new Date().valueOf() - frameDate) / 1000 >
+                desafios.tiempoCaptura &&
+                contaFrame === 1 &&
+                (setContaFrame(contaFrame + 1),
+                handleTakePicture(X, S, GOL, GOD));
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -209,8 +245,14 @@ const HomeScreen = () => {
             setCondicionX(S);
             if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
               setIndicator(true);
-              setContaFrame(contaFrame + 1);
-              contaFrame === 30 && handleTakePicture(X, S, GOL, GOD);
+              contaFrame === 0 &&
+                (setFrameDate(new Date().valueOf()),
+                setContaFrame(contaFrame + 1));
+              (new Date().valueOf() - frameDate) / 1000 >
+                desafios.tiempoCaptura &&
+                contaFrame === 1 &&
+                (setContaFrame(contaFrame + 1),
+                handleTakePicture(X, S, GOL, GOD));
             } else {
               setContaFrame(0);
               setIndicator(false);
@@ -320,14 +362,14 @@ const HomeScreen = () => {
   };
 
   useEffect(() => {
-    let aux = 3;
+    let aux = desafios.tiempoArranque;
     let aux2 = setInterval(() => {
       contaDetectFace >= 0 ? setContaDetectFace(aux) : clearInterval(aux2);
       aux--;
     }, 1000);
     setTimeout(() => {
       setDetectFace(true);
-    }, 4000);
+    }, (desafios.tiempoArranque + 1) * 1000);
   }, []);
 
   return (
@@ -385,7 +427,7 @@ const HomeScreen = () => {
               mode: FaceDetector.FaceDetectorMode.fast,
               //detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
               runClassifications: FaceDetector.FaceDetectorClassifications.all,
-              minDetectionInterval: 25,
+              minDetectionInterval: desafios.intervaloFrame,
               tracking: true,
             }}
           />

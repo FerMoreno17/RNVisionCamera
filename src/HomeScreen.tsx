@@ -125,145 +125,153 @@ const HomeScreen = () => {
         S = faces[0].smilingProbability;
         GOL = faces[0].rightEyeOpenProbability;
         GOD = faces[0].leftEyeOpenProbability;
-        setBounds(faces[0].bounds);
-        if (!desafios.frontSelected) {
-          if (X < 0) {
-            X = X * -1;
+        if (S !== undefined && GOL !== undefined && GOD !== undefined) {
+          setBounds(faces[0].bounds);
+          if (!desafios.frontSelected) {
+            if (X < 0) {
+              X = X * -1;
+            } else {
+              X = 360 - X;
+            }
+          }
+          if (desafios.frontSelected && Platform.OS === 'ios' && X < 0) {
+            X = 360 + X;
+          }
+          if (
+            faces[0].bounds.size.width <= width * 0.95 &&
+            faces[0].bounds.size.width >= width * 0.6 &&
+            faces[0].bounds.size.width + faces[0].bounds.origin.x <
+              width * 0.975 &&
+            faces[0].bounds.origin.y + faces[0].bounds.size.height <=
+              height * 0.73 &&
+            faces[0].bounds.origin.y >= height * 0.15
+          ) {
+            if (desafios.value[0] === desafiosList.MI) {
+              setCondicionX(X);
+              if (
+                X > desafios.mirarIzquierda.min &&
+                X < desafios.mirarIzquierda.max
+              ) {
+                setIndicator(true);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
+                (new Date().valueOf() - frameDate) / 1000 >
+                  desafios.tiempoCaptura &&
+                  contaFrame === 1 &&
+                  (setContaFrame(contaFrame + 1),
+                  handleTakePicture(X, S, GOL, GOD));
+              } else {
+                setContaFrame(0);
+                setIndicator(false);
+              }
+            }
+
+            if (desafios.value[0] === desafiosList.MD) {
+              setCondicionX(X);
+              if (
+                X > desafios.mirarDerecha.min &&
+                X < desafios.mirarDerecha.max
+              ) {
+                setIndicator(true);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
+                (new Date().valueOf() - frameDate) / 1000 >
+                  desafios.tiempoCaptura &&
+                  contaFrame === 1 &&
+                  (setContaFrame(contaFrame + 1),
+                  handleTakePicture(X, S, GOL, GOD));
+              } else {
+                setContaFrame(0);
+                setIndicator(false);
+              }
+            }
+
+            if (desafios.value[0] === desafiosList.MF) {
+              setCondicionX(X);
+              if (
+                X > desafios.mirarFrente.min ||
+                X < desafios.mirarFrente.max
+              ) {
+                setIndicator(true);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
+                (new Date().valueOf() - frameDate) / 1000 >
+                  desafios.tiempoCaptura &&
+                  contaFrame === 1 &&
+                  (setContaFrame(contaFrame + 1),
+                  handleTakePicture(X, S, GOL, GOD));
+              } else {
+                setContaFrame(0);
+                setIndicator(false);
+              }
+            }
+            if (desafios.value[0] === desafiosList.GI) {
+              setCondicionX(GOL);
+              if (
+                GOL > desafios.guiñoIzquierdo.min &&
+                GOL < desafios.guiñoIzquierdo.max
+              ) {
+                setIndicator(true);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
+                (new Date().valueOf() - frameDate) / 1000 >
+                  desafios.tiempoCaptura &&
+                  contaFrame === 1 &&
+                  (setContaFrame(contaFrame + 1),
+                  handleTakePicture(X, S, GOL, GOD));
+              } else {
+                setContaFrame(0);
+                setIndicator(false);
+              }
+            }
+            if (desafios.value[0] === desafiosList.GD) {
+              setCondicionX(GOD);
+              if (
+                GOD > desafios.guiñoDerecho.min &&
+                GOD < desafios.guiñoDerecho.max
+              ) {
+                setIndicator(true);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
+                (new Date().valueOf() - frameDate) / 1000 >
+                  desafios.tiempoCaptura &&
+                  contaFrame === 1 &&
+                  (setContaFrame(contaFrame + 1),
+                  handleTakePicture(X, S, GOL, GOD));
+              } else {
+                setContaFrame(0);
+                setIndicator(false);
+              }
+            }
+            if (desafios.value[0] === desafiosList.S) {
+              setCondicionX(S);
+              if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
+                setIndicator(true);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
+                (new Date().valueOf() - frameDate) / 1000 >
+                  desafios.tiempoCaptura &&
+                  contaFrame === 1 &&
+                  (setContaFrame(contaFrame + 1),
+                  handleTakePicture(X, S, GOL, GOD));
+              } else {
+                setContaFrame(0);
+                setIndicator(false);
+              }
+            }
           } else {
-            X = 360 - X;
-          }
-        }
-        if (desafios.frontSelected && Platform.OS === 'ios' && X < 0) {
-          X = 360 + X;
-        }
-        if (
-          faces[0].bounds.size.width <= width * 0.95 &&
-          faces[0].bounds.size.width >= width * 0.6 &&
-          faces[0].bounds.size.width + faces[0].bounds.origin.x <
-            width * 0.975 &&
-          faces[0].bounds.origin.y + faces[0].bounds.size.height <=
-            height * 0.73 &&
-          faces[0].bounds.origin.y >= height * 0.15
-        ) {
-          if (desafios.value[0] === desafiosList.MI) {
-            setCondicionX(X);
-            if (
-              X > desafios.mirarIzquierda.min &&
-              X < desafios.mirarIzquierda.max
-            ) {
-              setIndicator(true);
-              contaFrame === 0 &&
-                (setFrameDate(new Date().valueOf()),
-                setContaFrame(contaFrame + 1));
-              (new Date().valueOf() - frameDate) / 1000 >
-                desafios.tiempoCaptura &&
-                contaFrame === 1 &&
-                (setContaFrame(contaFrame + 1),
-                handleTakePicture(X, S, GOL, GOD));
-            } else {
-              setContaFrame(0);
-              setIndicator(false);
-            }
-          }
-
-          if (desafios.value[0] === desafiosList.MD) {
-            setCondicionX(X);
-            if (
-              X > desafios.mirarDerecha.min &&
-              X < desafios.mirarDerecha.max
-            ) {
-              setIndicator(true);
-              contaFrame === 0 &&
-                (setFrameDate(new Date().valueOf()),
-                setContaFrame(contaFrame + 1));
-              (new Date().valueOf() - frameDate) / 1000 >
-                desafios.tiempoCaptura &&
-                contaFrame === 1 &&
-                (setContaFrame(contaFrame + 1),
-                handleTakePicture(X, S, GOL, GOD));
-            } else {
-              setContaFrame(0);
-              setIndicator(false);
-            }
-          }
-
-          if (desafios.value[0] === desafiosList.MF) {
-            setCondicionX(X);
-            if (X > desafios.mirarFrente.min || X < desafios.mirarFrente.max) {
-              setIndicator(true);
-              contaFrame === 0 &&
-                (setFrameDate(new Date().valueOf()),
-                setContaFrame(contaFrame + 1));
-              (new Date().valueOf() - frameDate) / 1000 >
-                desafios.tiempoCaptura &&
-                contaFrame === 1 &&
-                (setContaFrame(contaFrame + 1),
-                handleTakePicture(X, S, GOL, GOD));
-            } else {
-              setContaFrame(0);
-              setIndicator(false);
-            }
-          }
-          if (desafios.value[0] === desafiosList.GI) {
-            setCondicionX(GOL);
-            if (
-              GOL > desafios.guiñoIzquierdo.min &&
-              GOL < desafios.guiñoIzquierdo.max
-            ) {
-              setIndicator(true);
-              contaFrame === 0 &&
-                (setFrameDate(new Date().valueOf()),
-                setContaFrame(contaFrame + 1));
-              (new Date().valueOf() - frameDate) / 1000 >
-                desafios.tiempoCaptura &&
-                contaFrame === 1 &&
-                (setContaFrame(contaFrame + 1),
-                handleTakePicture(X, S, GOL, GOD));
-            } else {
-              setContaFrame(0);
-              setIndicator(false);
-            }
-          }
-          if (desafios.value[0] === desafiosList.GD) {
-            setCondicionX(GOD);
-            if (
-              GOD > desafios.guiñoDerecho.min &&
-              GOD < desafios.guiñoDerecho.max
-            ) {
-              setIndicator(true);
-              contaFrame === 0 &&
-                (setFrameDate(new Date().valueOf()),
-                setContaFrame(contaFrame + 1));
-              (new Date().valueOf() - frameDate) / 1000 >
-                desafios.tiempoCaptura &&
-                contaFrame === 1 &&
-                (setContaFrame(contaFrame + 1),
-                handleTakePicture(X, S, GOL, GOD));
-            } else {
-              setContaFrame(0);
-              setIndicator(false);
-            }
-          }
-          if (desafios.value[0] === desafiosList.S) {
-            setCondicionX(S);
-            if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
-              setIndicator(true);
-              contaFrame === 0 &&
-                (setFrameDate(new Date().valueOf()),
-                setContaFrame(contaFrame + 1));
-              (new Date().valueOf() - frameDate) / 1000 >
-                desafios.tiempoCaptura &&
-                contaFrame === 1 &&
-                (setContaFrame(contaFrame + 1),
-                handleTakePicture(X, S, GOL, GOD));
-            } else {
-              setContaFrame(0);
-              setIndicator(false);
-            }
+            setContaFrame(0);
+            setIndicator(false);
           }
         } else {
-          setContaFrame(0);
-          setIndicator(false);
+          //Para refrescar la camara
+          setAux(aux + 1);
         }
       } catch (e) {}
     } else {
@@ -373,20 +381,6 @@ const HomeScreen = () => {
     setTimeout(() => {
       setDetectFace(true);
     }, (desafios.tiempoArranque + 1) * 1000);
-  }, []);
-
-  let asd = 0;
-  useEffect(() => {
-    AppState.addEventListener('change', nextAppState => {
-      if (
-        appState.current.match(/inactive|background/) &&
-        nextAppState === 'active'
-      ) {
-        asd = asd + 1;
-        setAux(asd);
-      }
-      appState.current = nextAppState;
-    });
   }, []);
 
   return (

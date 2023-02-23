@@ -18,7 +18,7 @@ import {desafiosList} from './components/DrawerContet';
 
 const PreviewScreen = () => {
   const navigation = useNavigation();
-  const props = useRoute();
+  const props: any = useRoute();
   const desafios = useSelector((state: any) => state.desafios);
   const [modaleOpen, setModalOpen] = useState(false);
   const [spinner, setSpinner] = useState(false);
@@ -48,7 +48,7 @@ const PreviewScreen = () => {
   const enviarDesa = async () => {
     setSpinner(true);
     await fetch(
-      'http://mejorasuxsuperapp.gyfcloud.com.ar/api/v0.11/enrolamiento/enviardesafio',
+      'https://mejorasuxsuperapp.gyfcloud.com.ar/api/v0.13/enrolamiento/enviardesafio',
       {
         method: 'POST',
         headers: {
@@ -83,6 +83,11 @@ const PreviewScreen = () => {
       })
       .then(respJson => {
         setResponse(respJson);
+        setModalOpen(true);
+        setSpinner(false);
+      })
+      .catch(error => {
+        setResponse(error.message);
         setModalOpen(true);
         setSpinner(false);
       });

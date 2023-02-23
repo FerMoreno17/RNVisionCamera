@@ -21,6 +21,7 @@ import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {SwitchCamaraAction} from './redux/action/DesafiosAction';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
+import {AppState} from 'react-native';
 
 interface IProp {
   originBounds: any;
@@ -62,12 +63,14 @@ const HomeScreen = () => {
   const [ratioo, setRatio] = useState<string | undefined>();
   const cameraRef = useRef<Camera>(null);
   const [contaFrame, setContaFrame] = useState(0);
+  const [aux, setAux] = useState(0);
   const [frameDate, setFrameDate] = useState<any>();
   const [detectFace, setDetectFace] = useState(false);
   const [contaDetectFace, setContaDetectFace] = useState(
     desafios.tiempoArranque,
   );
   const [originBounds, setBounds] = useState<any>();
+  const appState = useRef(AppState.currentState);
 
   const dispatch = useDispatch();
 
@@ -372,6 +375,20 @@ const HomeScreen = () => {
     }, (desafios.tiempoArranque + 1) * 1000);
   }, []);
 
+  let asd = 0;
+  useEffect(() => {
+    AppState.addEventListener('change', nextAppState => {
+      if (
+        appState.current.match(/inactive|background/) &&
+        nextAppState === 'active'
+      ) {
+        asd = asd + 1;
+        setAux(asd);
+      }
+      appState.current = nextAppState;
+    });
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       {permited && (
@@ -416,7 +433,9 @@ const HomeScreen = () => {
             }}
           />
           <MinFaceDetect />
+
           <Camera
+            key={aux}
             style={styles.camera}
             onCameraReady={prepareRatio}
             ratio={ratioo}

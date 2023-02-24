@@ -21,7 +21,7 @@ import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {SwitchCamaraAction} from './redux/action/DesafiosAction';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
-import {AppState} from 'react-native';
+import {useHeaderHeight} from '@react-navigation/elements';
 
 interface IProp {
   originBounds: any;
@@ -70,7 +70,6 @@ const HomeScreen = () => {
     desafios.tiempoArranque,
   );
   const [originBounds, setBounds] = useState<any>();
-  const appState = useRef(AppState.currentState);
 
   const dispatch = useDispatch();
 
@@ -365,11 +364,12 @@ const HomeScreen = () => {
   }, [desafios.frontSelected]);
 
   const prepareRatio = async () => {
-    await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
-      const ratio =
-        ratios.find(ratiox => ratiox === '16:9') || ratios[ratios.length - 1];
-      setRatio(ratio);
-    });
+    if (cameraRef) {
+      await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
+        const ratio = ratios[ratios.length - 1];
+        setRatio(ratio);
+      });
+    }
   };
 
   useEffect(() => {
@@ -382,6 +382,7 @@ const HomeScreen = () => {
       setDetectFace(true);
     }, (desafios.tiempoArranque + 1) * 1000);
   }, []);
+  const headerHeight = useHeaderHeight();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -430,7 +431,10 @@ const HomeScreen = () => {
 
           <Camera
             key={aux}
-            style={styles.camera}
+            style={{
+              width: width,
+              height: height - headerHeight,
+            }}
             onCameraReady={prepareRatio}
             ratio={ratioo}
             type={type}
@@ -484,9 +488,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   cameraContainer: {
-    flex: 1,
-  },
-  camera: {
     flex: 1,
   },
   mask: {

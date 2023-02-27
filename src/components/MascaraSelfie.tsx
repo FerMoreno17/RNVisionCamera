@@ -17,7 +17,7 @@ function MascaraSelfie({color}: IProps) {
     <Svg height={height} viewBox={viewBox}>
       <Mask id="mask">
         <Rect height={heightSinHeader} width={'100%'} fill="white" />
-        <Ellipse cx="50%" cy="47%" rx={'47%'} ry={'30%'} fill="black" />
+        <Ellipse cx="50%" cy="47%" rx={'43%'} ry={'27%'} fill="black" />
       </Mask>
       <Rect
         height={heightSinHeader}

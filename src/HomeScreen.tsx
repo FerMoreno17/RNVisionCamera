@@ -70,7 +70,7 @@ const HomeScreen = () => {
     desafios.tiempoArranque,
   );
   const [originBounds, setBounds] = useState<any>();
-
+  const [textHelp, setTextHelp] = useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -139,8 +139,6 @@ const HomeScreen = () => {
           if (
             faces[0].bounds.size.width <= width * 0.95 &&
             faces[0].bounds.size.width >= width * 0.6 &&
-            faces[0].bounds.size.width + faces[0].bounds.origin.x <
-              width * 0.975 &&
             faces[0].bounds.origin.y + faces[0].bounds.size.height <=
               height * 0.73 &&
             faces[0].bounds.origin.y >= height * 0.15
@@ -152,6 +150,7 @@ const HomeScreen = () => {
                 X < desafios.mirarIzquierda.max
               ) {
                 setIndicator(true);
+                setTextHelp('No te muevas hasta que se capture el desafío');
                 contaFrame === 0 &&
                   (setFrameDate(new Date().valueOf()),
                   setContaFrame(contaFrame + 1));
@@ -163,6 +162,7 @@ const HomeScreen = () => {
               } else {
                 setContaFrame(0);
                 setIndicator(false);
+                setTextHelp('Realice el desafio');
               }
             }
 
@@ -173,6 +173,7 @@ const HomeScreen = () => {
                 X < desafios.mirarDerecha.max
               ) {
                 setIndicator(true);
+                setTextHelp('No te muevas hasta que se capture el desafío');
                 contaFrame === 0 &&
                   (setFrameDate(new Date().valueOf()),
                   setContaFrame(contaFrame + 1));
@@ -184,6 +185,7 @@ const HomeScreen = () => {
               } else {
                 setContaFrame(0);
                 setIndicator(false);
+                setTextHelp('Realice el desafio');
               }
             }
 
@@ -194,6 +196,7 @@ const HomeScreen = () => {
                 X < desafios.mirarFrente.max
               ) {
                 setIndicator(true);
+                setTextHelp('No te muevas hasta que se capture el desafío');
                 contaFrame === 0 &&
                   (setFrameDate(new Date().valueOf()),
                   setContaFrame(contaFrame + 1));
@@ -205,6 +208,7 @@ const HomeScreen = () => {
               } else {
                 setContaFrame(0);
                 setIndicator(false);
+                setTextHelp('Realice el desafio');
               }
             }
             if (desafios.value[0] === desafiosList.GI) {
@@ -214,6 +218,7 @@ const HomeScreen = () => {
                 GOL < desafios.guiñoIzquierdo.max
               ) {
                 setIndicator(true);
+                setTextHelp('No te muevas hasta que se capture el desafío');
                 contaFrame === 0 &&
                   (setFrameDate(new Date().valueOf()),
                   setContaFrame(contaFrame + 1));
@@ -225,6 +230,7 @@ const HomeScreen = () => {
               } else {
                 setContaFrame(0);
                 setIndicator(false);
+                setTextHelp('Realice el desafio');
               }
             }
             if (desafios.value[0] === desafiosList.GD) {
@@ -234,6 +240,7 @@ const HomeScreen = () => {
                 GOD < desafios.guiñoDerecho.max
               ) {
                 setIndicator(true);
+                setTextHelp('No te muevas hasta que se capture el desafío');
                 contaFrame === 0 &&
                   (setFrameDate(new Date().valueOf()),
                   setContaFrame(contaFrame + 1));
@@ -245,12 +252,14 @@ const HomeScreen = () => {
               } else {
                 setContaFrame(0);
                 setIndicator(false);
+                setTextHelp('Realice el desafio');
               }
             }
             if (desafios.value[0] === desafiosList.S) {
               setCondicionX(S);
               if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
                 setIndicator(true);
+                setTextHelp('No te muevas hasta que se capture el desafío');
                 contaFrame === 0 &&
                   (setFrameDate(new Date().valueOf()),
                   setContaFrame(contaFrame + 1));
@@ -262,9 +271,20 @@ const HomeScreen = () => {
               } else {
                 setContaFrame(0);
                 setIndicator(false);
+                setTextHelp('Realice el desafio');
               }
             }
           } else {
+            faces[0].bounds.size.width < width * 0.6 &&
+              setTextHelp('Acérquese al celular');
+
+            faces[0].bounds.size.width > width * 0.95 &&
+              setTextHelp('Alejese del celular');
+
+            faces[0].bounds.origin.y + faces[0].bounds.size.height >
+              height * 0.73 ||
+              (faces[0].bounds.origin.y < height * 0.15 &&
+                setTextHelp('Ubíquese en la centro'));
             setContaFrame(0);
             setIndicator(false);
           }
@@ -276,6 +296,7 @@ const HomeScreen = () => {
     } else {
       setContaFrame(0);
       setIndicator(false);
+      setTextHelp('');
     }
     return;
   };
@@ -366,7 +387,8 @@ const HomeScreen = () => {
   const prepareRatio = async () => {
     if (cameraRef) {
       await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
-        const ratio = ratios[ratios.length - 1];
+        const ratio =
+          ratios.find(ratiox => ratiox === '16:9') || ratios[ratios.length - 1];
         setRatio(ratio);
       });
     }
@@ -412,11 +434,7 @@ const HomeScreen = () => {
             </View>
           </View>
           <View style={styles.conte}>
-            <Text style={styles.textDe}>
-              {!indicator
-                ? 'Realice el desafio'
-                : 'No te muevas hasta que se capture el desafío'}
-            </Text>
+            <Text style={styles.textDe}>{textHelp}</Text>
           </View>
           <FrameColor originBounds={originBounds} />
           <LimitFaceDetect
@@ -433,7 +451,7 @@ const HomeScreen = () => {
             key={aux}
             style={{
               width: width,
-              height: height - headerHeight,
+              height: height * 0.87,
             }}
             onCameraReady={prepareRatio}
             ratio={ratioo}
@@ -564,7 +582,7 @@ const styles = StyleSheet.create({
   },
   switch: {
     position: 'absolute',
-    zIndex: 300,
+    zIndex: 1001,
     bottom: 0,
     paddingVertical: 15,
     display: 'flex',

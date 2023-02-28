@@ -91,7 +91,6 @@ const HomeScreen = () => {
           zIndex: 1000,
           borderWidth: 3,
           borderColor: 'red',
-          borderStyle: 'dashed',
           borderLeftWidth: 0,
           borderRightWidth: 0,
         }}
@@ -424,8 +423,8 @@ const HomeScreen = () => {
           <FrameColor originBounds={originBounds} />
           <LimitFaceDetect
             originBounds={{
-              a: width * 0.95,
-              b: 2.5,
+              a: width,
+              b: 0,
               c: height * 0.15,
               d: height * 0.72,
             }}
@@ -433,12 +432,16 @@ const HomeScreen = () => {
 
           <Camera
             key={aux}
-            style={{
-              height: height,
-              width: '100%',
-              aspectRatio: AspRatioo,
-              alignSelf: 'center',
-            }}
+            style={
+              Platform.OS === 'ios'
+                ? {height: height, width: '100%'}
+                : {
+                    height: height,
+                    width: '100%',
+                    aspectRatio: AspRatioo,
+                    alignSelf: 'center',
+                  }
+            }
             onCameraReady={prepareRatio}
             ratio={ratioo}
             type={type}

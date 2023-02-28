@@ -90,33 +90,15 @@ const HomeScreen = () => {
           width: originBounds.originBounds.a,
           zIndex: 1000,
           borderWidth: 3,
-          borderLeftColor: 'yellow',
-          borderRightColor: 'yellow',
-          borderTopColor: 'red',
-          borderBottomColor: 'red',
+          borderColor: 'red',
+          borderStyle: 'dashed',
+          borderLeftWidth: 0,
+          borderRightWidth: 0,
         }}
       />
     );
   };
 
-  const MinFaceDetect = () => {
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          top: height * 0.33,
-          alignSelf: 'center',
-          height: height * 0.2,
-          width: width * 0.6,
-          zIndex: 1000,
-          borderWidth: 3,
-          borderColor: 'yellow',
-          borderTopWidth: 0,
-          borderBottomWidth: 0,
-        }}
-      />
-    );
-  };
   const handleFacesDetected = ({faces}: FaceDetectionResult) => {
     if (faces.length > 0) {
       try {
@@ -137,10 +119,10 @@ const HomeScreen = () => {
             X = 360 + X;
           }
           if (
-            faces[0].bounds.size.width <= width * 0.95 &&
-            faces[0].bounds.size.width >= width * 0.6 &&
+            faces[0].bounds.size.width <= width &&
+            faces[0].bounds.size.width >= width * 0.3 &&
             faces[0].bounds.origin.y + faces[0].bounds.size.height <=
-              height * 0.73 &&
+              height * 0.72 &&
             faces[0].bounds.origin.y >= height * 0.15
           ) {
             if (desafios.value[0] === desafiosList.MI) {
@@ -275,16 +257,17 @@ const HomeScreen = () => {
               }
             }
           } else {
-            faces[0].bounds.size.width < width * 0.6 &&
+            faces[0].bounds.size.width < width * 0.3 &&
               setTextHelp('Acérquese al celular');
 
-            faces[0].bounds.size.width > width * 0.95 &&
+            faces[0].bounds.size.width > width &&
               setTextHelp('Alejese del celular');
 
-            faces[0].bounds.origin.y + faces[0].bounds.size.height >
-              height * 0.73 ||
-              (faces[0].bounds.origin.y < height * 0.15 &&
-                setTextHelp('Ubíquese en la centro'));
+            (faces[0].bounds.origin.y + faces[0].bounds.size.height >
+              height * 0.72 ||
+              faces[0].bounds.origin.y < height * 0.15) &&
+              setTextHelp('Ubíquese en la centro');
+
             setContaFrame(0);
             setIndicator(false);
           }
@@ -442,10 +425,9 @@ const HomeScreen = () => {
               a: width * 0.95,
               b: 2.5,
               c: height * 0.15,
-              d: height * 0.73,
+              d: height * 0.72,
             }}
           />
-          <MinFaceDetect />
 
           <Camera
             key={aux}

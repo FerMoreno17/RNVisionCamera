@@ -21,7 +21,6 @@ import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {SwitchCamaraAction} from './redux/action/DesafiosAction';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
-import {useHeaderHeight} from '@react-navigation/elements';
 
 interface IProp {
   originBounds: any;
@@ -73,24 +72,45 @@ const HomeScreen = () => {
   const [originBounds, setBounds] = useState<any>();
   const [textHelp, setTextHelp] = useState('');
   const dispatch = useDispatch();
-  const headerHeight = useHeaderHeight();
-  const heightSinHeader = height - headerHeight;
 
   useEffect(() => {
     checkCameraPermission().then(resp => {
       setPermited(resp);
     });
   }, []);
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      navigation.dispatch(DrawerActions.toggleDrawer());
+      return true;
+    });
+  }, []);
 
-  const LimitFaceDetect = (originBounds: any) => {
+  useEffect(() => {
+    desafios.frontSelected
+      ? setType(CameraType.front)
+      : setType(CameraType.back);
+  }, [desafios.frontSelected]);
+
+  useEffect(() => {
+    let aux1 = desafios.tiempoArranque;
+    let aux2 = setInterval(() => {
+      contaDetectFace >= 0 ? setContaDetectFace(aux1) : clearInterval(aux2);
+      aux1--;
+    }, 1000);
+    setTimeout(() => {
+      setDetectFace(true);
+    }, (desafios.tiempoArranque + 1) * 1000);
+  }, []);
+
+  const LimitFaceDetect = (originBounds_: any) => {
     return (
       <View
         style={{
           position: 'absolute',
           top: height * 0.15,
-          left: `${originBounds.originBounds.b}%`,
+          left: `${originBounds_.originBounds.b}%`,
           bottom: height * 0.15,
-          width: originBounds.originBounds.a,
+          width: originBounds_.originBounds.a,
           zIndex: 1000,
           borderWidth: 3,
           borderColor: 'red',
@@ -124,7 +144,7 @@ const HomeScreen = () => {
             faces[0].bounds.size.width <= width &&
             faces[0].bounds.size.width >= width * 0.3 &&
             faces[0].bounds.origin.y + faces[0].bounds.size.height <=
-              height * 0.72 &&
+              height * 0.75 &&
             faces[0].bounds.origin.y >= height * 0.15
           ) {
             if (desafios.value[0] === desafiosList.MI) {
@@ -266,7 +286,7 @@ const HomeScreen = () => {
               setTextHelp('Alejese del celular');
 
             (faces[0].bounds.origin.y + faces[0].bounds.size.height >
-              height * 0.72 ||
+              height * 0.75 ||
               faces[0].bounds.origin.y < height * 0.15) &&
               setTextHelp('Ubíquese en la centro');
 
@@ -348,13 +368,6 @@ const HomeScreen = () => {
     });
   };
 
-  useEffect(() => {
-    BackHandler.addEventListener('hardwareBackPress', () => {
-      navigation.dispatch(DrawerActions.toggleDrawer());
-      return true;
-    });
-  }, []);
-
   if (cameraRef == null) {
     return (
       <View style={styles.activityIndicatorContainer}>
@@ -363,16 +376,11 @@ const HomeScreen = () => {
     );
   }
 
-  useEffect(() => {
-    desafios.frontSelected
-      ? setType(CameraType.front)
-      : setType(CameraType.back);
-  }, [desafios.frontSelected]);
-
   const prepareRatio = async () => {
     if (cameraRef) {
       await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
-        const ratio = ratios[ratios.length - 1];
+        const ratio =
+          ratios.find(ratiox => ratiox === '16:9') || ratios[ratios.length - 1];
         setAspRatio(
           parseInt(ratio.substring(ratio.indexOf(':') + 1, ratio.length)) /
             parseInt(ratio.substring(0, ratio.indexOf(':'))),
@@ -381,17 +389,6 @@ const HomeScreen = () => {
       });
     }
   };
-
-  useEffect(() => {
-    let aux = desafios.tiempoArranque;
-    let aux2 = setInterval(() => {
-      contaDetectFace >= 0 ? setContaDetectFace(aux) : clearInterval(aux2);
-      aux--;
-    }, 1000);
-    setTimeout(() => {
-      setDetectFace(true);
-    }, (desafios.tiempoArranque + 1) * 1000);
-  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -439,8 +436,9 @@ const HomeScreen = () => {
               Platform.OS === 'ios'
                 ? {height: height, width: '100%'}
                 : {
-                    height: height,
-                    width: '100%',
+                    // height: height,
+                    // width: '100%',
+                    flex: 1,
                     aspectRatio: AspRatioo,
                     alignSelf: 'center',
                   }

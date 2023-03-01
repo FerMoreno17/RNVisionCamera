@@ -1,6 +1,6 @@
 import React from 'react';
-import {Dimensions, StatusBar, Platform} from 'react-native';
-import Svg, {Circle, Rect, Mask, Ellipse} from 'react-native-svg';
+import {Dimensions, Platform} from 'react-native';
+import Svg, {Rect, Mask, Ellipse} from 'react-native-svg';
 import {useHeaderHeight} from '@react-navigation/elements';
 import Constans from 'expo-constants';
 
@@ -13,7 +13,7 @@ function MascaraSelfie({color}: IProps) {
   const headerHeight = useHeaderHeight();
   const heightSinHeader = height - headerHeight;
   const viewBox = `0 0 ${width} ${heightSinHeader}`;
-  console.log(Constans.statusBarHeight);
+
   return (
     <Svg height={heightSinHeader} viewBox={viewBox}>
       <Mask id="mask">

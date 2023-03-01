@@ -21,6 +21,7 @@ import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {SwitchCamaraAction} from './redux/action/DesafiosAction';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
+import {useHeaderHeight} from '@react-navigation/elements';
 
 interface IProp {
   originBounds: any;
@@ -72,6 +73,8 @@ const HomeScreen = () => {
   const [originBounds, setBounds] = useState<any>();
   const [textHelp, setTextHelp] = useState('');
   const dispatch = useDispatch();
+  const headerHeight = useHeaderHeight();
+  const heightSinHeader = height - headerHeight;
 
   useEffect(() => {
     checkCameraPermission().then(resp => {
@@ -84,9 +87,9 @@ const HomeScreen = () => {
       <View
         style={{
           position: 'absolute',
-          top: originBounds.originBounds.c,
+          top: height * 0.15,
           left: `${originBounds.originBounds.b}%`,
-          height: originBounds.originBounds.d - originBounds.originBounds.c,
+          bottom: height * 0.15,
           width: originBounds.originBounds.a,
           zIndex: 1000,
           borderWidth: 3,

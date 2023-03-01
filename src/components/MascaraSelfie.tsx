@@ -1,7 +1,8 @@
 import React from 'react';
-import {Dimensions} from 'react-native';
+import {Dimensions, StatusBar, Platform} from 'react-native';
 import Svg, {Circle, Rect, Mask, Ellipse} from 'react-native-svg';
 import {useHeaderHeight} from '@react-navigation/elements';
+import Constans from 'expo-constants';
 
 interface IProps {
   color?: string;
@@ -9,15 +10,29 @@ interface IProps {
 
 function MascaraSelfie({color}: IProps) {
   const {height, width} = Dimensions.get('window');
-  const viewBox = `0 0 ${width} ${height}`;
   const headerHeight = useHeaderHeight();
   const heightSinHeader = height - headerHeight;
-
+  const viewBox = `0 0 ${width} ${heightSinHeader}`;
+  console.log(Constans.statusBarHeight);
   return (
-    <Svg height={height} viewBox={viewBox}>
+    <Svg height={heightSinHeader} viewBox={viewBox}>
       <Mask id="mask">
         <Rect height={heightSinHeader} width={'100%'} fill="white" />
-        <Ellipse cx="50%" cy="47%" rx={'43%'} ry={'27%'} fill="black" />
+        <Ellipse
+          cx="50%"
+          cy={
+            (heightSinHeader -
+              (Platform.OS === 'ios' ? Constans.statusBarHeight : 0)) *
+            0.5
+          }
+          rx={'45%'}
+          ry={
+            (heightSinHeader -
+              (Platform.OS === 'ios' ? Constans.statusBarHeight : 0)) *
+            0.325
+          }
+          fill="black"
+        />
       </Mask>
       <Rect
         height={heightSinHeader}

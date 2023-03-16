@@ -13,6 +13,14 @@ import {
   IntervaloFrame,
   TiempoArranque,
   TiempoCaptura,
+  TextoMirarIzq,
+  TextoMirarDer,
+  TextoMirarFrente,
+  TextoAlejar,
+  TextoMAcercar,
+  TextoCentrar,
+  TextoRealizarDesa,
+  TextoMDentroDelRango,
 } from './redux/action/DesafiosAction';
 import {useNavigation} from '@react-navigation/native';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
@@ -47,6 +55,7 @@ const ConfiguracionScreen = () => {
     desafios.guiñoDerecho.min.toString(),
   );
   const [sonrisaMAX, setSonrisaMAX] = useState(desafios.sonreir.max.toString());
+
   const [sonrisaMIN, setSonrisaMIN] = useState(desafios.sonreir.min.toString());
   const [mirarFMAX, setMirarFMAX] = useState(
     desafios.mirarFrente.max.toString(),
@@ -64,6 +73,21 @@ const ConfiguracionScreen = () => {
 
   const [intervaloFrame, setIntervaloFrame] = useState(
     desafios.intervaloFrame.toString(),
+  );
+
+  const [textoMirarIzq, setTextoMirarIzq] = useState(desafios.textoDesafioDer);
+  const [textoMirarDer, setTextoMirarDer] = useState(desafios.textoDesafioIzq);
+  const [textoMirarFrente, setTextoMirarFrente] = useState(
+    desafios.textoDesafioFrente,
+  );
+  const [textoAcercarse, setTextoAcercarse] = useState(desafios.textoAcercarse);
+  const [textoAlejarse, setTextoAlejarse] = useState(desafios.textoAlejarse);
+  const [textoCentrarse, setTextoCentrarse] = useState(desafios.textoCentrarse);
+  const [textoRealizarDesafio, setTextoRealizarDesafio] = useState(
+    desafios.textoRealizarDesafio,
+  );
+  const [textoDentroDelRango, setTextoDentroDelRango] = useState(
+    desafios.textoDentroDelRango,
   );
 
   const navigation = useNavigation();
@@ -108,6 +132,14 @@ const ConfiguracionScreen = () => {
         max: parseFloat(sonrisaMAX === '' ? '0' : sonrisaMAX),
       }),
     );
+    dispatch(TextoMirarIzq(textoMirarIzq));
+    dispatch(TextoMirarDer(textoMirarDer));
+    dispatch(TextoMirarFrente(textoMirarFrente));
+    dispatch(TextoAlejar(textoAlejarse));
+    dispatch(TextoMAcercar(textoAcercarse));
+    dispatch(TextoCentrar(textoCentrarse));
+    dispatch(TextoRealizarDesa(textoRealizarDesafio));
+    dispatch(TextoMDentroDelRango(textoDentroDelRango));
 
     navigation.navigate('HomeScreen', {} as any);
   };
@@ -115,7 +147,7 @@ const ConfiguracionScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
-        <Text style={styles.titulo}>Mirar Izquierda</Text>
+        {/* <Text style={styles.titulo}>Mirar Izquierda</Text>
         <View style={styles.containerInputs}>
           <Text style={styles.placeHolder}>MIN</Text>
           <TextInput
@@ -216,7 +248,7 @@ const ConfiguracionScreen = () => {
             style={styles.textInput}
             onChangeText={setSonrisaMAX}
           />
-        </View>
+        </View> */}
         <Text style={styles.titulo}>Tiempo para iniciar el desafio(1=1s)</Text>
         <View style={styles.contTiempo}>
           <TextInput
@@ -235,7 +267,7 @@ const ConfiguracionScreen = () => {
             onChangeText={setTiempoCaptura}
           />
         </View>
-        <Text style={styles.titulo}>Intervalo de cada frame(1000=1s)</Text>
+        {/* <Text style={styles.titulo}>Intervalo de cada frame(1000=1s)</Text>
         <View style={styles.contTiempo}>
           <TextInput
             keyboardType="numbers-and-punctuation"
@@ -243,7 +275,63 @@ const ConfiguracionScreen = () => {
             style={styles.textInputTiempos}
             onChangeText={setIntervaloFrame}
           />
-        </View>
+        </View> */}
+        <Text style={styles.titulo}>Desafio mirar izquierda</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoMirarIzq}
+          style={styles.textInputTextos}
+          onChangeText={setTextoMirarIzq}
+        />
+        <Text style={styles.titulo}>Desafio mirar derecha</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoMirarDer}
+          style={styles.textInputTextos}
+          onChangeText={setTextoMirarDer}
+        />
+        <Text style={styles.titulo}>Desafio mirar frente</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoMirarFrente}
+          style={styles.textInputTextos}
+          onChangeText={setTextoMirarFrente}
+        />
+        <Text style={styles.titulo}>Alejar cara</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoAlejarse}
+          style={styles.textInputTextos}
+          onChangeText={setTextoAlejarse}
+        />
+        <Text style={styles.titulo}>Acercar cara</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoAcercarse}
+          style={styles.textInputTextos}
+          onChangeText={setTextoAcercarse}
+        />
+        <Text style={styles.titulo}>Centrar cara</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoCentrarse}
+          style={styles.textInputTextos}
+          onChangeText={setTextoCentrarse}
+        />
+        <Text style={styles.titulo}>Realizar desafio</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoRealizarDesafio}
+          style={styles.textInputTextos}
+          onChangeText={setTextoRealizarDesafio}
+        />
+        <Text style={styles.titulo}>Dentro del rango permitido</Text>
+        <TextInput
+          keyboardType="numbers-and-punctuation"
+          value={textoDentroDelRango}
+          style={styles.textInputTextos}
+          onChangeText={setTextoDentroDelRango}
+        />
       </ScrollView>
       <View
         style={{
@@ -296,6 +384,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20,
   },
+  textInputTextos: {
+    width: '100%',
+    borderColor: 'black',
+    borderWidth: 1,
+    color: 'black',
+    fontSize: 20,
+    paddingLeft: 15,
+  },
   containerInputs: {
     display: 'flex',
     flexDirection: 'row',
@@ -322,7 +418,6 @@ const styles = StyleSheet.create({
   contTiempo: {
     display: 'flex',
     flexDirection: 'row',
-    paddingLeft: '26%',
     alignItems: 'center',
   },
 });

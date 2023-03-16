@@ -9,6 +9,7 @@ import ConfiguracionScreen from './ConfiguracionScreen';
 import PreviewScreen from './PreviewScreen';
 import HomeScreen from './HomeScreen';
 import {PersistGate} from 'redux-persist/integration/react';
+import ValidacionExitosaScreen from './ValidacionExitosaScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,17 +27,23 @@ const App = () => {
             }}
             drawerContent={() => <DrawerContent />}>
             <Drawer.Screen
-              options={{headerTitle: 'Camara'}}
+              options={{headerTitle: 'Cámara'}}
               name="HomeScreen"
               component={HomeScreen}
             />
+            <Drawer.Screen
+              options={{headerTitle: 'Cámara'}}
+              name="ValidacionExitosaScreen"
+              component={ValidacionExitosaScreen}
+            />
+
             <Drawer.Screen
               options={{headerTitle: 'Configuración'}}
               name="ConfiguracionScreen"
               component={ConfiguracionScreen}
             />
             <Drawer.Screen
-              options={{headerTitle: 'Vista previa'}}
+              options={{headerTitle: 'Cámara'}}
               name="PreviewScreen"
               component={PreviewScreen}
             />

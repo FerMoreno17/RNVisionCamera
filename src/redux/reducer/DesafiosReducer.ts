@@ -11,6 +11,14 @@ import {
   TIEMPO_CAPTURA,
   TIEMPO_ARRANQUE,
   INTERVALO_FRAME,
+  TEXTO_MIRAR_IZQUIERDA,
+  TEXTO_MIRAR_DERECHA,
+  TEXTO_MIRAR_FRENTE,
+  ALEJAR,
+  ACERCAR,
+  CENTRAR,
+  REALIZAR_DESAFIO,
+  DENTRO_DE_RANGO,
 } from '../action/types';
 export interface IDesafiosReducer {
   mirarFrente: {max: number; min: number};
@@ -24,6 +32,14 @@ export interface IDesafiosReducer {
   tiempoCaptura: number;
   intervaloFrame: number;
   tiempoArranque: number;
+  textoDesafioIzq: string;
+  textoDesafioDer: string;
+  textoDesafioFrente: string;
+  textoAcercarse: string;
+  textoAlejarse: string;
+  textoCentrarse: string;
+  textoRealizarDesafio: string;
+  textoDentroDelRango: string;
 }
 
 const initialState = {
@@ -33,11 +49,19 @@ const initialState = {
   guiñoIzquierdo: {max: 0.5, min: 0},
   guiñoDerecho: {max: 0.5, min: 0},
   sonreir: {max: 1, min: 0.7},
-  value: ['Mirar Izquierda'],
+  value: ['Mirar Frente', 'Mirar Izquierda', 'Mirar Derecha'],
   frontSelected: true,
   tiempoCaptura: 3,
   intervaloFrame: 25,
   tiempoArranque: 3,
+  textoDesafioIzq: 'Mirar hacia la izquierda',
+  textoDesafioDer: 'Mirar hacia la derecha',
+  textoDesafioFrente: 'Mirar hacia el frente',
+  textoAcercarse: 'Acérquese al celular',
+  textoAlejarse: 'Aléjese del celular',
+  textoCentrarse: 'Ubíquese en la centro',
+  textoRealizarDesafio: 'Realice el desafio',
+  textoDentroDelRango: 'No te muevas...',
 };
 
 export function DesafiosReducer(
@@ -45,6 +69,46 @@ export function DesafiosReducer(
   action: IAction,
 ): IDesafiosReducer {
   switch (action.type) {
+    case TEXTO_MIRAR_IZQUIERDA:
+      return {
+        ...state,
+        textoDesafioIzq: action.payload,
+      };
+    case TEXTO_MIRAR_DERECHA:
+      return {
+        ...state,
+        textoDesafioDer: action.payload,
+      };
+    case TEXTO_MIRAR_FRENTE:
+      return {
+        ...state,
+        textoDesafioFrente: action.payload,
+      };
+    case ALEJAR:
+      return {
+        ...state,
+        textoAlejarse: action.payload,
+      };
+    case ACERCAR:
+      return {
+        ...state,
+        textoAcercarse: action.payload,
+      };
+    case CENTRAR:
+      return {
+        ...state,
+        textoCentrarse: action.payload,
+      };
+    case REALIZAR_DESAFIO:
+      return {
+        ...state,
+        textoRealizarDesafio: action.payload,
+      };
+    case DENTRO_DE_RANGO:
+      return {
+        ...state,
+        textoDentroDelRango: action.payload,
+      };
     case DESAFIOS:
       return {
         ...state,

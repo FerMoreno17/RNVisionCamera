@@ -27,7 +27,7 @@ export const DrawerContent = () => {
             navigation.reset({routes: [{name: 'ConfiguracionScreen'}]});
           }}
         />
-        {desafiosList.map((resp, index) => (
+        {/* {desafiosList.map((resp, index) => (
           <DrawerItem
             label={resp.toLocaleUpperCase()}
             key={index}
@@ -38,7 +38,7 @@ export const DrawerContent = () => {
                 navigation.reset({routes: [{name: 'HomeScreen'}]});
             }}
           />
-        ))}
+        ))} */}
       </DrawerContentScrollView>
     </View>
   );

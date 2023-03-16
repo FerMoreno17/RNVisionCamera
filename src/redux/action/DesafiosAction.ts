@@ -11,7 +11,49 @@ import {
   TIEMPO_CAPTURA,
   INTERVALO_FRAME,
   TIEMPO_ARRANQUE,
+  TEXTO_MIRAR_IZQUIERDA,
+  TEXTO_MIRAR_DERECHA,
+  TEXTO_MIRAR_FRENTE,
+  ALEJAR,
+  ACERCAR,
+  CENTRAR,
+  REALIZAR_DESAFIO,
+  DENTRO_DE_RANGO,
 } from '../action/types';
+
+const TextoMirarIzq = (value: string): IAction => ({
+  type: TEXTO_MIRAR_IZQUIERDA,
+  payload: value,
+});
+const TextoMirarDer = (value: string): IAction => ({
+  type: TEXTO_MIRAR_DERECHA,
+  payload: value,
+});
+const TextoMirarFrente = (value: string): IAction => ({
+  type: TEXTO_MIRAR_FRENTE,
+  payload: value,
+});
+const TextoAlejar = (value: string): IAction => ({
+  type: ALEJAR,
+  payload: value,
+});
+const TextoMAcercar = (value: string): IAction => ({
+  type: ACERCAR,
+  payload: value,
+});
+const TextoCentrar = (value: string): IAction => ({
+  type: CENTRAR,
+  payload: value,
+});
+const TextoRealizarDesa = (value: string): IAction => ({
+  type: REALIZAR_DESAFIO,
+  payload: value,
+});
+const TextoMDentroDelRango = (value: string): IAction => ({
+  type: DENTRO_DE_RANGO,
+  payload: value,
+});
+
 const TiempoCaptura = (value: number): IAction => ({
   type: TIEMPO_CAPTURA,
   payload: value,
@@ -69,4 +111,12 @@ export {
   TiempoCaptura,
   IntervaloFrame,
   TiempoArranque,
+  TextoMirarIzq,
+  TextoMirarDer,
+  TextoMirarFrente,
+  TextoAlejar,
+  TextoMAcercar,
+  TextoCentrar,
+  TextoRealizarDesa,
+  TextoMDentroDelRango,
 };

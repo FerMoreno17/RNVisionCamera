@@ -29,7 +29,7 @@ function MascaraSelfie({color}: IProps) {
           ry={
             (heightSinHeader -
               (Platform.OS === 'ios' ? Constans.statusBarHeight : 0)) *
-            0.325
+            0.3
           }
           fill="black"
         />

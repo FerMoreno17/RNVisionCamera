@@ -80,6 +80,10 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const [spinner, setSpinner] = useState(false);
 
+  const widthBar = width * 0.9;
+  const barPoint = widthBar / 2;
+  const pointOffset = 30;
+
   useEffect(() => {
     checkCameraPermission().then(resp => {
       setPermited(resp);
@@ -388,7 +392,7 @@ const HomeScreen = () => {
   }
 
   const prepareRatio = async () => {
-    if (cameraRef) {
+    if (cameraRef && Platform.OS === 'android') {
       await cameraRef.current?.getSupportedRatiosAsync().then(ratios => {
         const ratio =
           ratios.find(ratiox => ratiox === '16:9') || ratios[ratios.length - 1];
@@ -550,7 +554,7 @@ const HomeScreen = () => {
             }}
           />
 
-          {!initDesa && (
+          {!initDesa ? (
             <>
               <View style={styles.switch}>
                 <Switch
@@ -579,6 +583,69 @@ const HomeScreen = () => {
                 <Text style={styles.buttonLabel}>INICIAR</Text>
               </Pressable>
             </>
+          ) : (
+            <View
+              style={{
+                backgroundColor: 'transparent',
+                width: widthBar,
+                height: 25,
+                zIndex: 1000,
+                alignSelf: 'center',
+                position: 'absolute',
+                bottom: 80,
+                justifyContent: 'center',
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#747474',
+                  width: '100%',
+                  height: 25,
+                  justifyContent: 'center',
+                  borderRadius: 20,
+                  shadowColor: '#000',
+                  shadowOffset: {
+                    width: 0,
+                    height: 3,
+                  },
+                  shadowOpacity: 0.29,
+                  shadowRadius: 4.65,
+
+                  elevation: 7,
+                }}>
+                <View
+                  style={{
+                    backgroundColor: '#17D641',
+                    width: 50,
+                    height: 25,
+                    position: 'absolute',
+                    left:
+                      desafios.value[0] === desafiosList.MI
+                        ? 100
+                        : desafios.value[0] === desafiosList.MD
+                        ? 240
+                        : 160,
+                  }}
+                />
+                <View
+                  style={{
+                    backgroundColor: 'white',
+                    width: 20,
+                    height: 20,
+                    borderRadius: 10,
+                    left:
+                      condicionX !== undefined
+                        ? condicionX > 10 && condicionX < 90
+                          ? barPoint + condicionX + pointOffset
+                          : condicionX > 270 && condicionX < 350
+                          ? condicionX - barPoint - pointOffset
+                          : condicionX <= 10
+                          ? condicionX + barPoint
+                          : condicionX - barPoint
+                        : barPoint,
+                  }}
+                />
+              </View>
+            </View>
           )}
         </View>
       )}

@@ -360,9 +360,8 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
-            console.log(desafios.value.length);
-
-            desafios.value.length === 1 && setSpinner(true);
+            desafios.value.length === 1 &&
+              (setSpinner(true), setIndicator(false), setTextHelp(''));
             enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs).then(
               () => {
                 desafios.value.length === 1 &&
@@ -494,6 +493,14 @@ const HomeScreen = () => {
           <View style={styles.mask}>
             <MascaraSelfie color={indicator ? '#2BC11E9C' : '#ffffffc5'} />
           </View>
+          <View
+            style={{
+              position: 'absolute',
+              backgroundColor: '#00000033',
+              zIndex: 99,
+              width: '100%',
+              height: height,
+            }}></View>
           {initDesa && (
             <View style={styles.contenedorDatos}>
               <Text style={[styles.reto, indicator && {color: '#fff'}]}>

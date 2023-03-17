@@ -10,6 +10,7 @@ import PreviewScreen from './PreviewScreen';
 import HomeScreen from './HomeScreen';
 import {PersistGate} from 'redux-persist/integration/react';
 import ValidacionExitosaScreen from './ValidacionExitosaScreen';
+import ConsejosFeVidaScreen from './ConsejosFeVidaScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -26,6 +27,11 @@ const App = () => {
               headerTintColor: '#fff',
             }}
             drawerContent={() => <DrawerContent />}>
+            <Drawer.Screen
+              options={{headerTitle: 'Cámara'}}
+              name="ConsejosFeVidaScreen"
+              component={ConsejosFeVidaScreen}
+            />
             <Drawer.Screen
               options={{headerTitle: 'Cámara'}}
               name="HomeScreen"

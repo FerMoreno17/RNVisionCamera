@@ -75,8 +75,8 @@ const ConfiguracionScreen = () => {
     desafios.intervaloFrame.toString(),
   );
 
-  const [textoMirarIzq, setTextoMirarIzq] = useState(desafios.textoDesafioDer);
-  const [textoMirarDer, setTextoMirarDer] = useState(desafios.textoDesafioIzq);
+  const [textoMirarIzq, setTextoMirarIzq] = useState(desafios.textoDesafioIzq);
+  const [textoMirarDer, setTextoMirarDer] = useState(desafios.textoDesafioDer);
   const [textoMirarFrente, setTextoMirarFrente] = useState(
     desafios.textoDesafioFrente,
   );

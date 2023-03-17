@@ -8,6 +8,7 @@ import {
   Pressable,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import AppCard from './components/AppCard';
 
 export const ConsejosFeVidaRoute = 'ConsejosFeVida';
 
@@ -18,16 +19,18 @@ function ConsejosFeVidaScreen() {
     <SafeAreaView style={styles.main}>
       <View style={[styles.body, styles.marginSinTitulo]}>
         <Text style={[styles.marginConsejo, styles.titulo]}>
-          {'Para dar la Fe de Vida vamos \na tomar una foto de tu cara'}
+          Vamos tomar unas fotos de tu cara y a pedirte que hagas algunos
+          gestos.
         </Text>
       </View>
+      <AppCard />
 
       <Pressable
         style={styles.button}
         onPress={() => {
           navigation.navigate('HomeScreen');
         }}>
-        <Text style={styles.buttonLabel}>INICIAR</Text>
+        <Text style={styles.buttonLabel}>EMPEZAR</Text>
       </Pressable>
       <View style={styles.actions}></View>
     </SafeAreaView>
@@ -51,7 +54,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     alignSelf: 'center',
-    width: '90%',
+    width: '100%',
   },
   buttonLabel: {
     fontSize: 24,
@@ -59,8 +62,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   body: {
-    flex: 8,
     alignItems: 'center',
+    marginBottom: 50,
   },
   actions: {
     paddingBottom: 40,
@@ -70,7 +73,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: 12,
+    paddingHorizontal: '5%',
     backgroundColor: 'white',
   },
   marginSinTitulo: {

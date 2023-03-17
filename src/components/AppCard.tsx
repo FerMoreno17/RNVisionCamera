@@ -1,7 +1,25 @@
 import React from 'react';
-import {StyleSheet, View, Platform, Text} from 'react-native';
+import {StyleSheet, View, Platform, Text, Image} from 'react-native';
 
-function AppCard({item}) {
+export const AppCard = () => {
+  const DATA = [
+    {
+      id: '1',
+      imageUrl: require('../assets/Vector.png'),
+      title: 'Buscá un lugar con buena luz.',
+    },
+    {
+      id: '2',
+      imageUrl: require('../assets/SinVentana.png'),
+      title: 'Con un fondo claro y sin ventanas.',
+    },
+    {
+      id: '3',
+      imageUrl: require('../assets/SinAnteojos.png'),
+      title: 'No uses anteojos, barbijo, ni nada que tape tu rostro.',
+    },
+  ];
+
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',
@@ -43,12 +61,22 @@ function AppCard({item}) {
       borderRadius: 10,
     },
   });
+
   return (
-    <View style={[styles.container, styles.shadow, styles.fullBorderRadius]}>
-      <View style={styles.icon}>{item.imageUrl}</View>
-      <Text style={styles.label}>{item.title}</Text>
-    </View>
+    <>
+      {DATA.map(item => (
+        <View
+          style={[styles.container, styles.shadow, styles.fullBorderRadius]}>
+          <Image
+            style={{width: 30, height: 30, marginRight: 25}}
+            resizeMode="contain"
+            source={item.imageUrl}
+          />
+          <Text style={styles.label}>{item.title}</Text>
+        </View>
+      ))}
+    </>
   );
-}
+};
 
 export default AppCard;

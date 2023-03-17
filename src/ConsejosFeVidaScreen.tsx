@@ -18,7 +18,7 @@ function ConsejosFeVidaScreen() {
   return (
     <SafeAreaView style={styles.main}>
       <Text style={styles.titulo}>
-        Vamos tomar unas fotos de tu cara y a pedirte que hagas algunos gestos.
+        {'Consejos para la prueba \n biométrica'}
       </Text>
       <AppCard />
       <Pressable
@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     alignSelf: 'center',
-    width: '100%',
+    width: '95%',
   },
   buttonLabel: {
     fontSize: 24,
@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     alignItems: 'center',
-    paddingHorizontal: '5%',
+    paddingVertical: 20,
     backgroundColor: 'white',
   },
   marginSinTitulo: {
@@ -79,5 +79,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 50,
     marginTop: '20%',
+    width: '95%',
   },
 });

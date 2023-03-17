@@ -17,14 +17,10 @@ function ConsejosFeVidaScreen() {
 
   return (
     <SafeAreaView style={styles.main}>
-      <View style={[styles.body, styles.marginSinTitulo]}>
-        <Text style={[styles.marginConsejo, styles.titulo]}>
-          Vamos tomar unas fotos de tu cara y a pedirte que hagas algunos
-          gestos.
-        </Text>
-      </View>
+      <Text style={styles.titulo}>
+        Vamos tomar unas fotos de tu cara y a pedirte que hagas algunos gestos.
+      </Text>
       <AppCard />
-
       <Pressable
         style={styles.button}
         onPress={() => {
@@ -41,9 +37,6 @@ export default ConsejosFeVidaScreen;
 const {width, height} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
-  marginConsejo: {
-    marginBottom: 24,
-  },
   button: {
     zIndex: 100,
     backgroundColor: '#00AEEF',
@@ -84,5 +77,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'black',
     textAlign: 'center',
+    marginBottom: 50,
+    marginTop: '20%',
   },
 });

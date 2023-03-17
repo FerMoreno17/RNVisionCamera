@@ -27,6 +27,14 @@ export const DrawerContent = () => {
             navigation.reset({routes: [{name: 'ConfiguracionScreen'}]});
           }}
         />
+        <DrawerItem
+          label={'RESET DESAFÍO'}
+          labelStyle={styles.texto}
+          style={{backgroundColor: '#005855'}}
+          onPress={() => {
+            navigation.reset({routes: [{name: 'ConsejosFeVidaScreen'}]});
+          }}
+        />
         {/* {desafiosList.map((resp, index) => (
           <DrawerItem
             label={resp.toLocaleUpperCase()}

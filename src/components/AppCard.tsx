@@ -35,6 +35,7 @@ export const AppCard = () => {
           marginBottom: 12,
         },
       }),
+      width: '95%',
     },
     label: {
       flex: 3,
@@ -66,6 +67,7 @@ export const AppCard = () => {
     <>
       {DATA.map(item => (
         <View
+          key={item.id}
           style={[styles.container, styles.shadow, styles.fullBorderRadius]}>
           <Image
             style={{width: 30, height: 30, marginRight: 25}}

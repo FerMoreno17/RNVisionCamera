@@ -622,7 +622,7 @@ const HomeScreen = () => {
                       desafios.value[0] === desafiosList.MI
                         ? 100
                         : desafios.value[0] === desafiosList.MD
-                        ? 240
+                        ? 220
                         : 160,
                   }}
                 />

@@ -74,7 +74,7 @@ const App = () => {
               component={PreviewScreen}
             />
           </Drawer.Navigator>
-          <ModalSalir showModal={true} />
+          <ModalSalir />
         </NavigationContainer>
       </PersistGate>
     </Provider>

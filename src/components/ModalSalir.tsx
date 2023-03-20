@@ -5,10 +5,7 @@ import {useDispatch, useSelector} from 'react-redux';
 import {ModalS} from '../redux/action/DesafiosAction';
 import {IDesafiosReducer} from '../redux/reducer/DesafiosReducer';
 
-interface IProps {
-  showModal: boolean;
-}
-export const ModalSalir = ({showModal}: IProps) => {
+export const ModalSalir = () => {
   const dispatch = useDispatch();
   const desafios: IDesafiosReducer = useSelector(
     (state: any) => state.desafios.modal,

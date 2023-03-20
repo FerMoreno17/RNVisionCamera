@@ -1,9 +1,17 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect} from 'react';
-import {StyleSheet, Text, Pressable, Image, BackHandler} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  Pressable,
+  Image,
+  BackHandler,
+  View,
+} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch} from 'react-redux';
 import {ModalS} from './redux/action/DesafiosAction';
+import {Platform} from 'react-native';
 
 const ValidacionExitosaScreen = () => {
   const navigation = useNavigation();
@@ -16,24 +24,26 @@ const ValidacionExitosaScreen = () => {
   }, []);
   return (
     <SafeAreaView style={styles.contenedor}>
-      <Text style={styles.titulo}>Validación biométrica exitosa</Text>
-      <Image
-        style={{width: '100%', flex: 1, marginTop: '-60%'}}
-        resizeMode="contain"
-        source={require('./assets/validacionExitosa.png')}
-      />
-      <Pressable
-        style={({pressed}) => [
-          {
-            backgroundColor: pressed ? '#17A641' : '#17D641',
-          },
-          styles.button,
-        ]}
-        onPress={() => {
-          navigation.reset({routes: [{name: 'HomeScreen'}]});
-        }}>
-        <Text style={styles.buttonLabel}>FINALIZAR</Text>
-      </Pressable>
+      <View style={styles.body}>
+        <Text style={styles.titulo}>Validación biométrica exitosa</Text>
+        <Image
+          style={styles.image}
+          resizeMode="contain"
+          source={require('./assets/validacionExitosa.png')}
+        />
+        <Pressable
+          style={({pressed}) => [
+            {
+              backgroundColor: pressed ? '#17A641' : '#17D641',
+            },
+            styles.button,
+          ]}
+          onPress={() => {
+            navigation.reset({routes: [{name: 'HomeScreen'}]});
+          }}>
+          <Text style={styles.buttonLabel}>FINALIZAR</Text>
+        </Pressable>
+      </View>
     </SafeAreaView>
   );
 };
@@ -46,7 +56,6 @@ const styles = StyleSheet.create({
     color: 'black',
     textAlign: 'center',
     fontWeight: '500',
-    marginTop: '20%',
   },
   contenedor: {
     width: '90%',
@@ -58,7 +67,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 25,
-    position: 'absolute',
     bottom: 40,
     alignSelf: 'center',
     width: '100%',
@@ -76,5 +84,14 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'white',
     fontWeight: '700',
+  },
+  body: {
+    flex: 1,
+    paddingTop: Platform.OS === 'android' ? '10%' : 0,
+  },
+  image: {
+    width: '100%',
+    flex: 1,
+    marginTop: '-40%',
   },
 });

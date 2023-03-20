@@ -22,21 +22,25 @@ function ConsejosFeVidaScreen() {
   }, []);
   return (
     <SafeAreaView style={styles.main}>
-      <Text style={styles.titulo}>Consejos para la prueba biométrica</Text>
-      <AppCard />
-      <Pressable
-        style={({pressed}) => [
-          {
-            backgroundColor: pressed ? '#17A641' : '#17D641',
-          },
-          styles.button,
-        ]}
-        onPress={() => {
-          navigation.navigate('HomeScreen');
-        }}>
-        <Text style={styles.buttonLabel}>SIGUIENTE</Text>
-      </Pressable>
-      <View style={styles.actions} />
+      <View style={styles.body}>
+        <Text style={styles.titulo}>
+          {'Consejos para la prueba \nbiométrica'}
+        </Text>
+        <AppCard />
+        <Pressable
+          style={({pressed}) => [
+            {
+              backgroundColor: pressed ? '#17A641' : '#17D641',
+            },
+            styles.button,
+          ]}
+          onPress={() => {
+            navigation.navigate('HomeScreen');
+          }}>
+          <Text style={styles.buttonLabel}>SIGUIENTE</Text>
+        </Pressable>
+        <View style={styles.actions} />
+      </View>
     </SafeAreaView>
   );
 }
@@ -71,8 +75,8 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
   body: {
-    alignItems: 'center',
-    marginBottom: 50,
+    flex: 1,
+    marginHorizontal: '5%',
   },
   actions: {
     paddingBottom: 40,
@@ -82,7 +86,6 @@ const styles = StyleSheet.create({
   main: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 20,
     backgroundColor: 'white',
   },
   marginSinTitulo: {

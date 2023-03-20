@@ -41,13 +41,8 @@ const App = () => {
                 headerTitleAlign: 'center',
                 headerLeft: () => <></>,
               }}
-              name="ConsejosFeVidaScreen"
-              component={ConsejosFeVidaScreen}
-            />
-            <Drawer.Screen
-              options={{headerTitle: 'Cámara', headerTitleAlign: 'center'}}
-              name="HomeScreen"
-              component={HomeScreen}
+              name="ValidacionExitosaScreen"
+              component={ValidacionExitosaScreen}
             />
             <Drawer.Screen
               options={{
@@ -55,8 +50,13 @@ const App = () => {
                 headerTitleAlign: 'center',
                 headerLeft: () => <></>,
               }}
-              name="ValidacionExitosaScreen"
-              component={ValidacionExitosaScreen}
+              name="ConsejosFeVidaScreen"
+              component={ConsejosFeVidaScreen}
+            />
+            <Drawer.Screen
+              options={{headerTitle: 'Cámara', headerTitleAlign: 'center'}}
+              name="HomeScreen"
+              component={HomeScreen}
             />
 
             <Drawer.Screen

@@ -35,7 +35,7 @@ export const AppCard = () => {
           marginBottom: 12,
         },
       }),
-      width: '95%',
+      width: '100%',
     },
     label: {
       flex: 3,

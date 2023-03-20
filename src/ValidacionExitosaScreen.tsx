@@ -15,7 +15,12 @@ const ValidacionExitosaScreen = () => {
         source={require('./assets/validacionExitosa.png')}
       />
       <Pressable
-        style={styles.button}
+        style={({pressed}) => [
+          {
+            backgroundColor: pressed ? '#17A641' : '#17D641',
+          },
+          styles.button,
+        ]}
         onPress={() => {
           navigation.reset({routes: [{name: 'HomeScreen'}]});
         }}>
@@ -41,7 +46,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   button: {
-    backgroundColor: '#11B435',
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -50,6 +54,15 @@ const styles = StyleSheet.create({
     bottom: 40,
     alignSelf: 'center',
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   buttonLabel: {
     fontSize: 24,

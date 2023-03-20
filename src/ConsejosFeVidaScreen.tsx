@@ -17,16 +17,19 @@ function ConsejosFeVidaScreen() {
 
   return (
     <SafeAreaView style={styles.main}>
-      <Text style={styles.titulo}>
-        Vamos tomar unas fotos de tu cara y a pedirte que hagas algunos gestos.
-      </Text>
+      <Text style={styles.titulo}>Consejos para la prueba biométrica</Text>
       <AppCard />
       <Pressable
-        style={styles.button}
+        style={({pressed}) => [
+          {
+            backgroundColor: pressed ? '#17A641' : '#17D641',
+          },
+          styles.button,
+        ]}
         onPress={() => {
           navigation.navigate('HomeScreen');
         }}>
-        <Text style={styles.buttonLabel}>EMPEZAR</Text>
+        <Text style={styles.buttonLabel}>SIGUIENTE</Text>
       </Pressable>
       <View style={styles.actions}></View>
     </SafeAreaView>
@@ -39,7 +42,6 @@ const {width, height} = Dimensions.get('screen');
 const styles = StyleSheet.create({
   button: {
     zIndex: 100,
-    backgroundColor: '#00AEEF',
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -48,6 +50,15 @@ const styles = StyleSheet.create({
     bottom: 40,
     alignSelf: 'center',
     width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   buttonLabel: {
     fontSize: 24,
@@ -73,11 +84,11 @@ const styles = StyleSheet.create({
     marginTop: height * 0.085,
   },
   titulo: {
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 24,
     color: 'black',
     textAlign: 'center',
-    marginBottom: 50,
-    marginTop: '20%',
+    marginBottom: '25%',
+    marginTop: '10%',
   },
 });

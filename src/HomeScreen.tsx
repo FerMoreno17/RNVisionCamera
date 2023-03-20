@@ -553,29 +553,34 @@ const HomeScreen = () => {
           {!initDesa && (
             <>
               <View style={styles.switch}>
-                <Switch
-                  value={desafios.frontSelected}
-                  onValueChange={() => {
+                <Pressable
+                  onPress={() => {
                     dispatch(SwitchCamaraAction(!desafios.frontSelected));
-                  }}
-                  thumbColor={desafios.frontSelected ? '#00aeef' : '#fff'}
-                  trackColor={{
-                    false: '#00000099',
-                    true: '#ffffff99',
-                  }}
-                />
-                <Text
-                  style={{
-                    color: 'black',
-                    fontSize: 20,
-                    fontWeight: '700',
-                    marginLeft: 15,
                   }}>
-                  Cambiar cámara
-                </Text>
+                  {!desafios.frontSelected ? (
+                    <Image
+                      style={{width: 40, height: 35}}
+                      resizeMode="stretch"
+                      source={require('./assets/switchGreen.png')}
+                    />
+                  ) : (
+                    <Image
+                      style={{width: 40, height: 35}}
+                      resizeMode="stretch"
+                      source={require('./assets/switch.png')}
+                    />
+                  )}
+                </Pressable>
               </View>
 
-              <Pressable style={styles.button} onPress={iniciarDesafio}>
+              <Pressable
+                style={({pressed}) => [
+                  {
+                    backgroundColor: pressed ? '#17A641' : '#17D641',
+                  },
+                  styles.button,
+                ]}
+                onPress={iniciarDesafio}>
                 <Text style={styles.buttonLabel}>INICIAR</Text>
               </Pressable>
             </>
@@ -641,7 +646,6 @@ const styles = StyleSheet.create({
   },
   button: {
     zIndex: 100,
-    backgroundColor: '#11B435',
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -650,6 +654,15 @@ const styles = StyleSheet.create({
     bottom: 40,
     alignSelf: 'center',
     width: '90%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   buttonLabel: {
     fontSize: 24,
@@ -693,10 +706,10 @@ const styles = StyleSheet.create({
   switch: {
     position: 'absolute',
     zIndex: 1001,
-    bottom: 75,
+    bottom: 80,
     paddingVertical: 15,
     display: 'flex',
-    left: '2.5%',
+    left: '10%',
     flexDirection: 'row',
     justifyContent: 'center',
     marginVertical: 20,

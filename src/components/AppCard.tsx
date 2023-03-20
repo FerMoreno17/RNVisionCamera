@@ -11,12 +11,12 @@ export const AppCard = () => {
     {
       id: '2',
       imageUrl: require('../assets/SinVentana.png'),
-      title: 'Con un fondo claro y sin ventanas.',
+      title: 'Con un fondo claro y sin ventanas',
     },
     {
       id: '3',
       imageUrl: require('../assets/SinAnteojos.png'),
-      title: 'No uses anteojos, barbijo, ni nada que tape tu rostro.',
+      title: 'No uses anteojos, barbijo, ni nada que tape tu rostro',
     },
   ];
 
@@ -64,11 +64,12 @@ export const AppCard = () => {
 
   return (
     <>
-      {DATA.map(item => (
+      {DATA.map((item, key) => (
         <View
+          key={key}
           style={[styles.container, styles.shadow, styles.fullBorderRadius]}>
           <Image
-            style={{width: 30, height: 30, marginRight: 25}}
+            style={{width: 45, height: 45, marginRight: 25}}
             resizeMode="contain"
             source={item.imageUrl}
           />

@@ -1,11 +1,19 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
-import {StyleSheet, Text, Pressable, Image} from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet, Text, Pressable, Image, BackHandler} from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
+import {useDispatch} from 'react-redux';
+import {ModalS} from './redux/action/DesafiosAction';
 
 const ValidacionExitosaScreen = () => {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    });
+  }, []);
   return (
     <SafeAreaView style={styles.contenedor}>
       <Text style={styles.titulo}>Validación biométrica exitosa</Text>

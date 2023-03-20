@@ -22,6 +22,7 @@ import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {
   DesafiosAction,
+  ModalS,
   SwitchCamaraAction,
   TextoMirarDer,
   TextoMirarIzq,
@@ -90,7 +91,7 @@ const HomeScreen = () => {
       DesafiosAction(['Mirar Frente', 'Mirar Izquierda', 'Mirar Derecha']),
     ),
       BackHandler.addEventListener('hardwareBackPress', () => {
-        navigation.dispatch(DrawerActions.toggleDrawer());
+        dispatch(ModalS(true));
         return true;
       });
   }, []);
@@ -360,7 +361,7 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
-            desafios.value.length === 1 &&
+            desafios.value.length <= 1 &&
               (setSpinner(true), setIndicator(false), setTextHelp(''));
             enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs).then(
               () => {

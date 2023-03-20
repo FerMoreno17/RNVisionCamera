@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   Dimensions,
   Pressable,
+  BackHandler,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AppCard from './components/AppCard';
@@ -14,7 +15,11 @@ export const ConsejosFeVidaRoute = 'ConsejosFeVida';
 
 function ConsejosFeVidaScreen() {
   const navigation = useNavigation();
-
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    });
+  }, []);
   return (
     <SafeAreaView style={styles.main}>
       <Text style={styles.titulo}>Consejos para la prueba biométrica</Text>

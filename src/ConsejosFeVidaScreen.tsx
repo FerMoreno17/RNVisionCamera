@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   SafeAreaView,
   StyleSheet,
@@ -6,6 +6,7 @@ import {
   Text,
   Dimensions,
   Pressable,
+  BackHandler,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AppCard from './components/AppCard';
@@ -14,21 +15,28 @@ export const ConsejosFeVidaRoute = 'ConsejosFeVida';
 
 function ConsejosFeVidaScreen() {
   const navigation = useNavigation();
-
+  useEffect(() => {
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      return true;
+    });
+  }, []);
   return (
     <SafeAreaView style={styles.main}>
-      <Text style={styles.titulo}>
-        {'Consejos para la prueba \n biométrica'}
-      </Text>
+      <Text style={styles.titulo}>Consejos para la prueba biométrica</Text>
       <AppCard />
       <Pressable
-        style={styles.button}
+        style={({pressed}) => [
+          {
+            backgroundColor: pressed ? '#17A641' : '#17D641',
+          },
+          styles.button,
+        ]}
         onPress={() => {
           navigation.navigate('HomeScreen');
         }}>
-        <Text style={styles.buttonLabel}>EMPEZAR</Text>
+        <Text style={styles.buttonLabel}>SIGUIENTE</Text>
       </Pressable>
-      <View style={styles.actions}></View>
+      <View style={styles.actions} />
     </SafeAreaView>
   );
 }
@@ -39,7 +47,6 @@ const {width, height} = Dimensions.get('screen');
 const styles = StyleSheet.create({
   button: {
     zIndex: 100,
-    backgroundColor: '#00AEEF',
     padding: 10,
     justifyContent: 'center',
     alignItems: 'center',
@@ -47,7 +54,16 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 40,
     alignSelf: 'center',
-    width: '95%',
+    width: '100%',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+
+    elevation: 5,
   },
   buttonLabel: {
     fontSize: 24,
@@ -73,12 +89,11 @@ const styles = StyleSheet.create({
     marginTop: height * 0.085,
   },
   titulo: {
-    fontWeight: '700',
+    fontWeight: '600',
     fontSize: 24,
     color: 'black',
     textAlign: 'center',
-    marginBottom: 50,
-    marginTop: '20%',
-    width: '95%',
+    marginBottom: '25%',
+    marginTop: '10%',
   },
 });

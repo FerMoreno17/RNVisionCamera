@@ -23,3 +23,4 @@ export const ACERCAR = 'ACERCAR';
 export const CENTRAR = 'CENTRAR';
 export const REALIZAR_DESAFIO = 'REALIZAR_DESAFIO';
 export const DENTRO_DE_RANGO = 'DENTRO_DE_RANGO';
+export const MODAL = 'MODAL';

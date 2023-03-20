@@ -19,6 +19,7 @@ import {
   CENTRAR,
   REALIZAR_DESAFIO,
   DENTRO_DE_RANGO,
+  MODAL,
 } from '../action/types';
 export interface IDesafiosReducer {
   mirarFrente: {max: number; min: number};
@@ -40,6 +41,7 @@ export interface IDesafiosReducer {
   textoCentrarse: string;
   textoRealizarDesafio: string;
   textoDentroDelRango: string;
+  modal: boolean;
 }
 
 const initialState = {
@@ -51,9 +53,9 @@ const initialState = {
   sonreir: {max: 1, min: 0.7},
   value: ['Mirar Frente', 'Mirar Izquierda', 'Mirar Derecha'],
   frontSelected: true,
-  tiempoCaptura: 3,
+  tiempoCaptura: 2,
   intervaloFrame: 25,
-  tiempoArranque: 3,
+  tiempoArranque: 1,
   textoDesafioIzq: 'Mirar hacia la izquierda',
   textoDesafioDer: 'Mirar hacia la derecha',
   textoDesafioFrente: 'Mirar hacia el frente',
@@ -62,6 +64,7 @@ const initialState = {
   textoCentrarse: 'Ubíquese en la centro',
   textoRealizarDesafio: 'Realice el desafio',
   textoDentroDelRango: 'No te muevas...',
+  modal: false,
 };
 
 export function DesafiosReducer(
@@ -73,6 +76,11 @@ export function DesafiosReducer(
       return {
         ...state,
         textoDesafioIzq: action.payload,
+      };
+    case MODAL:
+      return {
+        ...state,
+        modal: action.payload,
       };
     case TEXTO_MIRAR_DERECHA:
       return {

@@ -19,6 +19,7 @@ import {
   CENTRAR,
   REALIZAR_DESAFIO,
   DENTRO_DE_RANGO,
+  MODAL,
 } from '../action/types';
 
 const TextoMirarIzq = (value: string): IAction => ({
@@ -35,6 +36,10 @@ const TextoMirarFrente = (value: string): IAction => ({
 });
 const TextoAlejar = (value: string): IAction => ({
   type: ALEJAR,
+  payload: value,
+});
+const ModalS = (value: boolean): IAction => ({
+  type: MODAL,
   payload: value,
 });
 const TextoMAcercar = (value: string): IAction => ({
@@ -119,4 +124,5 @@ export {
   TextoCentrar,
   TextoRealizarDesa,
   TextoMDentroDelRango,
+  ModalS,
 };

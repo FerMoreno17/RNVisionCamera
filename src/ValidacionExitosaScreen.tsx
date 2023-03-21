@@ -32,31 +32,37 @@ const ValidacionExitosaScreen = () => {
           resizeMode="contain"
           source={require('./assets/validacionExitosa.png')}
         />
-        <View
-          style={{
-            position: 'absolute',
-            bottom: 100,
-            backgroundColor: 'red',
-            padding: 5,
-            margin: '5%',
-            width: '90%',
-            flexDirection: 'row',
-            alignItems: 'flex-end',
-          }}>
-          <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
-            Error :
-          </Text>
-          <Text style={{fontSize: 18, color: 'white'}}>
-            {desafios.valueError &&
-              desafios.valueError?.map((item, key) => {
-                return (
-                  ' ' +
-                  item +
-                  (desafios.valueError.length !== key + 1 ? ', ' : '')
-                );
-              })}
-          </Text>
-        </View>
+
+        {desafios.valueError.length > 0 && (
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 100,
+              backgroundColor: 'red',
+              padding: 5,
+              margin: '5%',
+              width: '90%',
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: '700',
+                color: 'white',
+                width: '20%',
+              }}>
+              Error :
+            </Text>
+            <Text style={{fontSize: 18, color: 'white', width: '80%'}}>
+              {desafios.valueError &&
+                desafios.valueError?.map((item, key) => {
+                  return (
+                    item + (desafios.valueError.length !== key + 1 ? ', ' : '')
+                  );
+                })}
+            </Text>
+          </View>
+        )}
         <Pressable
           style={({pressed}) => [
             {

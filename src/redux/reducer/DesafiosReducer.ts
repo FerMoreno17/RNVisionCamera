@@ -21,6 +21,7 @@ import {
   DENTRO_DE_RANGO,
   MODAL,
   DESAFIOS_ERROR,
+  FLAG_INDICADOR,
 } from '../action/types';
 export interface IDesafiosReducer {
   mirarFrente: {max: number; min: number};
@@ -44,6 +45,7 @@ export interface IDesafiosReducer {
   textoDentroDelRango: string;
   modal: boolean;
   valueError: string[];
+  flagIndicador: boolean;
 }
 
 const initialState = {
@@ -68,6 +70,7 @@ const initialState = {
   textoDentroDelRango: 'No te muevas...',
   modal: false,
   valueError: [],
+  flagIndicador: true,
 };
 
 export function DesafiosReducer(
@@ -75,6 +78,11 @@ export function DesafiosReducer(
   action: IAction,
 ): IDesafiosReducer {
   switch (action.type) {
+    case FLAG_INDICADOR:
+      return {
+        ...state,
+        flagIndicador: action.payload,
+      };
     case TEXTO_MIRAR_IZQUIERDA:
       return {
         ...state,

@@ -41,15 +41,6 @@ const App = () => {
                 headerTitleAlign: 'center',
                 headerLeft: () => <></>,
               }}
-              name="ValidacionExitosaScreen"
-              component={ValidacionExitosaScreen}
-            />
-            <Drawer.Screen
-              options={{
-                headerTitle: 'Cámara',
-                headerTitleAlign: 'center',
-                headerLeft: () => <></>,
-              }}
               name="ConsejosFeVidaScreen"
               component={ConsejosFeVidaScreen}
             />
@@ -58,7 +49,6 @@ const App = () => {
               name="HomeScreen"
               component={HomeScreen}
             />
-
             <Drawer.Screen
               options={{
                 headerTitle: 'Configuración',
@@ -72,6 +62,15 @@ const App = () => {
               options={{headerTitle: 'Cámara', headerTitleAlign: 'center'}}
               name="PreviewScreen"
               component={PreviewScreen}
+            />
+            <Drawer.Screen
+              options={{
+                headerTitle: 'Cámara',
+                headerTitleAlign: 'center',
+                headerLeft: () => <></>,
+              }}
+              name="ValidacionExitosaScreen"
+              component={ValidacionExitosaScreen}
             />
           </Drawer.Navigator>
           <ModalSalir />

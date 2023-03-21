@@ -25,3 +25,4 @@ export const CENTRAR = 'CENTRAR';
 export const REALIZAR_DESAFIO = 'REALIZAR_DESAFIO';
 export const DENTRO_DE_RANGO = 'DENTRO_DE_RANGO';
 export const MODAL = 'MODAL';
+export const FLAG_INDICADOR = 'FLAG_INDICADOR';

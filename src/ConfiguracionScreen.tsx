@@ -29,6 +29,7 @@ import {
   TextoRealizarDesa,
   TextoMDentroDelRango,
   DesafiosAction,
+  FlagIndicadorMov,
 } from './redux/action/DesafiosAction';
 import {useNavigation} from '@react-navigation/native';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
@@ -204,6 +205,39 @@ const ConfiguracionScreen = () => {
             </Pressable>
           ))}
         </View>
+        <Text style={styles.titulo}>Activar indicador movimiento</Text>
+        <Pressable
+          onPress={() => {
+            dispatch(FlagIndicadorMov(!desafios.flagIndicador));
+          }}
+          style={{
+            width: 28,
+            alignItems: 'center',
+            marginLeft: 10,
+            padding: 4,
+          }}>
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 50,
+              borderWidth: 1,
+
+              padding: 2,
+            }}>
+            {desafios.flagIndicador && (
+              <View
+                style={{
+                  width: 14,
+                  height: 14,
+
+                  borderRadius: 50,
+                  backgroundColor: '#00aeef',
+                }}
+              />
+            )}
+          </View>
+        </Pressable>
         {/* <Text style={styles.titulo}>Mirar Izquierda</Text>
         <View style={styles.containerInputs}>
           <Text style={styles.placeHolder}>MIN</Text>

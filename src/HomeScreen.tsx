@@ -13,6 +13,7 @@ import {
   Platform,
   Image,
   Pressable,
+  Vibration,
 } from 'react-native';
 import {Camera, CameraType, FaceDetectionResult} from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
@@ -365,6 +366,7 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
+            Vibration.vibrate(500);
             desafios.value.length <= 1 &&
               (setSpinner(true), setIndicator(false), setTextHelp(''));
             enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs).then(

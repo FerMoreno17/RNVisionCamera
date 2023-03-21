@@ -28,11 +28,19 @@ export const DrawerContent = () => {
           }}
         />
         <DrawerItem
-          label={'RESET DESAFÍO'}
+          label={'DESAFÍOS'}
           labelStyle={styles.texto}
           style={{backgroundColor: '#005855'}}
           onPress={() => {
             navigation.reset({routes: [{name: 'ConsejosFeVidaScreen'}]});
+          }}
+        />
+        <DrawerItem
+          label={'QR'}
+          labelStyle={styles.texto}
+          style={{backgroundColor: '#cb1'}}
+          onPress={() => {
+            navigation.reset({routes: [{name: 'QrScreen'}]});
           }}
         />
         {/* {desafiosList.map((resp, index) => (

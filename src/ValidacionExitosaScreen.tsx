@@ -7,17 +7,16 @@ import {
   Image,
   BackHandler,
   View,
+  Vibration,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useDispatch} from 'react-redux';
-import {ModalS} from './redux/action/DesafiosAction';
 import {Platform} from 'react-native';
 
 const ValidacionExitosaScreen = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
 
   useEffect(() => {
+    Vibration.vibrate(500);
     BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
     });

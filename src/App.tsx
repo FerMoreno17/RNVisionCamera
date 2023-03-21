@@ -16,6 +16,7 @@ import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {Menu} from './components/Menu';
 import {Back} from './components/Back';
 import {ModalSalir} from './components/ModalSalir';
+import QrScreen from './QrScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -35,16 +36,7 @@ const App = () => {
               headerLeft: () => <Back />,
             }}
             drawerContent={() => <DrawerContent />}>
-            <Drawer.Screen
-              options={{
-                headerTitle: 'Cámara',
-                headerTitleAlign: 'center',
-                headerLeft: () => <></>,
-              }}
-              name="ValidacionExitosaScreen"
-              component={ValidacionExitosaScreen}
-            />
-            <Drawer.Screen
+            {/* <Drawer.Screen
               options={{
                 headerTitle: 'Cámara',
                 headerTitleAlign: 'center',
@@ -58,7 +50,15 @@ const App = () => {
               name="HomeScreen"
               component={HomeScreen}
             />
-
+            <Drawer.Screen
+              options={{
+                headerTitle: 'Cámara',
+                headerTitleAlign: 'center',
+                headerLeft: () => <></>,
+              }}
+              name="ValidacionExitosaScreen"
+              component={ValidacionExitosaScreen}
+            />
             <Drawer.Screen
               options={{
                 headerTitle: 'Configuración',
@@ -72,6 +72,11 @@ const App = () => {
               options={{headerTitle: 'Cámara', headerTitleAlign: 'center'}}
               name="PreviewScreen"
               component={PreviewScreen}
+            /> */}
+            <Drawer.Screen
+              options={{headerTitle: 'Qr', headerTitleAlign: 'center'}}
+              name="QrScreen"
+              component={QrScreen}
             />
           </Drawer.Navigator>
           <ModalSalir />

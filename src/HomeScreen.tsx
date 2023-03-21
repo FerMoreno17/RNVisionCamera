@@ -9,7 +9,6 @@ import {
   Text,
   View,
   BackHandler,
-  Switch,
   Platform,
   Image,
   Pressable,
@@ -17,16 +16,15 @@ import {
 } from 'react-native';
 import {Camera, CameraType, FaceDetectionResult} from 'expo-camera';
 import * as FaceDetector from 'expo-face-detector';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import {checkCameraPermission} from './cameraPermission';
 import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {
   DesafiosAction,
+  DesafiosActionError,
   ModalS,
   SwitchCamaraAction,
-  TextoMirarDer,
-  TextoMirarIzq,
 } from './redux/action/DesafiosAction';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 import AppSpinner from './components/AppSpinner';
@@ -85,20 +83,19 @@ const HomeScreen = () => {
   const widthBar = width * 0.9;
   const barPoint = widthBar / 2;
   const pointOffset = 30;
+  const [desafiosDefault, setDesafiosDefault] = useState<any>();
 
   useEffect(() => {
+    setDesafiosDefault(desafios.value);
     checkCameraPermission().then(resp => {
       setPermited(resp);
     });
   }, []);
   useEffect(() => {
-    dispatch(
-      DesafiosAction(['Mirar Frente', 'Mirar Izquierda', 'Mirar Derecha']),
-    ),
-      BackHandler.addEventListener('hardwareBackPress', () => {
-        dispatch(ModalS(true));
-        return true;
-      });
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      dispatch(ModalS(true));
+      return true;
+    });
   }, []);
 
   useEffect(() => {
@@ -368,14 +365,34 @@ const HomeScreen = () => {
           .then((crop: any) => {
             Vibration.vibrate(500);
             desafios.value.length <= 1 &&
-              (setSpinner(true), setIndicator(false), setTextHelp(''));
-            enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs).then(
-              () => {
+              (setSpinner(true),
+              setIndicator(false),
+              setTextHelp(''),
+              setDetectFace(false));
+            enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs)
+              .then((resp: any) => {
                 desafios.value.length === 1 &&
                   (navigation.navigate('ValidacionExitosaScreen'),
-                  setSpinner(false));
-              },
-            );
+                  setSpinner(false),
+                  dispatch(DesafiosAction(desafiosDefault)));
+                (resp.esError || resp === undefined) &&
+                  dispatch(
+                    DesafiosActionError([
+                      ...desafios.valueError,
+                      desafios.value[0],
+                    ]),
+                  );
+              })
+              .catch(() => {
+                desafios.value.length === 1 &&
+                  dispatch(DesafiosAction(desafiosDefault));
+                dispatch(
+                  DesafiosActionError([
+                    ...desafios.valueError,
+                    desafios.value[0],
+                  ]),
+                );
+              });
             dispatch(
               DesafiosAction(
                 desafios.value.filter(resp => resp !== desafios.value[0]),
@@ -490,6 +507,8 @@ const HomeScreen = () => {
         return desafios.textoDesafioDer;
       case desafiosList2[2]:
         return desafios.textoDesafioFrente;
+      default:
+        return '';
     }
   };
 
@@ -592,68 +611,70 @@ const HomeScreen = () => {
               </Pressable>
             </>
           ) : (
-            <View
-              style={{
-                backgroundColor: 'transparent',
-                width: widthBar,
-                height: 25,
-                zIndex: 1000,
-                alignSelf: 'center',
-                position: 'absolute',
-                bottom: 80,
-                justifyContent: 'center',
-              }}>
+            desafios.flagIndicador && (
               <View
                 style={{
-                  backgroundColor: '#747474',
-                  width: '100%',
+                  backgroundColor: 'transparent',
+                  width: widthBar,
                   height: 25,
+                  zIndex: 1000,
+                  alignSelf: 'center',
+                  position: 'absolute',
+                  bottom: 80,
                   justifyContent: 'center',
-                  borderRadius: 20,
-                  shadowColor: '#000',
-                  shadowOffset: {
-                    width: 0,
-                    height: 3,
-                  },
-                  shadowOpacity: 0.29,
-                  shadowRadius: 4.65,
-
-                  elevation: 7,
                 }}>
                 <View
                   style={{
-                    backgroundColor: '#17D641',
-                    width: 50,
+                    backgroundColor: '#747474',
+                    width: '100%',
                     height: 25,
-                    position: 'absolute',
-                    left:
-                      desafios.value[0] === desafiosList.MI
-                        ? 100
-                        : desafios.value[0] === desafiosList.MD
-                        ? 220
-                        : 160,
-                  }}
-                />
-                <View
-                  style={{
-                    backgroundColor: 'white',
-                    width: 20,
-                    height: 20,
-                    borderRadius: 10,
-                    left:
-                      condicionX !== undefined
-                        ? condicionX > 10 && condicionX < 90
-                          ? barPoint + condicionX + pointOffset
-                          : condicionX > 270 && condicionX < 350
-                          ? condicionX - barPoint - pointOffset
-                          : condicionX <= 10
-                          ? condicionX + barPoint
-                          : condicionX - barPoint
-                        : barPoint,
-                  }}
-                />
+                    justifyContent: 'center',
+                    borderRadius: 20,
+                    shadowColor: '#000',
+                    shadowOffset: {
+                      width: 0,
+                      height: 3,
+                    },
+                    shadowOpacity: 0.29,
+                    shadowRadius: 4.65,
+
+                    elevation: 7,
+                  }}>
+                  <View
+                    style={{
+                      backgroundColor: '#17D641',
+                      width: 50,
+                      height: 25,
+                      position: 'absolute',
+                      left:
+                        desafios.value[0] === desafiosList.MI
+                          ? 100
+                          : desafios.value[0] === desafiosList.MD
+                          ? 220
+                          : 160,
+                    }}
+                  />
+                  <View
+                    style={{
+                      backgroundColor: 'white',
+                      width: 20,
+                      height: 20,
+                      borderRadius: 10,
+                      left:
+                        condicionX !== undefined
+                          ? condicionX > 10 && condicionX < 90
+                            ? barPoint + condicionX + pointOffset
+                            : condicionX > 270 && condicionX < 350
+                            ? condicionX - barPoint - pointOffset
+                            : condicionX <= 10
+                            ? condicionX + barPoint
+                            : condicionX - barPoint
+                          : barPoint,
+                    }}
+                  />
+                </View>
               </View>
-            </View>
+            )
           )}
         </View>
       )}

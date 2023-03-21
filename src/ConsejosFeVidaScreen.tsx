@@ -10,12 +10,17 @@ import {
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import AppCard from './components/AppCard';
+import {useDispatch} from 'react-redux';
+import {DesafiosActionError} from './redux/action/DesafiosAction';
 
 export const ConsejosFeVidaRoute = 'ConsejosFeVida';
 
 function ConsejosFeVidaScreen() {
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
   useEffect(() => {
+    dispatch(DesafiosActionError([]));
     BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
     });

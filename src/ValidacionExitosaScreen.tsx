@@ -11,10 +11,14 @@ import {
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Platform} from 'react-native';
+import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
+import {useSelector} from 'react-redux';
 
 const ValidacionExitosaScreen = () => {
   const navigation = useNavigation();
-
+  const desafios: IDesafiosReducer = useSelector(
+    (state: any) => state.desafios,
+  );
   useEffect(() => {
     Vibration.vibrate(500);
     BackHandler.addEventListener('hardwareBackPress', () => {
@@ -30,6 +34,37 @@ const ValidacionExitosaScreen = () => {
           resizeMode="contain"
           source={require('./assets/validacionExitosa.png')}
         />
+
+        {desafios.valueError.length > 0 && (
+          <View
+            style={{
+              position: 'absolute',
+              bottom: 100,
+              backgroundColor: 'red',
+              padding: 5,
+              margin: '5%',
+              width: '90%',
+              flexDirection: 'row',
+            }}>
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: '700',
+                color: 'white',
+                width: '20%',
+              }}>
+              Error :
+            </Text>
+            <Text style={{fontSize: 18, color: 'white', width: '80%'}}>
+              {desafios.valueError &&
+                desafios.valueError?.map((item, key) => {
+                  return (
+                    item + (desafios.valueError.length !== key + 1 ? ', ' : '')
+                  );
+                })}
+            </Text>
+          </View>
+        )}
         <Pressable
           style={({pressed}) => [
             {
@@ -38,7 +73,7 @@ const ValidacionExitosaScreen = () => {
             styles.button,
           ]}
           onPress={() => {
-            navigation.reset({routes: [{name: 'HomeScreen'}]});
+            navigation.reset({routes: [{name: 'ConsejosFeVidaScreen'}]});
           }}>
           <Text style={styles.buttonLabel}>FINALIZAR</Text>
         </Pressable>

@@ -11,8 +11,6 @@ import HomeScreen from './HomeScreen';
 import {PersistGate} from 'redux-persist/integration/react';
 import ValidacionExitosaScreen from './ValidacionExitosaScreen';
 import ConsejosFeVidaScreen from './ConsejosFeVidaScreen';
-import {Image, Pressable} from 'react-native';
-import {useNavigation, DrawerActions} from '@react-navigation/native';
 import {Menu} from './components/Menu';
 import {Back} from './components/Back';
 import {ModalSalir} from './components/ModalSalir';
@@ -36,7 +34,7 @@ const App = () => {
               headerLeft: () => <Back />,
             }}
             drawerContent={() => <DrawerContent />}>
-            {/* <Drawer.Screen
+            <Drawer.Screen
               options={{
                 headerTitle: 'Cámara',
                 headerTitleAlign: 'center',
@@ -52,15 +50,6 @@ const App = () => {
             />
             <Drawer.Screen
               options={{
-                headerTitle: 'Cámara',
-                headerTitleAlign: 'center',
-                headerLeft: () => <></>,
-              }}
-              name="ValidacionExitosaScreen"
-              component={ValidacionExitosaScreen}
-            />
-            <Drawer.Screen
-              options={{
                 headerTitle: 'Configuración',
                 headerTitleAlign: 'center',
                 headerLeft: () => <Back consejos={true} />,
@@ -72,7 +61,16 @@ const App = () => {
               options={{headerTitle: 'Cámara', headerTitleAlign: 'center'}}
               name="PreviewScreen"
               component={PreviewScreen}
-            /> */}
+            />
+            <Drawer.Screen
+              options={{
+                headerTitle: 'Cámara',
+                headerTitleAlign: 'center',
+                headerLeft: () => <></>,
+              }}
+              name="ValidacionExitosaScreen"
+              component={ValidacionExitosaScreen}
+            />
             <Drawer.Screen
               options={{headerTitle: 'Qr', headerTitleAlign: 'center'}}
               name="QrScreen"

@@ -1,5 +1,12 @@
 import React, {useState} from 'react';
-import {StyleSheet, View, Text, TextInput, Button} from 'react-native';
+import {
+  StyleSheet,
+  View,
+  Text,
+  TextInput,
+  Button,
+  Pressable,
+} from 'react-native';
 import {ScrollView} from 'react-native-gesture-handler';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useDispatch, useSelector} from 'react-redux';
@@ -21,6 +28,8 @@ import {
   TextoCentrar,
   TextoRealizarDesa,
   TextoMDentroDelRango,
+  DesafiosAction,
+  FlagIndicadorMov,
 } from './redux/action/DesafiosAction';
 import {useNavigation} from '@react-navigation/native';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
@@ -143,10 +152,92 @@ const ConfiguracionScreen = () => {
 
     navigation.navigate('HomeScreen', {} as any);
   };
+  const gestionarDesafios = (value: string) => {
+    let aux = desafios.value.find(resp => {
+      return resp === value;
+    });
 
+    if (!aux) {
+      dispatch(DesafiosAction([...desafios.value, value]));
+    } else {
+      let aux = desafios.value.filter(resp => {
+        return resp !== value;
+      });
+      dispatch(DesafiosAction(aux));
+    }
+    // dispatch(DesafiosAction(aux));
+  };
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
+        <Text style={styles.titulo}>Orden de los desafíos</Text>
+        <View
+          style={{
+            flexDirection: 'row',
+            justifyContent: 'space-around',
+            marginVertical: 15,
+          }}>
+          {desafiosListAngulos.map((index, key) => (
+            <Pressable
+              key={key}
+              style={{borderWidth: 1, padding: 5}}
+              onPress={() => {
+                gestionarDesafios(index.enum);
+              }}>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'space-around',
+                }}>
+                <Text
+                  style={{color: 'orange', fontSize: 20, fontWeight: '700'}}>
+                  {desafios.value.map((resp, keyy) => {
+                    if (resp === index.enum) {
+                      let aux3 = keyy + 1;
+                      return aux3;
+                    }
+                  })}
+                </Text>
+                <Text style={{color: 'black', fontSize: 20}}>
+                  {' ' + index.title}
+                </Text>
+              </View>
+            </Pressable>
+          ))}
+        </View>
+        <Text style={styles.titulo}>Activar indicador movimiento</Text>
+        <Pressable
+          onPress={() => {
+            dispatch(FlagIndicadorMov(!desafios.flagIndicador));
+          }}
+          style={{
+            width: 28,
+            alignItems: 'center',
+            marginLeft: 10,
+            padding: 4,
+          }}>
+          <View
+            style={{
+              width: 20,
+              height: 20,
+              borderRadius: 50,
+              borderWidth: 1,
+
+              padding: 2,
+            }}>
+            {desafios.flagIndicador && (
+              <View
+                style={{
+                  width: 14,
+                  height: 14,
+
+                  borderRadius: 50,
+                  backgroundColor: '#00aeef',
+                }}
+              />
+            )}
+          </View>
+        </Pressable>
         {/* <Text style={styles.titulo}>Mirar Izquierda</Text>
         <View style={styles.containerInputs}>
           <Text style={styles.placeHolder}>MIN</Text>
@@ -354,7 +445,11 @@ const ConfiguracionScreen = () => {
 
 export default ConfiguracionScreen;
 
-let desafiosListAngulos = ['Mirar Izquierda', 'Mirar Derecha', 'Mirar Frente'];
+let desafiosListAngulos = [
+  {enum: 'Mirar Frente', title: 'Frente'},
+  {enum: 'Mirar Izquierda', title: 'Izquierda'},
+  {enum: 'Mirar Derecha', title: 'Derecha'},
+];
 
 let desafiosListProbabilidades = [
   'Guiño Izquierdo',

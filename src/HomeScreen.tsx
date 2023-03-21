@@ -22,6 +22,7 @@ import MascaraSelfie from './components/MascaraSelfie';
 import {manipulateAsync} from 'expo-image-manipulator';
 import {
   DesafiosAction,
+  DesafiosActionError,
   ModalS,
   SwitchCamaraAction,
   TextoMirarDer,
@@ -84,20 +85,19 @@ const HomeScreen = () => {
   const widthBar = width * 0.9;
   const barPoint = widthBar / 2;
   const pointOffset = 30;
+  const [desafiosDefault, setDesafiosDefault] = useState<any>();
 
   useEffect(() => {
+    setDesafiosDefault(desafios.value);
     checkCameraPermission().then(resp => {
       setPermited(resp);
     });
   }, []);
   useEffect(() => {
-    dispatch(
-      DesafiosAction(['Mirar Frente', 'Mirar Izquierda', 'Mirar Derecha']),
-    ),
-      BackHandler.addEventListener('hardwareBackPress', () => {
-        dispatch(ModalS(true));
-        return true;
-      });
+    BackHandler.addEventListener('hardwareBackPress', () => {
+      dispatch(ModalS(true));
+      return true;
+    });
   }, []);
 
   useEffect(() => {
@@ -367,13 +367,30 @@ const HomeScreen = () => {
           .then((crop: any) => {
             desafios.value.length <= 1 &&
               (setSpinner(true), setIndicator(false), setTextHelp(''));
-            enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs).then(
-              () => {
+            enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs)
+              .then((resp: any) => {
                 desafios.value.length === 1 &&
                   (navigation.navigate('ValidacionExitosaScreen'),
-                  setSpinner(false));
-              },
-            );
+                  setSpinner(false),
+                  dispatch(DesafiosAction(desafiosDefault)),
+                  (resp.esError || resp === undefined) &&
+                    dispatch(
+                      DesafiosAction(
+                        desafios.value.filter(
+                          resp => resp !== desafios.value[0],
+                        ),
+                      ),
+                    ));
+              })
+              .catch(() => {
+                console.log('hola');
+                dispatch(
+                  DesafiosActionError([
+                    ...desafios.valueError,
+                    desafios.value[0],
+                  ]),
+                );
+              });
             dispatch(
               DesafiosAction(
                 desafios.value.filter(resp => resp !== desafios.value[0]),
@@ -488,6 +505,8 @@ const HomeScreen = () => {
         return desafios.textoDesafioDer;
       case desafiosList2[2]:
         return desafios.textoDesafioFrente;
+      default:
+        return '';
     }
   };
 

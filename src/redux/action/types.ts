@@ -10,6 +10,7 @@ export const SONREIR = 'SONREIR';
 export const GUIÑO_DERECHA = 'GUIÑO_DERECHA';
 export const GUIÑO_IZQUIERDA = 'GUIÑO_IZQUIERDA';
 export const DESAFIOS = 'DESAFIOS';
+export const DESAFIOS_ERROR = 'DESAFIOS_ERROR';
 export const SWITCH_CAMARA = 'SWITCH_CAMARA';
 export const TIEMPO_CAPTURA = 'TIEMPO_CAPTURA';
 export const TIEMPO_ARRANQUE = 'TIEMPO_ARRANQUE';

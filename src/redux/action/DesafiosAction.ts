@@ -20,6 +20,7 @@ import {
   REALIZAR_DESAFIO,
   DENTRO_DE_RANGO,
   MODAL,
+  DESAFIOS_ERROR,
 } from '../action/types';
 
 const TextoMirarIzq = (value: string): IAction => ({
@@ -99,12 +100,16 @@ const DesafiosAction = (value: string[]): IAction => ({
   type: DESAFIOS,
   payload: value,
 });
-
+const DesafiosActionError = (value: string[]): IAction => ({
+  type: DESAFIOS_ERROR,
+  payload: value,
+});
 const SwitchCamaraAction = (value: boolean): IAction => ({
   type: SWITCH_CAMARA,
   payload: value,
 });
 export {
+  DesafiosActionError,
   DesafioMirarIquierda,
   DesafioGuiñoDerecha,
   DesafioGuiñoIzquierda,

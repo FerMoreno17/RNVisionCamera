@@ -9,14 +9,15 @@ import {
   View,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useDispatch} from 'react-redux';
-import {ModalS} from './redux/action/DesafiosAction';
 import {Platform} from 'react-native';
+import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
+import {useSelector} from 'react-redux';
 
 const ValidacionExitosaScreen = () => {
   const navigation = useNavigation();
-  const dispatch = useDispatch();
-
+  const desafios: IDesafiosReducer = useSelector(
+    (state: any) => state.desafios,
+  );
   useEffect(() => {
     BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
@@ -31,6 +32,31 @@ const ValidacionExitosaScreen = () => {
           resizeMode="contain"
           source={require('./assets/validacionExitosa.png')}
         />
+        <View
+          style={{
+            position: 'absolute',
+            bottom: 100,
+            backgroundColor: 'red',
+            padding: 5,
+            margin: '5%',
+            width: '90%',
+            flexDirection: 'row',
+            alignItems: 'flex-end',
+          }}>
+          <Text style={{fontSize: 20, fontWeight: '700', color: 'white'}}>
+            Error :
+          </Text>
+          <Text style={{fontSize: 18, color: 'white'}}>
+            {desafios.valueError &&
+              desafios.valueError?.map((item, key) => {
+                return (
+                  ' ' +
+                  item +
+                  (desafios.valueError.length !== key + 1 ? ', ' : '')
+                );
+              })}
+          </Text>
+        </View>
         <Pressable
           style={({pressed}) => [
             {
@@ -39,7 +65,7 @@ const ValidacionExitosaScreen = () => {
             styles.button,
           ]}
           onPress={() => {
-            navigation.reset({routes: [{name: 'HomeScreen'}]});
+            navigation.reset({routes: [{name: 'ConsejosFeVidaScreen'}]});
           }}>
           <Text style={styles.buttonLabel}>FINALIZAR</Text>
         </Pressable>

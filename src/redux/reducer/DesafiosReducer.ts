@@ -20,6 +20,7 @@ import {
   REALIZAR_DESAFIO,
   DENTRO_DE_RANGO,
   MODAL,
+  DESAFIOS_ERROR,
 } from '../action/types';
 export interface IDesafiosReducer {
   mirarFrente: {max: number; min: number};
@@ -42,6 +43,7 @@ export interface IDesafiosReducer {
   textoRealizarDesafio: string;
   textoDentroDelRango: string;
   modal: boolean;
+  valueError: string[];
 }
 
 const initialState = {
@@ -65,6 +67,7 @@ const initialState = {
   textoRealizarDesafio: 'Realice el desafio',
   textoDentroDelRango: 'No te muevas...',
   modal: false,
+  valueError: [],
 };
 
 export function DesafiosReducer(
@@ -76,6 +79,11 @@ export function DesafiosReducer(
       return {
         ...state,
         textoDesafioIzq: action.payload,
+      };
+    case DESAFIOS_ERROR:
+      return {
+        ...state,
+        valueError: action.payload,
       };
     case MODAL:
       return {

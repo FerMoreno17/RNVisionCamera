@@ -363,7 +363,10 @@ const HomeScreen = () => {
         )
           .then((crop: any) => {
             desafios.value.length <= 1 &&
-              (setSpinner(true), setIndicator(false), setTextHelp(''));
+              (setSpinner(true),
+              setIndicator(false),
+              setTextHelp(''),
+              setDetectFace(false));
             enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs)
               .then((resp: any) => {
                 desafios.value.length === 1 &&

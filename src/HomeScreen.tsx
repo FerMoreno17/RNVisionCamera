@@ -383,7 +383,8 @@ const HomeScreen = () => {
                     ));
               })
               .catch(() => {
-                console.log('hola');
+                desafios.value.length === 1 &&
+                  dispatch(DesafiosAction(desafiosDefault));
                 dispatch(
                   DesafiosActionError([
                     ...desafios.valueError,

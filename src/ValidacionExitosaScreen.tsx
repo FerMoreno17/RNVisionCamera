@@ -7,7 +7,6 @@ import {
   Image,
   BackHandler,
   View,
-  Vibration,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {Platform} from 'react-native';
@@ -20,7 +19,6 @@ const ValidacionExitosaScreen = () => {
     (state: any) => state.desafios,
   );
   useEffect(() => {
-    Vibration.vibrate(500);
     BackHandler.addEventListener('hardwareBackPress', () => {
       return true;
     });

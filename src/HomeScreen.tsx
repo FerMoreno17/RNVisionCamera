@@ -656,7 +656,7 @@ const HomeScreen = () => {
                           ? width * 0.9 -
                             (width * 0.45 * 10) / 50 -
                             (width * 0.45 * 15) / 50
-                          : width * 0.45 - (width * 0.45 * 16) / 50 / 2,
+                          : width * 0.45 - (width * 0.45 * 16) / 50 + 20,
                     }}
                   />
                   <View
@@ -668,10 +668,12 @@ const HomeScreen = () => {
                       left:
                         condicionX !== undefined
                           ? condicionX >= 0 && condicionX < 90
-                            ? (width * 0.45 * condicionX) / 50 + width * 0.45
+                            ? (width * 0.45 * condicionX) / 50 +
+                              width * 0.45 -
+                              (desafios.value[0] !== desafiosList.MF ? 0 : 10)
                             : width * 0.45 -
                               (width * 0.45 * (360 - condicionX)) / 50 -
-                              (desafios.value[0] !== desafiosList.MF ? 20 : 0)
+                              (desafios.value[0] !== desafiosList.MF ? 20 : 10)
                           : width * 0.45 - 10,
                     }}
                   />

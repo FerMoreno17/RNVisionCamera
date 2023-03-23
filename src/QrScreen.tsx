@@ -15,7 +15,7 @@ import {
 } from 'react-native';
 import {BarCodeScanningResult, Camera, CameraType} from 'expo-camera';
 import {useNavigation} from '@react-navigation/native';
-import {manipulateAsync} from 'expo-image-manipulator';
+import {ImageResult, manipulateAsync} from 'expo-image-manipulator';
 import {BarCodeBounds, BarCodeScanner} from 'expo-barcode-scanner';
 
 const QrScreen = () => {
@@ -27,6 +27,8 @@ const QrScreen = () => {
   const [hasPermission, setHasPermission] = useState<boolean>();
   const [scanned, setScanned] = useState(false);
   const [point, setPoint] = useState<BarCodeBounds>();
+  const [activeSpinner, setActiveSpinner] = useState(false);
+  let validAscii: boolean;
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -38,13 +40,80 @@ const QrScreen = () => {
   }, []);
 
   const handleBarCodeScanned = (data: BarCodeScanningResult) => {
+    let response;
+    let str: string[] = [];
+
+    setActiveSpinner(true);
+
     if (data.data !== undefined) {
       setScanned(true);
-      Alert.alert(
-        `Bar code with type ${data.type} and data ${data.data} has been scanned!`,
-      );
+      for (var i = 0; i < data.data.length; i++) {
+        if (data.data.charCodeAt(i) > 127) {
+          console.log('non-ascii code detected');
+          validAscii = false;
+          return false;
+        }
+
+        if (data.data.charAt(i) === '@') {
+          str.push(data.data.charAt(i));
+        }
+      }
+      validAscii = true;
+    }
+
+    if (validAscii) {
+      if (str.length >= 6 && str.length <= 16) {
+        const datosQr = data.data.split('@');
+        console.log(datosQr);
+        if (data.data.startsWith('@')) {
+          response = checkStructure(datosQr, 'OLD');
+        } else {
+          response = checkStructure(datosQr, 'NEW');
+        }
+
+        if (response) {
+          handleTakePicture();
+        } else {
+          setActiveSpinner(false);
+          Alert.alert('no se puede leer el qr');
+        }
+      } else {
+        return false;
+      }
     }
   };
+
+  const validDateExp = new RegExp(`^[0-9]{2}[/]{1}[0-9]{2}[/]{1}[0-9]{4}$`);
+
+  function checkStructure(datosQr: string[], tipo: string) {
+    let nroTramite: string, genero: string, fechaNac: string;
+    if (tipo === 'OLD') {
+      nroTramite = datosQr[10];
+      genero = datosQr[8];
+      fechaNac = datosQr[7];
+    } else {
+      nroTramite = datosQr[0];
+      genero = datosQr[3];
+      fechaNac = datosQr[6];
+    }
+
+    if (nroTramite.length === 11) {
+      if (genero === 'M' || genero === 'F') {
+        if (validDateExp.test(fechaNac)) {
+          return true;
+        } else {
+          console.log('fecha error', fechaNac);
+          return false;
+        }
+      } else {
+        console.log('genero error', genero);
+        return false;
+      }
+    } else {
+      console.log('tramite error', nroTramite);
+      return false;
+    }
+  }
 
   const prepareRatio = async () => {
     if (cameraRef && Platform.OS === 'android') {
@@ -69,10 +138,12 @@ const QrScreen = () => {
 
   const handleTakePicture = async () => {
     if (cameraRef) {
+      console.log('cameraRef');
       await cameraRef.current?.takePictureAsync({
         quality: 0.5,
         skipProcessing: true,
         onPictureSaved: data => {
+          console.log({data});
           cropImage(data?.uri!);
         },
       });
@@ -81,20 +152,22 @@ const QrScreen = () => {
   };
 
   const cropImage = async (imageUri: string) => {
+    console.log('entro crop');
     await manipulateAsync(
       Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
-      [{resize: {width: 600}}],
+      [{resize: {width: 800}}],
     ).then(async (resize: any) => {
+      console.log('entro then');
       Image.getSize(resize.uri, async (widthX, height) => {
         await manipulateAsync(
           Platform.OS === 'android' ? resize.uri : `file://${resize.uri}`,
           [
             {
               crop: {
-                height: 720,
+                height: 600,
                 originX: 0,
                 originY: height * 0.17,
-                width: 600,
+                width: 800,
               },
             },
           ],
@@ -103,9 +176,11 @@ const QrScreen = () => {
             compress: 0.6,
           },
         )
-          .then((crop: any) => {
+          .then((crop: ImageResult) => {
+            console.log('vibrar');
             Vibration.vibrate(500);
-            console.log(crop);
+            console.log(crop.base64);
+            setActiveSpinner(false);
           })
           .catch(error => console.log('error ==>', error));
       });
@@ -122,6 +197,13 @@ const QrScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
+      {activeSpinner && (
+        <ActivityIndicator
+          color={'green'}
+          size={50}
+          style={{flex: 1, zIndex: 2, backgroundColor: 'rgba(255,255,255,0.5)'}}
+        />
+      )}
       <Camera
         onCameraReady={prepareRatio}
         ratio={ratioo}
@@ -132,7 +214,7 @@ const QrScreen = () => {
           scanned ? undefined : data => handleBarCodeScanned(data)
         }
         barCodeScannerSettings={{
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.pdf147],
+          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.pdf417],
         }}
       />
     </SafeAreaView>

@@ -384,8 +384,9 @@ const HomeScreen = () => {
                   );
               })
               .catch(() => {
-                desafios.value.length === 1 &&
-                  dispatch(DesafiosAction(desafiosDefault));
+                setSpinner(false),
+                  desafios.value.length === 1 &&
+                    dispatch(DesafiosAction(desafiosDefault));
                 dispatch(
                   DesafiosActionError([
                     ...desafios.valueError,
@@ -456,7 +457,7 @@ const HomeScreen = () => {
     GOLss: number,
     GODss: number,
   ) => {
-    await fetch(
+    return await fetch(
       'https://mejorasuxsuperapp.gyfcloud.com.ar/api/v0.13/enrolamiento/enviardesafio',
       {
         method: 'POST',
@@ -489,14 +490,11 @@ const HomeScreen = () => {
           intervaloFrame: desafios.intervaloFrame.toString(),
         }),
       },
-    )
-      .then(resp => {
-        return resp.json();
-      })
-      .then(respJson => {
-        // RESPUESTA
-      })
-      .catch(error => {});
+    ).then(resp => {
+      return resp.json().then(respJson => {
+        return respJson;
+      });
+    });
   };
 
   const desafioTitle = (value: string) => {

@@ -1,25 +1,10 @@
 import React from 'react';
 import {StyleSheet, View, Platform, Text, Image} from 'react-native';
 
-export const AppCard = () => {
-  const DATA = [
-    {
-      id: '1',
-      imageUrl: require('../assets/Vector.png'),
-      title: 'Buscá un lugar con buena luz.',
-    },
-    {
-      id: '2',
-      imageUrl: require('../assets/SinVentana.png'),
-      title: 'Con un fondo claro y sin ventanas',
-    },
-    {
-      id: '3',
-      imageUrl: require('../assets/SinAnteojos.png'),
-      title: 'No uses anteojos, barbijo, ni nada que tape tu rostro',
-    },
-  ];
-
+interface IProp {
+  DATA: any;
+}
+export const AppCard = ({DATA}: IProp) => {
   const styles = StyleSheet.create({
     container: {
       flexDirection: 'row',

@@ -34,7 +34,7 @@ const App = () => {
               headerLeft: () => <Back />,
             }}
             drawerContent={() => <DrawerContent />}>
-            <Drawer.Screen
+            {/* <Drawer.Screen
               options={{
                 headerTitle: 'Cámara',
                 headerTitleAlign: 'center',
@@ -70,7 +70,7 @@ const App = () => {
               }}
               name="ValidacionExitosaScreen"
               component={ValidacionExitosaScreen}
-            />
+            /> */}
             <Drawer.Screen
               options={{headerTitle: 'Qr', headerTitleAlign: 'center'}}
               name="QrScreen"

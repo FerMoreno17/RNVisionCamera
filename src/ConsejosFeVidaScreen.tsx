@@ -15,6 +15,24 @@ import {DesafiosActionError} from './redux/action/DesafiosAction';
 
 export const ConsejosFeVidaRoute = 'ConsejosFeVida';
 
+const DATA = [
+  {
+    id: '1',
+    imageUrl: require('../assets/Vector.png'),
+    title: 'Buscá un lugar con buena luz.',
+  },
+  {
+    id: '2',
+    imageUrl: require('../assets/SinVentana.png'),
+    title: 'Con un fondo claro y sin ventanas',
+  },
+  {
+    id: '3',
+    imageUrl: require('../assets/SinAnteojos.png'),
+    title: 'No uses anteojos, barbijo, ni nada que tape tu rostro',
+  },
+];
+
 function ConsejosFeVidaScreen() {
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -31,7 +49,7 @@ function ConsejosFeVidaScreen() {
         <Text style={styles.titulo}>
           {'Consejos para la prueba \nbiométrica'}
         </Text>
-        <AppCard />
+        <AppCard DATA={DATA} />
         <Pressable
           style={({pressed}) => [
             {

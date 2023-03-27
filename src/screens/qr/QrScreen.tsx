@@ -17,6 +17,7 @@ import {BarCodeScanningResult, Camera, CameraType} from 'expo-camera';
 import {useNavigation} from '@react-navigation/native';
 import {ImageResult, manipulateAsync} from 'expo-image-manipulator';
 import {BarCodeBounds, BarCodeScanner} from 'expo-barcode-scanner';
+import MascaraDni from './MascaraDni';
 
 const QrScreen = () => {
   const navigation = useNavigation();
@@ -26,8 +27,7 @@ const QrScreen = () => {
   const [AspRatioo, setAspRatio] = useState<number>(1);
   const [hasPermission, setHasPermission] = useState<boolean>();
   const [scanned, setScanned] = useState(false);
-  const [point, setPoint] = useState<BarCodeBounds>();
-  const [activeSpinner, setActiveSpinner] = useState(false);
+  const [indicator, setIndicator] = useState(false);
   let validAscii: boolean;
 
   useEffect(() => {
@@ -93,7 +93,6 @@ const QrScreen = () => {
           if (response) {
             handleTakePicture();
           } else {
-            setActiveSpinner(false);
             Alert.alert('no se puede leer el qr');
           }
         } else {
@@ -195,27 +194,27 @@ const QrScreen = () => {
 
   return (
     <SafeAreaView style={styles.container}>
-      {activeSpinner && (
-        <ActivityIndicator
-          color={'green'}
-          size={50}
-          style={{flex: 1, zIndex: 2, backgroundColor: 'rgba(255,255,255,0.5)'}}
+      <View style={styles.cameraContainer}>
+        <Text style={styles.titulo}>Escanea tu DNI</Text>
+
+        <View style={styles.mask}>
+          <MascaraDni color={indicator ? '#2BC11E' : '#ffffff'} />
+        </View>
+        <Camera
+          onCameraReady={prepareRatio}
+          ratio={ratioo}
+          style={{flex: 1, aspectRatio: AspRatioo}}
+          type={CameraType.back}
+          ref={cameraRef}
+          onBarCodeScanned={
+            scanned ? undefined : data => handleBarCodeScanned(data)
+          }
+          barCodeScannerSettings={{
+            interval: 25,
+            barCodeTypes: [BarCodeScanner.Constants.BarCodeType.pdf417],
+          }}
         />
-      )}
-      <Camera
-        onCameraReady={prepareRatio}
-        ratio={ratioo}
-        style={{flex: 1, aspectRatio: AspRatioo}}
-        type={CameraType.back}
-        ref={cameraRef}
-        onBarCodeScanned={
-          scanned ? undefined : data => handleBarCodeScanned(data)
-        }
-        barCodeScannerSettings={{
-          interval: 25,
-          barCodeTypes: [BarCodeScanner.Constants.BarCodeType.pdf417],
-        }}
-      />
+      </View>
     </SafeAreaView>
   );
 };
@@ -247,6 +246,15 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: 'white',
     textAlign: 'center',
+  },
+  titulo: {
+    fontWeight: '600',
+    fontSize: 24,
+    color: 'black',
+    textAlign: 'center',
+    marginBottom: '25%',
+    marginTop: '10%',
+    zIndex: 200,
   },
   bottomContainer: {
     backgroundColor: '#ffffff99',

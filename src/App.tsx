@@ -14,7 +14,7 @@ import ConsejosFeVidaScreen from './ConsejosFeVidaScreen';
 import {Menu} from './components/Menu';
 import {Back} from './components/Back';
 import {ModalSalir} from './components/ModalSalir';
-import QrScreen from './QrScreen';
+import QrScreen from './screens/qr/QrScreen';
 
 const Drawer = createDrawerNavigator();
 

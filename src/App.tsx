@@ -15,6 +15,8 @@ import {Menu} from './components/Menu';
 import {Back} from './components/Back';
 import {ModalSalir} from './components/ModalSalir';
 import QrScreen from './screens/qr/QrScreen';
+import ConsejosQRScreen from './ConsejosQRScreen';
+import ValidacionExitosaQrScreen from './screens/qr/ValidacionExitosaQrScreen';
 
 const Drawer = createDrawerNavigator();
 
@@ -34,7 +36,7 @@ const App = () => {
               headerLeft: () => <Back />,
             }}
             drawerContent={() => <DrawerContent />}>
-            {/* <Drawer.Screen
+            <Drawer.Screen
               options={{
                 headerTitle: 'Cámara',
                 headerTitleAlign: 'center',
@@ -42,6 +44,15 @@ const App = () => {
               }}
               name="ConsejosFeVidaScreen"
               component={ConsejosFeVidaScreen}
+            />
+            <Drawer.Screen
+              options={{
+                headerTitle: 'Cámara',
+                headerTitleAlign: 'center',
+                headerLeft: () => <></>,
+              }}
+              name="ConsejosQRScreen"
+              component={ConsejosQRScreen}
             />
             <Drawer.Screen
               options={{headerTitle: 'Cámara', headerTitleAlign: 'center'}}
@@ -70,7 +81,16 @@ const App = () => {
               }}
               name="ValidacionExitosaScreen"
               component={ValidacionExitosaScreen}
-            /> */}
+            />
+            <Drawer.Screen
+              options={{
+                headerTitle: 'Cámara',
+                headerTitleAlign: 'center',
+                headerLeft: () => <></>,
+              }}
+              name="ValidacionExitosaQrScreen"
+              component={ValidacionExitosaQrScreen}
+            />
             <Drawer.Screen
               options={{headerTitle: 'Qr', headerTitleAlign: 'center'}}
               name="QrScreen"

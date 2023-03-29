@@ -13,27 +13,19 @@ import AppCard from './components/AppCard';
 import {useDispatch} from 'react-redux';
 import {DesafiosActionError} from './redux/action/DesafiosAction';
 
-export const ConsejosFeVidaRoute = 'ConsejosFeVida';
-
-const DATA = [
-  {
-    id: '1',
-    imageUrl: require('./assets/Vector.png'),
-    title: 'Buscá un lugar con buena luz.',
-  },
-  {
-    id: '2',
-    imageUrl: require('./assets/SinVentana.png'),
-    title: 'Con un fondo claro y sin ventanas',
-  },
-  {
-    id: '3',
-    imageUrl: require('./assets/SinAnteojos.png'),
-    title: 'No uses anteojos, barbijo, ni nada que tape tu rostro',
-  },
-];
-
-function ConsejosFeVidaScreen() {
+function ConsejosQRScreen() {
+  const DATA = [
+    {
+      id: '1',
+      imageUrl: require('./assets/Vector.png'),
+      title: 'Buscá un lugar con buena luz.',
+    },
+    {
+      id: '2',
+      imageUrl: require('./assets/mesa.png'),
+      title: 'Colocalo sobre una mesa',
+    },
+  ];
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
@@ -46,9 +38,16 @@ function ConsejosFeVidaScreen() {
   return (
     <SafeAreaView style={styles.main}>
       <View style={styles.body}>
-        <Text style={styles.titulo}>
-          {'Consejos para la prueba \nbiométrica'}
-        </Text>
+        <Text style={styles.titulo}>Escaneo de DNI</Text>
+        <View
+          style={{
+            backgroundColor: '#D9D9D9',
+            height: height * 0.3,
+            width: width * 0.9,
+            borderRadius: 14,
+            marginBottom: 30,
+          }}
+        />
         <AppCard DATA={DATA} />
         <Pressable
           style={({pressed}) => [
@@ -58,9 +57,9 @@ function ConsejosFeVidaScreen() {
             styles.button,
           ]}
           onPress={() => {
-            navigation.navigate('HomeScreen');
+            navigation.navigate('QrScreen');
           }}>
-          <Text style={styles.buttonLabel}>SIGUIENTE</Text>
+          <Text style={styles.buttonLabel}>INICIAR</Text>
         </Pressable>
         <View style={styles.actions} />
       </View>
@@ -68,7 +67,7 @@ function ConsejosFeVidaScreen() {
   );
 }
 
-export default ConsejosFeVidaScreen;
+export default ConsejosQRScreen;
 const {width, height} = Dimensions.get('screen');
 
 const styles = StyleSheet.create({
@@ -119,7 +118,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'black',
     textAlign: 'center',
-    marginBottom: '25%',
-    marginTop: '10%',
+    marginBottom: 55,
+    marginTop: 30,
   },
 });

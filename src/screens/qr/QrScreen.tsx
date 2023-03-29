@@ -69,7 +69,6 @@ const QrScreen = () => {
         setScanned(true);
         for (var i = 0; i < data.data.length; i++) {
           if (data.data.charCodeAt(i) > 127) {
-            console.log('non-ascii code detected');
             validAscii = false;
             return false;
           }
@@ -89,11 +88,9 @@ const QrScreen = () => {
           } else {
             response = checkStructure(datosQr, 'NEW');
           }
-          console.log({response});
+          console.log({datosQr});
           if (response) {
             handleTakePicture();
-          } else {
-            Alert.alert('no se puede leer el qr');
           }
         } else {
           return false;
@@ -123,15 +120,12 @@ const QrScreen = () => {
         if (validDateExp.test(fechaNac)) {
           return true;
         } else {
-          console.log('fecha error', fechaNac);
           return false;
         }
       } else {
-        console.log('genero error', genero);
         return false;
       }
     } else {
-      console.log('tramite error', nroTramite);
       return false;
     }
   }
@@ -150,12 +144,10 @@ const QrScreen = () => {
   };
 
   const cropImage = async (imageUri: string) => {
-    console.log('entro crop');
     await manipulateAsync(
       Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
       [{resize: {width: 800}}],
     ).then(async (resize: any) => {
-      console.log('entro then');
       Image.getSize(resize.uri, async (widthX, height) => {
         await manipulateAsync(
           Platform.OS === 'android' ? resize.uri : `file://${resize.uri}`,
@@ -175,9 +167,8 @@ const QrScreen = () => {
           },
         )
           .then((crop: ImageResult) => {
-            console.log('vibrar');
             Vibration.vibrate(500);
-            console.log(crop.base64);
+            navigation.navigate('ValidacionExitosaQrScreen');
           })
           .catch(error => console.log('error ==>', error));
       });
@@ -195,10 +186,12 @@ const QrScreen = () => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.cameraContainer}>
-        <Text style={styles.titulo}>Escanea tu DNI</Text>
+        <Text style={styles.titulo}>
+          Enfocá tu DNI del lado del código de barras dentro del marco
+        </Text>
 
         <View style={styles.mask}>
-          <MascaraDni color={indicator ? '#2BC11E' : '#ffffff'} />
+          <MascaraDni color={indicator ? '#2BC11Eb2' : '#ffffffb2'} />
         </View>
         <Camera
           onCameraReady={prepareRatio}
@@ -231,7 +224,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mask: {
-    zIndex: 100,
+    zIndex: 1000,
     position: 'absolute',
     width: '100%',
   },
@@ -252,9 +245,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: 'black',
     textAlign: 'center',
-    marginBottom: '25%',
-    marginTop: '10%',
-    zIndex: 200,
+    marginTop: 30,
+    zIndex: 1001,
+    position: 'absolute',
+    alignSelf: 'center',
   },
   bottomContainer: {
     backgroundColor: '#ffffff99',

@@ -40,7 +40,7 @@ export const DrawerContent = () => {
           labelStyle={styles.texto}
           style={{backgroundColor: '#cb1'}}
           onPress={() => {
-            navigation.reset({routes: [{name: 'QrScreen'}]});
+            navigation.reset({routes: [{name: 'ConsejosQRScreen'}]});
           }}
         />
         {/* {desafiosList.map((resp, index) => (

@@ -1,4 +1,4 @@
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import React, {useEffect} from 'react';
 import {
   StyleSheet,
@@ -16,6 +16,8 @@ import {useSelector} from 'react-redux';
 
 const ValidacionExitosaQrScreen = () => {
   const navigation = useNavigation();
+  const props: any = useRoute();
+
   const desafios: IDesafiosReducer = useSelector(
     (state: any) => state.desafios,
   );
@@ -29,6 +31,7 @@ const ValidacionExitosaQrScreen = () => {
     <SafeAreaView style={styles.contenedor}>
       <View style={styles.body}>
         <Text style={styles.titulo}>Escaneo de DNI exitoso</Text>
+        <Text style={styles.dni}>DNI: {props.params?.dni}</Text>
         <Image
           style={styles.image}
           resizeMode="contain"
@@ -91,6 +94,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontWeight: '500',
   },
+  dni: {
+    fontSize: 30,
+    color: '#2BC11E',
+    textAlign: 'center',
+    fontWeight: '500',
+  },
+
   contenedor: {
     width: '90%',
     alignSelf: 'center',

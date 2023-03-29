@@ -18,16 +18,17 @@ import {useNavigation} from '@react-navigation/native';
 import {ImageResult, manipulateAsync} from 'expo-image-manipulator';
 import {BarCodeBounds, BarCodeScanner} from 'expo-barcode-scanner';
 import MascaraDni from './MascaraDni';
+import AppSpinner from '../../components/AppSpinner';
 
 const QrScreen = () => {
   const navigation = useNavigation();
   const cameraRef = useRef<Camera>(null);
-  const dispatch = useDispatch();
+  const [spinner, setSpinner] = useState(false);
   const [ratioo, setRatio] = useState<string | undefined>();
   const [AspRatioo, setAspRatio] = useState<number>(1);
   const [hasPermission, setHasPermission] = useState<boolean>();
-  const [scanned, setScanned] = useState(false);
   const [indicator, setIndicator] = useState(false);
+  const [scanned, setScanned] = useState(false);
   let validAscii: boolean;
 
   useEffect(() => {
@@ -66,7 +67,6 @@ const QrScreen = () => {
 
     try {
       if (data.data !== undefined) {
-        setScanned(true);
         for (var i = 0; i < data.data.length; i++) {
           if (data.data.charCodeAt(i) > 127) {
             validAscii = false;
@@ -83,14 +83,27 @@ const QrScreen = () => {
       if (validAscii) {
         if (str.length >= 6 && str.length <= 16) {
           const datosQr = data.data.split('@');
+          let aux;
           if (data.data.startsWith('@')) {
+            aux = datosQr[1].trim();
             response = checkStructure(datosQr, 'OLD');
           } else {
+            aux = datosQr[4].trim();
             response = checkStructure(datosQr, 'NEW');
           }
-          console.log({datosQr});
           if (response) {
-            handleTakePicture();
+            setScanned(true);
+            setSpinner(true);
+            setIndicator(true);
+            setTimeout(() => {
+              setIndicator(false);
+            }, 1000);
+            setTimeout(() => {
+              navigation.navigate('ValidacionExitosaQrScreen', {
+                dni: aux,
+              } as any);
+              setSpinner(false);
+            }, 2000);
           }
         } else {
           return false;
@@ -208,6 +221,7 @@ const QrScreen = () => {
           }}
         />
       </View>
+      <AppSpinner open={spinner} />
     </SafeAreaView>
   );
 };

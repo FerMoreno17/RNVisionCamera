@@ -20,6 +20,28 @@ import {BarCodeBounds, BarCodeScanner} from 'expo-barcode-scanner';
 import MascaraDni from './MascaraDni';
 import AppSpinner from '../../components/AppSpinner';
 
+interface IProp {
+  originBounds: any;
+}
+const FrameColor = ({originBounds}: IProp) => {
+  if (originBounds !== undefined) {
+    return (
+      <View
+        style={{
+          position: 'absolute',
+          top: originBounds.origin.x,
+          left: originBounds.origin.y,
+          height: originBounds.size.width,
+          width: originBounds.size.height,
+          zIndex: 999,
+          borderWidth: 1,
+          borderColor: 'red',
+        }}
+      />
+    );
+  }
+};
+
 const QrScreen = () => {
   const navigation = useNavigation();
   const cameraRef = useRef<Camera>(null);
@@ -30,6 +52,7 @@ const QrScreen = () => {
   const [indicator, setIndicator] = useState(false);
   const [scanned, setScanned] = useState(false);
   let validAscii: boolean;
+  const [originBounds, setBounds] = useState<any>();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -66,6 +89,7 @@ const QrScreen = () => {
     let str: string[] = [];
 
     try {
+      setBounds(data.boundingBox);
       if (data.data !== undefined) {
         for (var i = 0; i < data.data.length; i++) {
           if (data.data.charCodeAt(i) > 127) {
@@ -79,34 +103,39 @@ const QrScreen = () => {
         }
         validAscii = true;
       }
-
-      if (validAscii) {
-        if (str.length >= 6 && str.length <= 16) {
-          const datosQr = data.data.split('@');
-          let aux;
-          if (data.data.startsWith('@')) {
-            aux = datosQr[1].trim();
-            response = checkStructure(datosQr, 'OLD');
+      //width x height por que estan invertidos los valores
+      if (
+        data.boundingBox.origin.x + data.boundingBox.size.width <
+        height * 0.5
+      ) {
+        if (validAscii) {
+          if (str.length >= 6 && str.length <= 16) {
+            const datosQr = data.data.split('@');
+            let aux;
+            if (data.data.startsWith('@')) {
+              aux = datosQr[1].trim();
+              response = checkStructure(datosQr, 'OLD');
+            } else {
+              aux = datosQr[4].trim();
+              response = checkStructure(datosQr, 'NEW');
+            }
+            if (response) {
+              setScanned(true);
+              setSpinner(true);
+              setIndicator(true);
+              setTimeout(() => {
+                setIndicator(false);
+              }, 1000);
+              setTimeout(() => {
+                navigation.navigate('ValidacionExitosaQrScreen', {
+                  dni: aux,
+                } as any);
+                setSpinner(false);
+              }, 2000);
+            }
           } else {
-            aux = datosQr[4].trim();
-            response = checkStructure(datosQr, 'NEW');
+            return false;
           }
-          if (response) {
-            setScanned(true);
-            setSpinner(true);
-            setIndicator(true);
-            setTimeout(() => {
-              setIndicator(false);
-            }, 1000);
-            setTimeout(() => {
-              navigation.navigate('ValidacionExitosaQrScreen', {
-                dni: aux,
-              } as any);
-              setSpinner(false);
-            }, 2000);
-          }
-        } else {
-          return false;
         }
       }
     } catch (e) {
@@ -202,7 +231,6 @@ const QrScreen = () => {
         <Text style={styles.titulo}>
           Enfocá tu DNI del lado del código de barras dentro del marco
         </Text>
-
         <View style={styles.mask}>
           <MascaraDni color={indicator ? '#2BC11Eb2' : '#ffffffb2'} />
         </View>

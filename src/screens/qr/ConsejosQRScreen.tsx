@@ -9,20 +9,20 @@ import {
   BackHandler,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import AppCard from './components/AppCard';
+import AppCard from '../../components/AppCard';
 import {useDispatch} from 'react-redux';
-import {DesafiosActionError} from './redux/action/DesafiosAction';
+import {DesafiosActionError} from '../../redux/action/DesafiosAction';
 
 function ConsejosQRScreen() {
   const DATA = [
     {
       id: '1',
-      imageUrl: require('./assets/Vector.png'),
+      imageUrl: require('../../assets/Vector.png'),
       title: 'Buscá un lugar con buena luz.',
     },
     {
       id: '2',
-      imageUrl: require('./assets/mesa.png'),
+      imageUrl: require('../../assets/mesa.png'),
       title: 'Colocalo sobre una mesa',
     },
   ];
@@ -39,15 +39,7 @@ function ConsejosQRScreen() {
     <SafeAreaView style={styles.main}>
       <View style={styles.body}>
         <Text style={styles.titulo}>Escaneo de DNI</Text>
-        <View
-          style={{
-            backgroundColor: '#D9D9D9',
-            height: height * 0.3,
-            width: width * 0.9,
-            borderRadius: 14,
-            marginBottom: 30,
-          }}
-        />
+        <View style={styles.greyBox} />
         <AppCard DATA={DATA} />
         <Pressable
           style={({pressed}) => [
@@ -120,5 +112,13 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 55,
     marginTop: 30,
+  },
+  greyBox: {
+    backgroundColor: '#D9D9D9',
+    height: height * 0.3,
+    width: width * 0.9,
+    borderRadius: 14,
+    marginBottom: 30,
+    alignSelf: 'center',
   },
 });

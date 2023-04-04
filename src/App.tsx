@@ -15,7 +15,7 @@ import {Menu} from './components/Menu';
 import {Back} from './components/Back';
 import {ModalSalir} from './components/ModalSalir';
 import QrScreen from './screens/qr/QrScreen';
-import ConsejosQRScreen from './ConsejosQRScreen';
+import ConsejosQRScreen from './screens/qr/ConsejosQRScreen';
 import ValidacionExitosaQrScreen from './screens/qr/ValidacionExitosaQrScreen';
 
 const Drawer = createDrawerNavigator();

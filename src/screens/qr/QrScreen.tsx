@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, {useEffect, useRef, useState} from 'react';
-import {useDispatch} from 'react-redux';
 import {
   ActivityIndicator,
   Dimensions,
@@ -9,38 +8,13 @@ import {
   Text,
   View,
   Platform,
-  Image,
   Vibration,
-  Alert,
 } from 'react-native';
 import {BarCodeScanningResult, Camera, CameraType} from 'expo-camera';
 import {useNavigation} from '@react-navigation/native';
-import {ImageResult, manipulateAsync} from 'expo-image-manipulator';
-import {BarCodeBounds, BarCodeScanner} from 'expo-barcode-scanner';
+import {BarCodeScanner} from 'expo-barcode-scanner';
 import MascaraDni from './MascaraDni';
 import AppSpinner from '../../components/AppSpinner';
-
-interface IProp {
-  originBounds: any;
-}
-const FrameColor = ({originBounds}: IProp) => {
-  if (originBounds !== undefined) {
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          top: originBounds.origin.x,
-          left: originBounds.origin.y,
-          height: originBounds.size.width,
-          width: originBounds.size.height,
-          zIndex: 999,
-          borderWidth: 1,
-          borderColor: 'red',
-        }}
-      />
-    );
-  }
-};
 
 const QrScreen = () => {
   const navigation = useNavigation();
@@ -52,7 +26,6 @@ const QrScreen = () => {
   const [indicator, setIndicator] = useState(false);
   const [scanned, setScanned] = useState(false);
   let validAscii: boolean;
-  const [originBounds, setBounds] = useState<any>();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -89,7 +62,7 @@ const QrScreen = () => {
     let str: string[] = [];
 
     try {
-      setBounds(data.boundingBox);
+      //setBounds(data.boundingBox);
       if (data.data !== undefined) {
         for (var i = 0; i < data.data.length; i++) {
           if (data.data.charCodeAt(i) > 127) {
@@ -105,8 +78,8 @@ const QrScreen = () => {
       }
       //width x height por que estan invertidos los valores
       if (
-        data.boundingBox.origin.x + data.boundingBox.size.width <
-        height * 0.5
+        Platform.OS === 'ios' ||
+        data.boundingBox.origin.x + data.boundingBox.size.width < height * 0.5
       ) {
         if (validAscii) {
           if (str.length >= 6 && str.length <= 16) {
@@ -127,6 +100,7 @@ const QrScreen = () => {
                 setIndicator(false);
               }, 1000);
               setTimeout(() => {
+                Vibration.vibrate(500);
                 navigation.navigate('ValidacionExitosaQrScreen', {
                   dni: aux,
                 } as any);
@@ -171,51 +145,6 @@ const QrScreen = () => {
       return false;
     }
   }
-
-  const handleTakePicture = async () => {
-    if (cameraRef) {
-      await cameraRef.current?.takePictureAsync({
-        quality: 0.5,
-        skipProcessing: true,
-        onPictureSaved: data => {
-          cropImage(data?.uri!);
-        },
-      });
-    }
-    return;
-  };
-
-  const cropImage = async (imageUri: string) => {
-    await manipulateAsync(
-      Platform.OS === 'android' ? imageUri : `file://${imageUri}`,
-      [{resize: {width: 800}}],
-    ).then(async (resize: any) => {
-      Image.getSize(resize.uri, async (widthX, height) => {
-        await manipulateAsync(
-          Platform.OS === 'android' ? resize.uri : `file://${resize.uri}`,
-          [
-            {
-              crop: {
-                height: 600,
-                originX: 0,
-                originY: height * 0.17,
-                width: 800,
-              },
-            },
-          ],
-          {
-            base64: true,
-            compress: 0.6,
-          },
-        )
-          .then((crop: ImageResult) => {
-            Vibration.vibrate(500);
-            navigation.navigate('ValidacionExitosaQrScreen');
-          })
-          .catch(error => console.log('error ==>', error));
-      });
-    });
-  };
 
   if (cameraRef == null) {
     return (

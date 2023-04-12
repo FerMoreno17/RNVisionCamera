@@ -166,7 +166,11 @@ const QrScreen = () => {
         <Camera
           onCameraReady={prepareRatio}
           ratio={ratioo}
-          style={{flex: 1, aspectRatio: AspRatioo}}
+          style={
+            Platform.OS === 'ios'
+              ? {height: height, width: '100%'}
+              : {flex: 1, aspectRatio: AspRatioo, alignSelf: 'center'}
+          }
           type={CameraType.back}
           ref={cameraRef}
           onBarCodeScanned={

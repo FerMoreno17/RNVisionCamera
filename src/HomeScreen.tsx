@@ -384,8 +384,9 @@ const HomeScreen = () => {
                   );
               })
               .catch(() => {
-                desafios.value.length === 1 &&
-                  dispatch(DesafiosAction(desafiosDefault));
+                setSpinner(false),
+                  desafios.value.length === 1 &&
+                    dispatch(DesafiosAction(desafiosDefault));
                 dispatch(
                   DesafiosActionError([
                     ...desafios.valueError,
@@ -456,7 +457,7 @@ const HomeScreen = () => {
     GOLss: number,
     GODss: number,
   ) => {
-    await fetch(
+    return await fetch(
       'https://mejorasuxsuperapp.gyfcloud.com.ar/api/v0.13/enrolamiento/enviardesafio',
       {
         method: 'POST',
@@ -489,14 +490,11 @@ const HomeScreen = () => {
           intervaloFrame: desafios.intervaloFrame.toString(),
         }),
       },
-    )
-      .then(resp => {
-        return resp.json();
-      })
-      .then(respJson => {
-        // RESPUESTA
-      })
-      .catch(error => {});
+    ).then(resp => {
+      return resp.json().then(respJson => {
+        return respJson;
+      });
+    });
   };
 
   const desafioTitle = (value: string) => {
@@ -643,15 +641,20 @@ const HomeScreen = () => {
                   <View
                     style={{
                       backgroundColor: '#17D641',
-                      width: 50,
+                      width:
+                        desafios.value[0] === desafiosList.MF
+                          ? (width * 0.45 * 16) / 50 + 20
+                          : (width * 0.45 * 15) / 50 + 20,
                       height: 25,
                       position: 'absolute',
                       left:
                         desafios.value[0] === desafiosList.MI
-                          ? 100
+                          ? (width * 0.45 * 10) / 50 - 20
                           : desafios.value[0] === desafiosList.MD
-                          ? 220
-                          : 160,
+                          ? width * 0.9 -
+                            (width * 0.45 * 10) / 50 -
+                            (width * 0.45 * 15) / 50
+                          : width * 0.45 - (width * 0.45 * 16) / 50 + 20,
                     }}
                   />
                   <View
@@ -662,14 +665,14 @@ const HomeScreen = () => {
                       borderRadius: 10,
                       left:
                         condicionX !== undefined
-                          ? condicionX > 10 && condicionX < 90
-                            ? barPoint + condicionX + pointOffset
-                            : condicionX > 270 && condicionX < 350
-                            ? condicionX - barPoint - pointOffset
-                            : condicionX <= 10
-                            ? condicionX + barPoint
-                            : condicionX - barPoint
-                          : barPoint,
+                          ? condicionX >= 0 && condicionX < 90
+                            ? (width * 0.45 * condicionX) / 50 +
+                              width * 0.45 -
+                              (desafios.value[0] !== desafiosList.MF ? 0 : 10)
+                            : width * 0.45 -
+                              (width * 0.45 * (360 - condicionX)) / 50 -
+                              (desafios.value[0] !== desafiosList.MF ? 20 : 10)
+                          : width * 0.45 - 10,
                     }}
                   />
                 </View>

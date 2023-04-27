@@ -162,11 +162,16 @@ const HomeScreen = () => {
                 X > desafios.mirarIzquierda.min &&
                 X < desafios.mirarIzquierda.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarIzquierda.min + 5 &&
+                  X < desafios.mirarIzquierda.max - 5
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -185,11 +190,16 @@ const HomeScreen = () => {
                 X > desafios.mirarDerecha.min &&
                 X < desafios.mirarDerecha.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarDerecha.min + 5 &&
+                  X < desafios.mirarDerecha.max - 5
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -208,11 +218,16 @@ const HomeScreen = () => {
                 X > desafios.mirarFrente.min ||
                 X < desafios.mirarFrente.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarFrente.min + 5 ||
+                  X < desafios.mirarFrente.max - 5
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -535,15 +550,15 @@ const HomeScreen = () => {
           <View style={styles.conte}>
             <Text style={styles.textDe}>{textHelp}</Text>
           </View>
-          <FrameColor originBounds={originBounds} />
-          <LimitFaceDetect
+          {/* <FrameColor originBounds={originBounds} /> */}
+          {/* <LimitFaceDetect
             originBounds={{
               a: width,
               b: 0,
               c: height * 0.15,
               d: height * 0.72,
             }}
-          />
+          /> */}
 
           <Camera
             key={aux}

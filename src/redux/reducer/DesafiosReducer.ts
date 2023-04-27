@@ -70,7 +70,7 @@ const initialState = {
   textoDentroDelRango: 'No te muevas...',
   modal: false,
   valueError: [],
-  flagIndicador: true,
+  flagIndicador: false,
 };
 
 export function DesafiosReducer(

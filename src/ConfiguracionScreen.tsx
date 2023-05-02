@@ -358,7 +358,7 @@ const ConfiguracionScreen = () => {
             onChangeText={setTiempoCaptura}
           />
         </View>
-        {/* <Text style={styles.titulo}>Intervalo de cada frame(1000=1s)</Text>
+        <Text style={styles.titulo}>Intervalo de cada frame(1000=1s)</Text>
         <View style={styles.contTiempo}>
           <TextInput
             keyboardType="numbers-and-punctuation"
@@ -366,7 +366,7 @@ const ConfiguracionScreen = () => {
             style={styles.textInputTiempos}
             onChangeText={setIntervaloFrame}
           />
-        </View> */}
+        </View>
         <Text style={styles.titulo}>Desafio mirar izquierda</Text>
         <TextInput
           keyboardType="numbers-and-punctuation"

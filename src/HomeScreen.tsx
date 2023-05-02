@@ -28,10 +28,12 @@ import {
 } from './redux/action/DesafiosAction';
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 import AppSpinner from './components/AppSpinner';
+import {activateKeepAwake, deactivateKeepAwake} from 'expo-keep-awake';
 
 interface IProp {
   originBounds: any;
 }
+
 const FrameColor = ({originBounds}: IProp) => {
   if (originBounds !== undefined) {
     return (
@@ -104,33 +106,8 @@ const HomeScreen = () => {
       : setType(CameraType.back);
   }, [desafios.frontSelected]);
 
-  // useEffect(() => {
-  //   let aux1 = desafios.tiempoArranque;
-  //   let aux2 = setInterval(() => {
-  //     contaDetectFace >= 0 ? setContaDetectFace(aux1) : clearInterval(aux2);
-  //     aux1--;
-  //   }, 1000);
-  //   setTimeout(() => {
-  //     setDetectFace(true);
-  //   }, (desafios.tiempoArranque + 1) * 1000);
-  // }, []);
-
-  const LimitFaceDetect = (originBounds_: any) => {
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          top: height * 0.15,
-          left: `${originBounds_.originBounds.b}%`,
-          bottom: height * 0.15,
-          width: originBounds_.originBounds.a,
-          zIndex: 1000,
-        }}
-      />
-    );
-  };
-
   const handleFacesDetected = ({faces}: FaceDetectionResult) => {
+    activateKeepAwake();
     if (faces.length > 0) {
       try {
         X = faces[0].yawAngle;
@@ -162,11 +139,16 @@ const HomeScreen = () => {
                 X > desafios.mirarIzquierda.min &&
                 X < desafios.mirarIzquierda.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarIzquierda.min + 5 &&
+                  X < desafios.mirarIzquierda.max - 5
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -185,11 +167,16 @@ const HomeScreen = () => {
                 X > desafios.mirarDerecha.min &&
                 X < desafios.mirarDerecha.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarDerecha.min + 5 &&
+                  X < desafios.mirarDerecha.max - 5
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -208,11 +195,16 @@ const HomeScreen = () => {
                 X > desafios.mirarFrente.min ||
                 X < desafios.mirarFrente.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarFrente.min + 2 ||
+                  X < desafios.mirarFrente.max - 2
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -321,6 +313,7 @@ const HomeScreen = () => {
     GOLs: number,
     GODs: number,
   ) => {
+    Vibration.vibrate(1000);
     if (cameraRef) {
       await cameraRef.current?.takePictureAsync({
         quality: type === CameraType.back ? 0 : 1,
@@ -363,7 +356,6 @@ const HomeScreen = () => {
           },
         )
           .then((crop: any) => {
-            Vibration.vibrate(500);
             desafios.value.length <= 1 &&
               (setSpinner(true),
               setIndicator(false),
@@ -372,7 +364,8 @@ const HomeScreen = () => {
             enviarDesa(crop.base64, desafios.value[0], Xs, Ss, GOLs, GODs)
               .then((resp: any) => {
                 desafios.value.length === 1 &&
-                  (navigation.navigate('ValidacionExitosaScreen'),
+                  (deactivateKeepAwake(),
+                  navigation.navigate('ValidacionExitosaScreen'),
                   setSpinner(false),
                   dispatch(DesafiosAction(desafiosDefault)));
                 (resp.esError || resp === undefined) &&
@@ -535,24 +528,12 @@ const HomeScreen = () => {
           <View style={styles.conte}>
             <Text style={styles.textDe}>{textHelp}</Text>
           </View>
-          <FrameColor originBounds={originBounds} />
-          <LimitFaceDetect
-            originBounds={{
-              a: width,
-              b: 0,
-              c: height * 0.15,
-              d: height * 0.72,
-            }}
-          />
-
           <Camera
             key={aux}
             style={
               Platform.OS === 'ios'
                 ? {height: height, width: '100%'}
                 : {
-                    // height: height,
-                    // width: '100%',
                     flex: 1,
                     aspectRatio: AspRatioo,
                     alignSelf: 'center',
@@ -567,7 +548,6 @@ const HomeScreen = () => {
             }
             faceDetectorSettings={{
               mode: FaceDetector.FaceDetectorMode.fast,
-              //detectLandmarks: FaceDetector.FaceDetectorLandmarks.all,
               runClassifications: FaceDetector.FaceDetectorClassifications.all,
               minDetectionInterval: desafios.intervaloFrame,
               tracking: true,
@@ -596,7 +576,6 @@ const HomeScreen = () => {
                   )}
                 </Pressable>
               </View>
-
               <Pressable
                 style={({pressed}) => [
                   {
@@ -835,15 +814,15 @@ const styles = StyleSheet.create({
   },
   reto: {
     color: '#000',
-    fontSize: 35,
+    fontSize: 30,
     textAlign: 'center',
     fontWeight: '700',
   },
   contenedorDatos: {
-    marginTop: '10%',
+    marginTop: '3%',
     position: 'absolute',
     zIndex: 100,
-    width: '90%',
+    width: '95%',
     alignSelf: 'center',
   },
 });

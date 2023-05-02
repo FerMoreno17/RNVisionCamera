@@ -20,6 +20,7 @@
     "expo-camera": "~13.1.0",
     "expo-face-detector": "~12.0.0",
     "expo-image-manipulator": "^11.0.0",
+    "expo-keep-awake": "~11.0.1",
     "react": "18.1.0",
     "react-native": "0.70.3",
     "react-native-cli": "^2.0.1",

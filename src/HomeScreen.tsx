@@ -30,26 +30,26 @@ import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 import AppSpinner from './components/AppSpinner';
 import {activateKeepAwake, deactivateKeepAwake} from 'expo-keep-awake';
 
-interface IProp {
-  originBounds: any;
-}
+// interface IProp {
+//   originBounds: any;
+// }
 
-const FrameColor = ({originBounds}: IProp) => {
-  if (originBounds !== undefined) {
-    return (
-      <View
-        style={{
-          position: 'absolute',
-          top: originBounds.origin.y,
-          left: originBounds.origin.x,
-          height: originBounds.size.height,
-          width: originBounds.size.width,
-          zIndex: 999,
-        }}
-      />
-    );
-  }
-};
+// const FrameColor = ({originBounds}: IProp) => {
+//   if (originBounds !== undefined) {
+//     return (
+//       <View
+//         style={{
+//           position: 'absolute',
+//           top: originBounds.origin.y,
+//           left: originBounds.origin.x,
+//           height: originBounds.size.height,
+//           width: originBounds.size.width,
+//           zIndex: 999,
+//         }}
+//       />
+//     );
+//   }
+// };
 
 const HomeScreen = () => {
   const navigation = useNavigation();

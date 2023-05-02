@@ -60,9 +60,10 @@ const initialState = {
   tiempoCaptura: 2,
   intervaloFrame: 25,
   tiempoArranque: 1,
-  textoDesafioIzq: 'Mirar hacia la izquierda',
-  textoDesafioDer: 'Mirar hacia la derecha',
-  textoDesafioFrente: 'Mirar hacia el frente',
+  textoDesafioIzq:
+    'Girar levemente hacia la izquierda hasta que se ponga verde',
+  textoDesafioDer: 'Girar levemente hacia la derecha hasta que se ponga verde',
+  textoDesafioFrente: 'Mirar hacia el frente hasta que se ponga verde',
   textoAcercarse: 'Acérquese al celular',
   textoAlejarse: 'Aléjese del celular',
   textoCentrarse: 'Ubíquese en la centro',

@@ -52,7 +52,7 @@ const PreviewScreen = () => {
   const enviarDesa = async () => {
     setSpinner(true);
     await fetch(
-      'https://mejorasuxsuperapp.gyfcloud.com.ar/api/v0.13/enrolamiento/enviardesafio',
+      'https://superapp.dev.gyfcloud.com.ar/mejorasUx/api/v0.13/enrolamiento/enviardesafio',
       {
         method: 'POST',
         headers: {

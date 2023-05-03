@@ -1,5 +1,5 @@
 import {useNavigation, useRoute} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
   Text,
   StyleSheet,
@@ -9,96 +9,14 @@ import {
   View,
   ImageBackground,
   Dimensions,
-  Modal,
   ScrollView,
 } from 'react-native';
 import {SafeAreaView} from 'react-native-safe-area-context';
-import {useSelector} from 'react-redux';
-import AppSpinner from './components/AppSpinner';
-import {desafiosList} from './components/DrawerContet';
-import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 
 const PreviewScreen = () => {
   const navigation = useNavigation();
   const props: any = useRoute();
-  const desafios: IDesafiosReducer = useSelector(
-    (state: any) => state.desafios,
-  );
-  const [modaleOpen, setModalOpen] = useState(false);
-  const [spinner, setSpinner] = useState(false);
-  const [response, setResponse] = useState();
 
-  function handleButtonBack() {
-    navigation.reset({routes: [{name: 'HomeScreen'}] as any});
-  }
-
-  const desafioBack = (value: string) => {
-    switch (value) {
-      case desafiosList[0]:
-        return 'MirarHaciaIzquierda';
-      case desafiosList[1]:
-        return 'MirarHaciaDerecha';
-      case desafiosList[2]:
-        return 'MirarAlFrente';
-      case desafiosList[3]:
-        return 'OjoIzquierdoCerrado';
-      case desafiosList[4]:
-        return 'OjoDerechoCerrado';
-      case desafiosList[5]:
-        return 'Sonreir';
-    }
-  };
-
-  const enviarDesa = async () => {
-    setSpinner(true);
-    await fetch(
-      'https://superapp.dev.gyfcloud.com.ar/mejorasUx/api/v0.13/enrolamiento/enviardesafio',
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          foto: props.params?.base64,
-          desafio: desafioBack(desafios.value[0]),
-          probabilidadGuinioIzq: props.params?.GOL,
-          probabilidadGuinioDer: props.params?.GOD,
-          probabilidadSonreir: props.params?.S,
-          gradoEjeX: props.params?.X,
-          configMirarIzquierdaMin: desafios.mirarIzquierda.min.toString(),
-          configMirarIzquierdaMax: desafios.mirarIzquierda.max.toString(),
-          configMirarDerechaMin: desafios.mirarDerecha.min.toString(),
-          configMirarDerechaMax: desafios.mirarDerecha.max.toString(),
-          configMirarFrenteMin: desafios.mirarFrente.min.toString(),
-          configMirarFrenteMax: desafios.mirarFrente.max.toString(),
-          configGuinioIzquierdoMin: desafios.guiñoIzquierdo.min.toString(),
-          configGuinioIzquierdoMax: desafios.guiñoIzquierdo.max.toString(),
-          configGuinioDerechoMin: desafios.guiñoDerecho.min.toString(),
-          configGuinioDerechoMax: desafios.guiñoDerecho.max.toString(),
-          configSonreirMin: desafios.sonreir.min.toString(),
-          configSonreirMax: desafios.sonreir.max.toString(),
-          camara: desafios.frontSelected ? 'Camara Frontal' : 'Camara Trasera',
-          tiempoInicioDesafio: desafios.tiempoArranque.toString(),
-          tiempoRetrasoCaptura: desafios.tiempoCaptura.toString(),
-          intervaloFrame: desafios.intervaloFrame.toString(),
-        }),
-      },
-    )
-      .then(resp => {
-        return resp.json();
-      })
-      .then(respJson => {
-        setResponse(respJson);
-        setModalOpen(true);
-        setSpinner(false);
-      })
-      .catch(error => {
-        setResponse(error.message);
-        setModalOpen(true);
-        setSpinner(false);
-      });
-  };
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
@@ -109,7 +27,8 @@ const PreviewScreen = () => {
     );
     return () => backHandler.remove();
   }, []);
-
+  const respuesta = props.params?.resp;
+  const myJSON = JSON.stringify(respuesta);
   return (
     <SafeAreaView style={styles.imageContainer}>
       <ImageBackground
@@ -133,69 +52,21 @@ const PreviewScreen = () => {
         }}>
         <ScrollView>
           <View style={styles.desaBox}>
-            <Text style={styles.desaAcepttitle}>Angulo del eje X:</Text>
-            <Text style={styles.desaAcept}>{props.params?.X?.toFixed(4)}°</Text>
+            <Text style={styles.desaAcepttitle}>Angulo:</Text>
+            <Text style={styles.desaAcept}>{Math.round(props.params?.X)}°</Text>
           </View>
-          <View style={styles.desaBox}>
-            <Text style={styles.desaAcepttitle}>Prob. de Sonreir:</Text>
-            <Text style={styles.desaAcept}>{props.params?.S?.toFixed(4)}%</Text>
-          </View>
-          <View style={styles.desaBox}>
-            <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Izq:</Text>
-            <Text style={styles.desaAcept}>
-              {props.params?.GOL?.toFixed(4)}%
-            </Text>
-          </View>
-          <View style={styles.desaBox}>
-            <Text style={styles.desaAcepttitle}>Prob. de abrir ojo Der:</Text>
-            <Text style={styles.desaAcept}>
-              {props.params?.GOD?.toFixed(4)}%
-            </Text>
-          </View>
+          <Text style={styles.desaAceptar}>{myJSON}</Text>
         </ScrollView>
       </View>
       <View style={styles.botonera}>
         <Pressable
           style={[styles.button, {backgroundColor: 'grey'}]}
-          onPress={handleButtonBack}>
-          <Text style={styles.buttonLabel}>{'VOLVER'}</Text>
-        </Pressable>
-
-        <Pressable style={styles.button} onPress={enviarDesa}>
-          <Text style={styles.buttonLabel}>ENVIAR</Text>
+          onPress={() =>
+            navigation.reset({routes: [{name: 'ConsejosFeVidaScreen'}]})
+          }>
+          <Text style={styles.buttonLabel}>{'VOLVER A INTENTAR'}</Text>
         </Pressable>
       </View>
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={modaleOpen}
-        onRequestClose={() => {
-          setModalOpen(false);
-        }}>
-        <Pressable
-          onTouchEnd={() => {
-            setModalOpen(false);
-          }}
-          style={{
-            flex: 1,
-            backgroundColor: '#00000099',
-          }}></Pressable>
-        <View style={styles.cont}>
-          <Text
-            style={styles.closeModal}
-            onPress={() => {
-              setModalOpen(false);
-            }}>
-            X
-          </Text>
-          <View style={styles.json}>
-            <Text style={{color: '#000', fontSize: 18, lineHeight: 30}}>
-              {JSON.stringify(response, null, 1)}
-            </Text>
-          </View>
-        </View>
-      </Modal>
-      <AppSpinner open={spinner} />
     </SafeAreaView>
   );
 };
@@ -233,6 +104,12 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   desaAcept: {
+    color: '#000',
+    fontWeight: '700',
+    fontSize: 20,
+    marginTop: 20,
+  },
+  desaAceptar: {
     color: '#000',
     fontWeight: '700',
     fontSize: 20,

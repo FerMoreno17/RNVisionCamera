@@ -55,7 +55,7 @@ const initialState = {
   guiñoIzquierdo: {max: 0.5, min: 0},
   guiñoDerecho: {max: 0.5, min: 0},
   sonreir: {max: 1, min: 0.7},
-  value: ['Mirar Frente', 'Mirar Izquierda', 'Mirar Derecha'],
+  value: ['Mirar Frente'],
   frontSelected: true,
   tiempoCaptura: 2,
   intervaloFrame: 25,

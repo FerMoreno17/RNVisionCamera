@@ -218,69 +218,6 @@ const HomeScreen = () => {
                 setTextHelp(desafios.textoRealizarDesafio);
               }
             }
-            if (desafios.value[0] === desafiosList.GI) {
-              setCondicionX(GOL);
-              if (
-                GOL > desafios.guiñoIzquierdo.min &&
-                GOL < desafios.guiñoIzquierdo.max
-              ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
-                (new Date().valueOf() - frameDate) / 1000 >
-                  desafios.tiempoCaptura &&
-                  contaFrame === 1 &&
-                  (setContaFrame(contaFrame + 1),
-                  handleTakePicture(X, S, GOL, GOD));
-              } else {
-                setContaFrame(0);
-                setIndicator(false);
-                setTextHelp(desafios.textoRealizarDesafio);
-              }
-            }
-            if (desafios.value[0] === desafiosList.GD) {
-              setCondicionX(GOD);
-              if (
-                GOD > desafios.guiñoDerecho.min &&
-                GOD < desafios.guiñoDerecho.max
-              ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
-                (new Date().valueOf() - frameDate) / 1000 >
-                  desafios.tiempoCaptura &&
-                  contaFrame === 1 &&
-                  (setContaFrame(contaFrame + 1),
-                  handleTakePicture(X, S, GOL, GOD));
-              } else {
-                setContaFrame(0);
-                setIndicator(false);
-                setTextHelp(desafios.textoRealizarDesafio);
-              }
-            }
-            if (desafios.value[0] === desafiosList.S) {
-              setCondicionX(S);
-              if (S > desafios.sonreir.min && S < desafios.sonreir.max) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
-                (new Date().valueOf() - frameDate) / 1000 >
-                  desafios.tiempoCaptura &&
-                  contaFrame === 1 &&
-                  (setContaFrame(contaFrame + 1),
-                  handleTakePicture(X, S, GOL, GOD));
-              } else {
-                setContaFrame(0);
-                setIndicator(false);
-                setTextHelp(desafios.textoRealizarDesafio);
-              }
-            }
           } else {
             faces[0].bounds.size.width < width * 0.3 &&
               setTextHelp(desafios.textoAcercarse);
@@ -367,16 +304,14 @@ const HomeScreen = () => {
               .then((resp: any) => {
                 desafios.value.length === 1 &&
                   (deactivateKeepAwake(),
-                  navigation.navigate('ValidacionExitosaScreen'),
+                  navigation.navigate('PreviewScreen', {
+                    X: Xs,
+                    base64: crop.base64,
+                    imagePath: crop.uri,
+                    resp: resp,
+                  }),
                   setSpinner(false),
                   dispatch(DesafiosAction(desafiosDefault)));
-                (resp.esError || resp === undefined) &&
-                  dispatch(
-                    DesafiosActionError([
-                      ...desafios.valueError,
-                      desafios.value[0],
-                    ]),
-                  );
               })
               .catch(() => {
                 setSpinner(false),
@@ -389,11 +324,6 @@ const HomeScreen = () => {
                   ]),
                 );
               });
-            dispatch(
-              DesafiosAction(
-                desafios.value.filter(resp => resp !== desafios.value[0]),
-              ),
-            );
           })
           .catch(error => console.log('error ==>', error));
       });
@@ -524,6 +454,9 @@ const HomeScreen = () => {
             <View style={styles.contenedorDatos}>
               <Text style={[styles.reto, indicator && {color: '#fff'}]}>
                 {desafioTitle(desafios.value[0])}
+              </Text>
+              <Text style={[styles.angulo, indicator && {color: '#fff'}]}>
+                {condicionX && Math.round(condicionX)}
               </Text>
             </View>
           )}
@@ -830,9 +763,16 @@ const styles = StyleSheet.create({
   },
   reto: {
     color: '#000',
+    fontSize: 24,
+    textAlign: 'center',
+    fontWeight: '700',
+  },
+  angulo: {
+    color: 'red',
     fontSize: 30,
     textAlign: 'center',
     fontWeight: '700',
+    marginTop: 10,
   },
   contenedorDatos: {
     marginTop: '3%',

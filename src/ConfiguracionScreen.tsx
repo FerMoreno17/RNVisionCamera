@@ -153,20 +153,9 @@ const ConfiguracionScreen = () => {
     navigation.navigate('HomeScreen', {} as any);
   };
   const gestionarDesafios = (value: string) => {
-    let aux = desafios.value.find(resp => {
-      return resp === value;
-    });
-
-    if (!aux) {
-      dispatch(DesafiosAction([...desafios.value, value]));
-    } else {
-      let aux = desafios.value.filter(resp => {
-        return resp !== value;
-      });
-      dispatch(DesafiosAction(aux));
-    }
-    // dispatch(DesafiosAction(aux));
+    dispatch(DesafiosAction([value]));
   };
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView>
@@ -238,108 +227,6 @@ const ConfiguracionScreen = () => {
             )}
           </View>
         </Pressable>
-        {/* <Text style={styles.titulo}>Mirar Izquierda</Text>
-        <View style={styles.containerInputs}>
-          <Text style={styles.placeHolder}>MIN</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={mirarIzMIN}
-            style={styles.textInput}
-            onChangeText={setMirarIzMIN}
-          />
-          <Text style={styles.placeHolder}>MAX</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={mirarIzMAX}
-            style={styles.textInput}
-            onChangeText={setMirarIzMAX}
-          />
-        </View>
-        <Text style={styles.titulo}>Mirar Derecha</Text>
-        <View style={styles.containerInputs}>
-          <Text style={styles.placeHolder}>MIN</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={mirarDrMIN}
-            style={styles.textInput}
-            onChangeText={setMirarDrMIN}
-          />
-          <Text style={styles.placeHolder}>MAX</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={mirarDrMAX}
-            style={styles.textInput}
-            onChangeText={setMirarDrMAX}
-          />
-        </View>
-        <Text style={styles.titulo}>Mirar Frente</Text>
-        <View style={styles.containerInputs}>
-          <Text style={styles.placeHolder}>MIN</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={mirarFMIN}
-            style={styles.textInput}
-            onChangeText={setMirarFMIN}
-          />
-          <Text style={styles.placeHolder}>MAX</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={mirarFMAX}
-            style={styles.textInput}
-            onChangeText={setMirarFMAX}
-          />
-        </View>
-        <Text style={styles.titulo}>Guiño Izquierdo</Text>
-        <View style={styles.containerInputsProb}>
-          <Text style={styles.placeHolder}>MIN</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={ojoIzqMIN}
-            style={styles.textInput}
-            onChangeText={setOjoIzqMIN}
-          />
-          <Text style={styles.placeHolder}>MAX</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={ojoIzqMAX}
-            style={styles.textInput}
-            onChangeText={setOjoIzqMAX}
-          />
-        </View>
-        <Text style={styles.titulo}>Guiño Derecho</Text>
-        <View style={styles.containerInputsProb}>
-          <Text style={styles.placeHolder}>MIN</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={ojoDerMIN}
-            style={styles.textInput}
-            onChangeText={setOjoDerMIN}
-          />
-          <Text style={styles.placeHolder}>MAX</Text>
-          <TextInput
-            keyboardType="numeric"
-            value={ojoDerMAX}
-            style={styles.textInput}
-            onChangeText={setOjoDerMAX}
-          />
-        </View>
-        <Text style={styles.titulo}>Sonreir</Text>
-        <View style={styles.containerInputsProb}>
-          <Text style={styles.placeHolder}>MIN</Text>
-          <TextInput
-            keyboardType="numbers-and-punctuation"
-            value={sonrisaMIN}
-            style={styles.textInput}
-            onChangeText={setSonrisaMIN}
-          />
-          <Text style={styles.placeHolder}>MAX</Text>
-          <TextInput
-            keyboardType="numbers-and-punctuation"
-            value={sonrisaMAX}
-            style={styles.textInput}
-            onChangeText={setSonrisaMAX}
-          />
-        </View> */}
         <Text style={styles.titulo}>Tiempo para iniciar el desafio(1=1s)</Text>
         <View style={styles.contTiempo}>
           <TextInput

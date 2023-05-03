@@ -29,6 +29,8 @@ import {
 import {IDesafiosReducer} from './redux/reducer/DesafiosReducer';
 import AppSpinner from './components/AppSpinner';
 import {activateKeepAwake, deactivateKeepAwake} from 'expo-keep-awake';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import {faCamera} from '@fortawesome/free-solid-svg-icons';
 
 // interface IProp {
 //   originBounds: any;
@@ -556,25 +558,19 @@ const HomeScreen = () => {
 
           {!initDesa ? (
             <>
-              <View style={styles.switch}>
+              <View style={[styles.cameraButtonContainer, styles.shadow]}>
                 <Pressable
                   onPress={() => {
                     dispatch(SwitchCamaraAction(!desafios.frontSelected));
-                  }}>
-                  {!desafios.frontSelected ? (
-                    <Image
-                      style={{width: 40, height: 35}}
-                      resizeMode="stretch"
-                      source={require('./assets/switchGreen.png')}
-                    />
-                  ) : (
-                    <Image
-                      style={{width: 40, height: 35}}
-                      resizeMode="stretch"
-                      source={require('./assets/switch.png')}
-                    />
-                  )}
+                  }}
+                  style={[
+                    styles.cameraButton,
+                    styles.shadow,
+                    !desafios.frontSelected ? styles.active : styles.inactive,
+                  ]}>
+                  <FontAwesomeIcon icon={faCamera} color={'white'} size={30} />
                 </Pressable>
+                <Text style={{fontSize: 10, marginTop: 5}}>GIRAR CAMARA</Text>
               </View>
               <Pressable
                 style={({pressed}) => [
@@ -776,16 +772,36 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: 'black',
   },
-  switch: {
+  cameraButtonContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
     position: 'absolute',
     zIndex: 1001,
-    bottom: 80,
-    paddingVertical: 15,
-    display: 'flex',
-    left: '10%',
-    flexDirection: 'row',
+    bottom: 100,
+    right: 20,
+  },
+  cameraButton: {
+    maxWidth: 55,
     justifyContent: 'center',
-    marginVertical: 20,
+    padding: 13,
+    borderRadius: 100,
+  },
+  active: {
+    backgroundColor: '#17D641',
+  },
+  inactive: {
+    backgroundColor: '#002855',
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.22,
+    shadowRadius: 2.22,
+
+    elevation: 3,
   },
   desaAcept: {
     color: 'green',

@@ -31,7 +31,6 @@ import AppSpinner from './components/AppSpinner';
 import {activateKeepAwake, deactivateKeepAwake} from 'expo-keep-awake';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faCamera} from '@fortawesome/free-solid-svg-icons';
-
 // interface IProp {
 //   originBounds: any;
 // }
@@ -141,16 +140,11 @@ const HomeScreen = () => {
                 X > desafios.mirarIzquierda.min &&
                 X < desafios.mirarIzquierda.max
               ) {
-                if (
-                  X > desafios.mirarIzquierda.min + 5 &&
-                  X < desafios.mirarIzquierda.max - 5
-                ) {
-                  setIndicator(true);
-                  setTextHelp(desafios.textoDentroDelRango);
-                  contaFrame === 0 &&
-                    (setFrameDate(new Date().valueOf()),
-                    setContaFrame(contaFrame + 1));
-                }
+                setIndicator(true);
+                setTextHelp(desafios.textoDentroDelRango);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -169,16 +163,11 @@ const HomeScreen = () => {
                 X > desafios.mirarDerecha.min &&
                 X < desafios.mirarDerecha.max
               ) {
-                if (
-                  X > desafios.mirarDerecha.min + 5 &&
-                  X < desafios.mirarDerecha.max - 5
-                ) {
-                  setIndicator(true);
-                  setTextHelp(desafios.textoDentroDelRango);
-                  contaFrame === 0 &&
-                    (setFrameDate(new Date().valueOf()),
-                    setContaFrame(contaFrame + 1));
-                }
+                setIndicator(true);
+                setTextHelp(desafios.textoDentroDelRango);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -190,23 +179,17 @@ const HomeScreen = () => {
                 setTextHelp(desafios.textoRealizarDesafio);
               }
             }
-
             if (desafios.value[0] === desafiosList.MF) {
               setCondicionX(X);
               if (
                 X > desafios.mirarFrente.min ||
                 X < desafios.mirarFrente.max
               ) {
-                if (
-                  X > desafios.mirarFrente.min + 2 ||
-                  X < desafios.mirarFrente.max - 2
-                ) {
-                  setIndicator(true);
-                  setTextHelp(desafios.textoDentroDelRango);
-                  contaFrame === 0 &&
-                    (setFrameDate(new Date().valueOf()),
-                    setContaFrame(contaFrame + 1));
-                }
+                setIndicator(true);
+                setTextHelp(desafios.textoDentroDelRango);
+                contaFrame === 0 &&
+                  (setFrameDate(new Date().valueOf()),
+                  setContaFrame(contaFrame + 1));
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -503,7 +486,15 @@ const HomeScreen = () => {
                   ]}>
                   <FontAwesomeIcon icon={faCamera} color={'white'} size={30} />
                 </Pressable>
-                <Text style={{fontSize: 10, marginTop: 5}}>GIRAR CAMARA</Text>
+                <Text
+                  style={{
+                    fontSize: 14,
+                    fontWeight: '600',
+                    marginTop: 5,
+                    color: '#002855',
+                  }}>
+                  GIRAR CAMARA
+                </Text>
               </View>
               <Pressable
                 style={({pressed}) => [

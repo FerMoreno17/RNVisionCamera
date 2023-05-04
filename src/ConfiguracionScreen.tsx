@@ -254,6 +254,57 @@ const ConfiguracionScreen = () => {
             onChangeText={setIntervaloFrame}
           />
         </View>
+        <Text style={styles.titulo}>Mirar Izquierda</Text>
+        <View style={styles.containerInputs}>
+          <Text style={styles.placeHolder}>MIN</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={mirarIzMIN}
+            style={styles.textInput}
+            onChangeText={setMirarIzMIN}
+          />
+          <Text style={styles.placeHolder}>MAX</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={mirarIzMAX}
+            style={styles.textInput}
+            onChangeText={setMirarIzMAX}
+          />
+        </View>
+        <Text style={styles.titulo}>Mirar Derecha</Text>
+        <View style={styles.containerInputs}>
+          <Text style={styles.placeHolder}>MIN</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={mirarDrMIN}
+            style={styles.textInput}
+            onChangeText={setMirarDrMIN}
+          />
+          <Text style={styles.placeHolder}>MAX</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={mirarDrMAX}
+            style={styles.textInput}
+            onChangeText={setMirarDrMAX}
+          />
+        </View>
+        <Text style={styles.titulo}>Mirar Frente</Text>
+        <View style={styles.containerInputs}>
+          <Text style={styles.placeHolder}>MIN</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={mirarFMIN}
+            style={styles.textInput}
+            onChangeText={setMirarFMIN}
+          />
+          <Text style={styles.placeHolder}>MAX</Text>
+          <TextInput
+            keyboardType="numeric"
+            value={mirarFMAX}
+            style={styles.textInput}
+            onChangeText={setMirarFMAX}
+          />
+        </View>
         <Text style={styles.titulo}>Desafio mirar izquierda</Text>
         <TextInput
           keyboardType="numbers-and-punctuation"

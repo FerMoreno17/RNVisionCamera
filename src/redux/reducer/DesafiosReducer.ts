@@ -49,8 +49,8 @@ export interface IDesafiosReducer {
 }
 
 const initialState = {
-  mirarIzquierda: {max: 335, min: 320},
-  mirarDerecha: {max: 40, min: 25},
+  mirarIzquierda: {max: 346, min: 330},
+  mirarDerecha: {max: 30, min: 14},
   mirarFrente: {max: 8, min: 352},
   guiñoIzquierdo: {max: 0.5, min: 0},
   guiñoDerecho: {max: 0.5, min: 0},

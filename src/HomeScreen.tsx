@@ -140,11 +140,16 @@ const HomeScreen = () => {
                 X > desafios.mirarIzquierda.min &&
                 X < desafios.mirarIzquierda.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarIzquierda.min + 5 &&
+                  X < desafios.mirarIzquierda.max - 5
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -163,11 +168,16 @@ const HomeScreen = () => {
                 X > desafios.mirarDerecha.min &&
                 X < desafios.mirarDerecha.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarDerecha.min + 5 &&
+                  X < desafios.mirarDerecha.max - 5
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
@@ -179,17 +189,23 @@ const HomeScreen = () => {
                 setTextHelp(desafios.textoRealizarDesafio);
               }
             }
+
             if (desafios.value[0] === desafiosList.MF) {
               setCondicionX(X);
               if (
                 X > desafios.mirarFrente.min ||
                 X < desafios.mirarFrente.max
               ) {
-                setIndicator(true);
-                setTextHelp(desafios.textoDentroDelRango);
-                contaFrame === 0 &&
-                  (setFrameDate(new Date().valueOf()),
-                  setContaFrame(contaFrame + 1));
+                if (
+                  X > desafios.mirarFrente.min + 2 ||
+                  X < desafios.mirarFrente.max - 2
+                ) {
+                  setIndicator(true);
+                  setTextHelp(desafios.textoDentroDelRango);
+                  contaFrame === 0 &&
+                    (setFrameDate(new Date().valueOf()),
+                    setContaFrame(contaFrame + 1));
+                }
                 (new Date().valueOf() - frameDate) / 1000 >
                   desafios.tiempoCaptura &&
                   contaFrame === 1 &&
